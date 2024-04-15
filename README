@@ -9,7 +9,7 @@ Efoy is a hospital appointment manager application for hospitals.
 - appointment booking
 - rating / reviews
 
-# Requirement Specification
+# Requirement Specifications
 
 - The application should allow doctors and patients to create accounts to login and logout of their accounts
 - Doctors should be able to create and update their profiles in a manner that is representative of what they do in the hospital, their skills and reputations
