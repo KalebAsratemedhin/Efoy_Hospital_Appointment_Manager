@@ -4,6 +4,9 @@ Efoy is a hospital appointment manager application for hospitals.
 - The application will be made Using React Front End and Nest Js Backend
 - mongo db will be the database used
 
+# Software Architecture
+- Client Server architecture will be used
+
 # Features
 - signup / signin / signout
 - appointment booking
