@@ -5,7 +5,7 @@ Efoy is a hospital appointment manager application for hospitals.
 - mongo db will be the database used
 
 # Software Architecture
-- Client Server architecture will be used
+- Client Server architecture will be used in this project.
 
 # Features
 - signup / signin / signout
