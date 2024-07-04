@@ -1,4 +1,4 @@
-###Efoy hospital appointment manager
+### Efoy Hospital Appointment Manager
 It is an application for hospitals.
 
 # Project Description
