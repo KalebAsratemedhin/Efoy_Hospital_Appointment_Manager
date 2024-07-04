@@ -1,20 +1,20 @@
-### Efoy Hospital Appointment Manager
+# Efoy Hospital Appointment Manager
 It is an application for hospitals.
 
-# Project Description
+## Project Description
 - The application will be made Using MERN stack
 
-# Software Architecture
+## Software Architecture
 - Client Server architecture will be used in this project.
 
-# Features
+## Features
 - authenticcation and authorization
 - appointment booking/updating/deleting
 - rating / reviews
 - notifications
 
 
-# Requirement Specifications
+## Requirement Specifications
 
 - The application should allow doctors and patients to create accounts to login and logout of their accounts
 - Doctors should be able to create and update their profiles in a manner that is representative of what they do in the hospital, their skills and reputations
