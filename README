@@ -1,16 +1,18 @@
-Efoy is a hospital appointment manager application for hospitals.
+###Efoy hospital appointment manager
+It is an application for hospitals.
 
 # Project Description
 - The application will be made Using MERN stack
-
 
 # Software Architecture
 - Client Server architecture will be used in this project.
 
 # Features
-- signup / signin / signout
+- authenticcation and authorization
 - appointment booking/updating/deleting
 - rating / reviews
+- notifications
+
 
 # Requirement Specifications
 
