@@ -3,11 +3,12 @@ import Footer from "./Footer"
 import Header from "./Header"
 
 const Layout = () => {
+
   return (
     <div className="flex flex-col h-full">
     
         <Header />
-        <div className="flex-grow">
+        <div className="flex-grow min-h-screen">
           <Outlet />
         </div>
         <Footer /> 
