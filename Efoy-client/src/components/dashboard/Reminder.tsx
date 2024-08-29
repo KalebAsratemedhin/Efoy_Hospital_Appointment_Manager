@@ -45,7 +45,7 @@ const Countdown = () => {
   ));
 
   return (
-    <div className="bg-white m-3 shadow-lg rounded-lg p-6 flex flex-col items-center space-y-4">
+    <div className="bg-white  shadow-lg rounded-lg p-6 flex flex-col items-center space-y-4">
       <div className="flex items-center space-x-2 text-indigo-600">
         <FaCalendarAlt className="h-6 w-6" />
         <h2 className="text-xl font-bold">Your next appointment</h2>

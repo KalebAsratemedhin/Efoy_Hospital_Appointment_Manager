@@ -4,6 +4,7 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom"
 import SignupPage from "./pages/Signup"
 import SigninPage from "./pages/Signin"
 import DashboardPage from "./pages/Dashboard"
+import DoctorDashboard from "./components/dashboard/Doctor"
 
 function App() {
 
@@ -14,6 +15,8 @@ function App() {
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/doc-dashboard" element={<DoctorDashboard />} />
+
 
   
         </Route>

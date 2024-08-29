@@ -10,6 +10,8 @@ import { FaUserMd } from "react-icons/fa";
 import { FaUserAlt } from "react-icons/fa";
 import { PiSignOut } from "react-icons/pi";
 import { LuStethoscope } from "react-icons/lu";
+import { BsClipboardCheckFill } from "react-icons/bs";
+import { VscCalendar } from "react-icons/vsc";
 
 
 const Sidebar = () => {
@@ -22,8 +24,10 @@ const Sidebar = () => {
         <div className="flex flex-col gap-2 px-4">
             <Link className="flex gap-3 h-12 border border-tertiary rounded-lg items-center pl-4 hover:bg-tertiary" to='/'> <IoHomeOutline className="" width='20px' /> Home</Link>
             <Link className="flex gap-3 h-12 border border-tertiary rounded-lg items-center pl-4 hover:bg-tertiary" to='/dashboard'> <RiDashboardHorizontalFill/> Dashboard</Link>
-            <Link className="flex gap-3 h-12 border border-tertiary rounded-lg items-center pl-4 hover:bg-tertiary" to='/appointments'>  <FaUserMd /> Appointments</Link>
-            <Link className="flex gap-3 h-12 border border-tertiary rounded-lg items-center pl-4 hover:bg-tertiary" to='/book'> <FaBook /> Book</Link>
+            <Link className="flex gap-3 h-12 border border-tertiary rounded-lg items-center pl-4 hover:bg-tertiary" to='/appointments'>  <BsClipboardCheckFill /> Appointments</Link>
+            <Link className="flex gap-3 h-12 border border-tertiary rounded-lg items-center pl-4 hover:bg-tertiary" to='/appointments'>  <VscCalendar /> Calendar</Link>
+
+            <Link className="flex gap-3 h-12 border border-tertiary rounded-lg items-center pl-4 hover:bg-tertiary" to='/book'> <FaUserMd /> Doctors</Link> 
             <Link className="flex gap-3 h-12 border border-tertiary rounded-lg items-center pl-4 hover:bg-tertiary" to='/favorites'> <MdFavoriteBorder />Favorites</Link>
             <Link className="flex gap-3 h-12 border border-tertiary rounded-lg items-center pl-4 hover:bg-tertiary" to='/settings'> <IoSettingsOutline />  Settings</Link>
 
