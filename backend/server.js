@@ -12,14 +12,14 @@ const cors = require('cors');
 require('./strategies/jwt_strategy');
 
 const corsOpts = {
-    origin: 'http://localhost:3000',
+    origin: 'http://localhost:5173',
     credentials: true,
     methods: ['GET', 'POST', 'HEAD', 'PUT', 'PATCH', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'], // Ensure Authorization header is allowed
+    allowedHeaders: ['Content-Type', 'Authorization'],  
     exposedHeaders: ['Content-Type']
   };
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT; 
 app.use(cors(corsOpts));
 
 

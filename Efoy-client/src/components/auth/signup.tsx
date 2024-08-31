@@ -1,8 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form"
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IoArrowBackSharp } from "react-icons/io5";
 import { IoArrowForwardSharp } from "react-icons/io5";
+import { useSignupMutation } from "../../redux/api/authAPI";
+import Spinner from "../utils/Spinner";
+import Error from "../utils/Error";
+import { SignupCredential } from "../../types/SignupCredential";
+import { useDispatch } from "react-redux";
+import { setAuth } from "../../redux/slices/authSlice";
+import { User } from "../../types/User";
 
 
 interface FormData{
@@ -16,18 +23,53 @@ interface FormData{
     orgID?: string;
     experience?: string;
     educationLevel?: string;
-    gender: 'Male' | 'Female' | 'Other' | 'Rather not say'; 
+    gender: string; 
     age: number;
     address: string;
 }
 
 const Signup = () => {
-    const {formState: {errors}, watch, register} = useForm<FormData>();
+    const {formState: {errors, isValid}, watch, register, handleSubmit} = useForm<FormData>({
+        defaultValues: {
+            role: 'patient'
+        },
+        mode: 'onChange'
+    });
     const [step, setStep] = useState(1)
+    const [signupUser, {isError, isLoading, isSuccess, error, data: signupData}] = useSignupMutation()
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const onSubmit =  async (data: FormData) => {
+        if (isValid){
+            const result = await signupUser(data as SignupCredential)
+            console.log('result signup', result)
+        }
 
-    const handleSubmit = () => {
-
+    
     } 
+    const handleStep = () => {
+        console.log("errors", errors)
+        if( isValid)
+            setStep(step + 1)
+
+    }
+
+    useEffect(() => {
+        if(isSuccess){
+            dispatch(setAuth(signupData as User))
+            navigate('/dashboard')
+
+        }
+
+    }, [isSuccess])
+    
+
+    if(isLoading)
+        return <Spinner />
+    
+    if (isError)
+        return <Error message="Could not signup." />
+        
 
     return (
       <div className="border shadow-lg bg-white  h-full p-4 flex flex-col justify-center items-center rounded-md ">
@@ -35,15 +77,16 @@ const Signup = () => {
          <p className="text-3xl text-purple-500 font-semibold ">Signup </p>
          
          
-          <form noValidate className="mt-2  p-10">
+          <form noValidate onSubmit={handleSubmit(onSubmit)} className="mt-2  p-10">
             <div className="flex justify-between items-center">
                 <div>
                     {step > 1 && <IoArrowBackSharp className="text-xl mb-4 hover:cursor-pointer" onClick={() => setStep(step - 1)} /> }
                 </div>
-                <p className="text-gray-500 text-lg text-center mb-4">Step {step} / 3</p>
+                <p className="text-gray-500 text-lg text-center mb-4">Step {step} / {watch('role') === 'patient' ? '2' : '3'} </p>
                 <div>
-                    {step < 3 && <IoArrowForwardSharp className="text-xl mb-4 hover:cursor-pointer" onClick={() => setStep(step + 1)} /> }
+                    {step < 3 && <IoArrowForwardSharp className="text-xl mb-4 hover:cursor-pointer" onClick={handleStep} /> }
                 </div>
+
             </div>
              
              {step === 1 && <div>
@@ -63,52 +106,53 @@ const Signup = () => {
                     })} />
                 </div>
 
-                {errors.role && <p className="text-red-500 text-base">{errors.role.message}</p>}
+                {errors.role && <p className="text-red-500 text-base mt-1">{errors.role.message}</p>}
 
 
             </div>
 
-             <div className="w-full">
+             <div className="w-full my-4">
                   <label className="text-gray-500" htmlFor="fullName">Fullname</label>
-                      <input className="w-full mt-2  block mb-3 border rounded-xl px-2 focus:outline-none focus:ring-purple-400 focus:ring-2 border-gray-300 h-12" id="fullName" type="text" {...register('fullName', {
+                      <input className="w-full block border rounded-xl px-2 focus:outline-none focus:ring-purple-400 focus:ring-2 border-gray-300 h-12" id="fullName" type="text" {...register('fullName', {
                           required: "Fullname is required"
                       })} />
                   
-                  <p className="text-red-500 text-base">{errors.fullName?.message}</p>
+                  <p className="text-red-500 text-base mt-1">{errors.fullName?.message}</p>
               </div>
-              <div className="w-full">
+              <div className="w-full my-4">
                   <label className="text-gray-500" htmlFor="username">Username</label>
-                      <input className="w-full mt-2  block mb-3 border rounded-xl px-2 focus:outline-none focus:ring-purple-400 focus:ring-2 border-gray-300 h-12" id="username" type="text" {...register('username', {
+                      <input className="w-full block border rounded-xl px-2 focus:outline-none focus:ring-purple-400 focus:ring-2 border-gray-300 h-12" id="username" type="text" {...register('username', {
                           required: "Username is required",
-                          pattern: {
-                            value: /^[A-Za-z\d]{6} $/,
-                            message: 'Username should have letters, digits and should be atleast six.'
-                          }
+                          validate: (value) => value.length >= 6 || "Username should be atleast six characters long."
                       })} />
                   
-                  <p className="text-red-500 text-base">{errors.username?.message}</p>
+                  <p className="text-red-500 text-base mt-1">{errors.username?.message}</p>
               </div>
-              <div className="w-full">
+              <div className="w-full my-4">
                   <label className="text-gray-500" htmlFor="password"> Password </label>
-                      <input className="w-full mt-2  block mb-3 border rounded-xl px-2 focus:outline-none focus:ring-purple-400 focus:ring-2 border-gray-300 h-12" id="password" type="password" {...register('password', {
-                          required: "Password is required",
-                          pattern: {
-                              value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/,
-                              message: "Password should include letters an digits"
-                          },    
-                          validate: (value) => value.length >= 6 || "Password should not be shorter than six characters."
-                      
+                      <input className="w-full block border rounded-xl px-2 focus:outline-none focus:ring-purple-400 focus:ring-2 border-gray-300 h-12" id="password" type="password" {...register('password', {
+                          required: "Password is required",  
+                          validate: (value) => {
+                            
+                            if(value.length < 6)
+                                return "Password should not be shorter than six characters."
+
+                            return /[a-zA-Z]{1,}/.test(value) || 'Password must contain at least one letter'
+                            
+                            
+
+                          }                      
                       })} />
                  
-                  <p className="text-red-500 text-base">{errors.password?.message}</p>
+                  <p className="text-red-500 text-base mt-1">{errors.password?.message}</p>
               </div>
-              <button onClick={() => setStep(step + 1)} className="w-full bg-purple-700 text-lg font-semibold hover:shadow-md text-white py-2 rounded-full">Next</button>
+              <button onClick={handleStep} className="w-full bg-purple-700 text-lg font-semibold hover:shadow-md text-white py-2 rounded-full">Next</button>
              </div>}
 
              {step === 2 && <div>
-                <div className="w-full">
+                <div className="w-full my-4">
                   <label className="text-gray-500" htmlFor="email">Email</label>
-                      <input className="w-full mt-2  block mb-3 border rounded-xl px-2 focus:outline-none focus:ring-purple-400 focus:ring-2 border-gray-300 h-12" id="email" type="text" {...register('email', {
+                      <input className="w-full block border rounded-xl px-2 focus:outline-none focus:ring-purple-400 focus:ring-2 border-gray-300 h-12" id="email" type="text" {...register('email', {
                           required: "Email is required",
                           pattern: {
                             value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
@@ -116,18 +160,18 @@ const Signup = () => {
                           } 
                       })} />
                   
-                  <p className="text-red-500 text-base">{errors.email?.message}</p>
+                  <p className="text-red-500 text-base mt-1">{errors.email?.message}</p>
               </div>
-              <div className="w-full">
+              <div className="w-full my-4">
                   <label className="text-gray-500" htmlFor="phoneNumber">Phone Number</label>
-                      <input className="w-full mt-2  block mb-3 border rounded-xl px-2 focus:outline-none focus:ring-purple-400 focus:ring-2 border-gray-300 h-12" id="phoneNumber" type="text" {...register('phoneNumber', {
+                      <input className="w-full block border rounded-xl px-2 focus:outline-none focus:ring-purple-400 focus:ring-2 border-gray-300 h-12" id="phoneNumber" type="text" {...register('phoneNumber', {
                           required: "Phone Number is required",
                           
                       })} />
                   
-                  <p className="text-red-500 text-base">{errors.phoneNumber?.message}</p>
+                  <p className="text-red-500 text-base mt-1">{errors.phoneNumber?.message}</p>
               </div>
-              <div className="w-full">
+              <div className="w-full my-4">
                   <label className="text-gray-500" htmlFor="gender"> Gender </label>
                     <select className="block my-3 bg-slate-100  rounded-md p-3 focus:border-yellow-500 focus:ring-yellow-500 w-full focus:outline-none appearance-none " id="gender" {...register('gender')}>
                         <option value="Female">Female</option>
@@ -141,45 +185,45 @@ const Signup = () => {
                         </svg>
                     </div>
               </div>
-              <div className="w-full">
+              <div className="w-full my-4">
                   <label className="text-gray-500" htmlFor="age"> Age </label>
-                      <input className="w-full mt-2  block mb-3 border rounded-xl px-2 focus:outline-none focus:ring-purple-400 focus:ring-2 border-gray-300 h-12" id="age" type="text" {...register('age', {
+                      <input className="w-full block border rounded-xl px-2 focus:outline-none focus:ring-purple-400 focus:ring-2 border-gray-300 h-12" id="age" type="text" {...register('age', {
                           required: "age is required",
                           
                       })} />
                  
-                  <p className="text-red-500 text-base">{errors.age?.message}</p>
+                  <p className="text-red-500 text-base mt-1">{errors.age?.message}</p>
               </div>
-              <div className="w-full">
+              <div className="w-full my-4">
                   <label className="text-gray-500" htmlFor="address"> Address </label>
-                      <input className="w-full mt-2  block mb-3 border rounded-xl px-2 focus:outline-none focus:ring-purple-400 focus:ring-2 border-gray-300 h-12" id="address" type="text" {...register('address', {
+                      <input className="w-full block border rounded-xl px-2 focus:outline-none focus:ring-purple-400 focus:ring-2 border-gray-300 h-12" id="address" type="text" {...register('address', {
                           required: "Address is required",
                           
                       })} />
                  
-                  <p className="text-red-500 text-base">{errors.address?.message}</p>
+                  <p className="text-red-500 text-base mt-1">{errors.address?.message}</p>
               </div>
 
               {watch('role') === "patient" ? 
-              <button onClick={handleSubmit} className="w-full  bg-purple-700 text-lg font-semibold hover:shadow-md text-white py-2 rounded-full">Signup</button> 
+              <button type="submit"  className="w-full  bg-purple-700 text-lg font-semibold hover:shadow-md text-white py-2 rounded-full">Signup</button> 
                     :
-              <button onClick={() => setStep(step + 1)} className="w-full bg-purple-700 text-lg font-semibold hover:shadow-md text-white py-2 rounded-full">Next</button>
+              <button onClick={handleStep} className="w-full bg-purple-700 text-lg font-semibold hover:shadow-md text-white py-2 rounded-full">Next</button>
                 }
               
              </div> }
 
              {step === 3 && watch('role') === "doctor" && <div>
-                <div className="w-full">
+                <div className="w-full my-4">
                   <label className="text-gray-500" htmlFor="speciality">Speciality</label>
-                      <input className="w-full mt-2  block mb-3 border rounded-xl px-2 focus:outline-none focus:ring-purple-400 focus:ring-2 border-gray-300 h-12" id="speciality" type="text" {...register('speciality', {
+                      <input className="w-full block border rounded-xl px-2 focus:outline-none focus:ring-purple-400 focus:ring-2 border-gray-300 h-12" id="speciality" type="text" {...register('speciality', {
                           required: "Speciality is required"
                       })} />
                   
-                  <p className="text-red-500 text-base">{errors.speciality?.message}</p>
+                  <p className="text-red-500 text-base mt-1">{errors.speciality?.message}</p>
               </div>
-              <div className="w-full">
+              <div className="w-full my-4">
                   <label className="text-gray-500" htmlFor="orgID">Organization ID</label>
-                      <input className="w-full mt-2  block mb-3 border rounded-xl px-2 focus:outline-none focus:ring-purple-400 focus:ring-2 border-gray-300 h-12" id="orgID" type="text" {...register('orgID', {
+                      <input className="w-full block border rounded-xl px-2 focus:outline-none focus:ring-purple-400 focus:ring-2 border-gray-300 h-12" id="orgID" type="text" {...register('orgID', {
                           required: "OrgID is required",
                           pattern: {
                             value: /^[A-Za-z\d]{6} $/,
@@ -187,27 +231,27 @@ const Signup = () => {
                           }
                       })} />
                   
-                  <p className="text-red-500 text-base">{errors.orgID?.message}</p>
+                  <p className="text-red-500 text-base mt-1">{errors.orgID?.message}</p>
               </div>
-              <div className="w-full">
+              <div className="w-full my-4">
                   <label className="text-gray-500" htmlFor="experience"> Experience </label>
-                      <input className="w-full mt-2  block mb-3 border rounded-xl px-2 focus:outline-none focus:ring-purple-400 focus:ring-2 border-gray-300 h-12" id="experience" type="text" {...register('experience', {
+                      <input className="w-full block border rounded-xl px-2 focus:outline-none focus:ring-purple-400 focus:ring-2 border-gray-300 h-12" id="experience" type="text" {...register('experience', {
                           required: "Experience is required",
                           
                       })} />
                  
-                  <p className="text-red-500 text-base">{errors.experience?.message}</p>
+                  <p className="text-red-500 text-base mt-1">{errors.experience?.message}</p>
               </div>
-              <div className="w-full">
+              <div className="w-full my-4">
                   <label className="text-gray-500" htmlFor="educationLevel"> EducationLevel </label>
-                      <input className="w-full mt-2  block mb-3 border rounded-xl px-2 focus:outline-none focus:ring-purple-400 focus:ring-2 border-gray-300 h-12" id="educationLevel" type="text" {...register('educationLevel', {
+                      <input className="w-full block border rounded-xl px-2 focus:outline-none focus:ring-purple-400 focus:ring-2 border-gray-300 h-12" id="educationLevel" type="text" {...register('educationLevel', {
                           required: "EducationLevel is required",
                           
                       })} />
                  
-                  <p className="text-red-500 text-base">{errors.educationLevel?.message}</p>
+                  <p className="text-red-500 text-base mt-1">{errors.educationLevel?.message}</p>
               </div>
-              <button onClick={handleSubmit} className="w-full  bg-purple-700 text-lg font-semibold hover:shadow-md text-white py-2 rounded-full">Signup</button> 
+              <button type='submit' className="w-full  bg-purple-700 text-lg font-semibold hover:shadow-md text-white py-2 rounded-full">Signup</button> 
               
 
              </div> }

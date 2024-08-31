@@ -5,13 +5,13 @@ const authenticateToken = require('../middlewares/authenticateToken.js')
 
 const router = express.Router();
  
-router.get('/', authenticateToken,  authController.getUser)
+router.get('/current-user', authenticateToken,  authController.getUser)
 
 router.post('/signup', authController.signup);
 
-router.post('/login', authController.login)
+router.post('/signin', authController.login)
 
-router.get('/logout', authController.logout)
+router.post('/signout', authController.logout)
 
 
 

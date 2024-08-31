@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const mongoURI = 'mongodb://localhost:27017/Efoy_db';
+const mongoURI = 'mongodb://127.0.0.1:27017/Efoy_db';
 
 
 const connectDatabase = async () => {

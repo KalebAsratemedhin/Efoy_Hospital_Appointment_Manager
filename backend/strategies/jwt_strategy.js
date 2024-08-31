@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-const secret = process.env.jwt_secret
+const secret = process.env.jwt_secret 
 const passport = require('passport');
 const passportJWT = require('passport-jwt');
 const JWTStrategy = passportJWT.Strategy;
@@ -16,7 +16,7 @@ const opts = {
     return req.cookies.token; 
   }, 
   secretOrKey: secret,
-};
+}; 
 
 passport.use(new JWTStrategy(opts, async (jwt_payload, done) => {
   try {
