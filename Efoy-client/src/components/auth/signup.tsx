@@ -56,7 +56,7 @@ const Signup = () => {
 
     useEffect(() => {
         if(isSuccess){
-            dispatch(setAuth(signupData as User))
+            dispatch(setAuth(signupData ))
             navigate('/dashboard')
 
         }
@@ -225,9 +225,16 @@ const Signup = () => {
                   <label className="text-gray-500" htmlFor="orgID">Organization ID</label>
                       <input className="w-full block border rounded-xl px-2 focus:outline-none focus:ring-purple-400 focus:ring-2 border-gray-300 h-12" id="orgID" type="text" {...register('orgID', {
                           required: "OrgID is required",
-                          pattern: {
-                            value: /^[A-Za-z\d]{6} $/,
-                            message: 'OrgID should have letters, digits and should be atleast six.'
+                          validate: (value) => {
+                            if(!value)
+                                return false
+
+                            if(value.length < 6)
+                                return "OrgId should not be shorter than six characters."
+
+                            return /[a-zA-Z]{2,}/.test(value) || 'OrgID must contain at least two letters'
+                            
+
                           }
                       })} />
                   

@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux"
-import Dashboard from "../components/dashboard/Dashboard"
-import DoctorDashboard from "../components/dashboard/Doctor"
+import Dashboard from "../components/dashboard/PatientDashboard"
+import DoctorDashboard from "../components/dashboard/DoctorDashboard"
 import { RootState } from '../redux/store'
 import NotFound from "../components/utils/NotFound"
 

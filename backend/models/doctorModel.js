@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 
 const doctorSchema = mongoose.Schema(
     {
+        fullName: {
+            type: String,
+            required: true,
+        },
         username: {
             type: String,
             required: true,

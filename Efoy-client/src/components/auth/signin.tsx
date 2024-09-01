@@ -4,8 +4,8 @@ import { useSigninMutation } from "../../redux/api/authAPI";
 import Spinner from "../utils/Spinner";
 import Error from "../utils/Error";
 import { useEffect } from "react";
-import { setAuth } from "../../redux/slices/authSlice";
-import { useDispatch } from "react-redux";
+import { authSelector, setAuth } from "../../redux/slices/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 interface FormData{
     username: string;
@@ -23,6 +23,7 @@ const Signin = () => {
     const [signinUser, {isError, isLoading, isSuccess, error, data}] = useSigninMutation()
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const authState = useSelector(authSelector)
     const onSubmit = async(data: FormData) => {
 
         const result = await signinUser(data)
@@ -32,11 +33,13 @@ const Signin = () => {
     useEffect(() => {
         if(isSuccess){
             dispatch(setAuth(data))
-            navigate('/dashboard')
 
         }
+        if(authState.username){
+            navigate('/dashboard')
+        }
 
-    }, [isSuccess])
+    }, [isSuccess, authState])
 
     if(isLoading)
         return <Spinner />
@@ -77,7 +80,7 @@ const Signin = () => {
             </div>
             <div className="my-3">
                 <label className="text-gray-500 text-base" htmlFor="password">Password</label>
-                    <input className="block border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-lg h-12 px-2 w-full border" id="password" type="text" {...register('password', {
+                    <input className="block border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-lg h-12 px-2 w-full border" id="password" type="password" {...register('password', {
                         required: "Password is required",
                         
                     })} />

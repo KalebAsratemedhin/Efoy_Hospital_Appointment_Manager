@@ -1,4 +1,6 @@
-const Booking = require("../models/bookingModel")
+const Booking = require("../models/bookingModel");
+const formatTime = require("../utils/formatTime")
+const generateTimeSlots = require("../utils/generateTimeSlots")
 
 const findAllUserBookings = async (req, res) => {
     try {
@@ -28,7 +30,7 @@ const findAllUserBookings = async (req, res) => {
 const findOneBooking = async (req, res) => {
     try {
         const {id} = req.params
-        const booking = await Booking.findById(id);
+        const booking = await Booking.findById(id).populate('patientId').populate('doctorId');;
 
         return res.status(200).json(booking)
 
@@ -38,21 +40,58 @@ const findOneBooking = async (req, res) => {
     }
 
 }
+
+const findAvailableTimeSlots = async (req, res) => {
+    try {
+        console.log("hello", req.params)
+        const { doctorId, date } = req.params;
+        console.log("mello", doctorId, date)
+
+        const start = "08:00";
+        const end = "17:30";
+        const interval = 20;
+
+        console.log("h slots")
+
+        const allSlots = generateTimeSlots(start, end, interval);
+        console.log("h bookings", allSlots)
+
+        const bookings = await Booking.find({doctorId, appointmentDate: date})
+
+        const doctorBookedSlots = bookings.map(booking => booking.time)
+
+        const availableSlots = allSlots.filter(slot => !doctorBookedSlots.includes(slot));
+        console.log("available", allSlots)
+
+
+        res.json(availableSlots);
+        
+    } catch (error) {
+        res.status(500).send({message: error.message})
+    }
+}
+
+
 const createBooking = async (req, res) => {
     try {
-        if( !req.body.doctorId | !req.body.appointmentDate){
-            return res.status(400).send({
-                message: "Missing fields!",
-            });
+        console.log("booking req body", req.body)
+        const {doctorId, appointmentDate, time, reason} = req.body
+
+        const existing = await Booking.find({doctorId, appointmentDate, time})
+
+        if(existing && existing.length > 0){
+            return res.status(402).json({message: "Time slot is unavailable."})
+            
         }
         const booking = await Booking.create({
             patientId: req.user.data._id,
-            doctorId: req.body.doctorId,
-            appointmentDate: req.body.appointmentDate,
+            doctorId: doctorId,
+            appointmentDate: appointmentDate,
+            time: time,
+            reason: reason,
             status: "pending" 
             
         });
-        console.log(booking, 'created') 
 
         return res.status(201).json(booking)
 
@@ -106,6 +145,7 @@ const deleteBooking = async (req, res) => {
 module.exports = {
     findAllUserBookings,
     findOneBooking,
+    findAvailableTimeSlots,
     createBooking,
     updateBooking,
     deleteBooking

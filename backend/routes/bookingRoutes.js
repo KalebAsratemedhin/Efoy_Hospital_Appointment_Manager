@@ -5,6 +5,7 @@ const passport = require('../strategies/jwt_strategy');
 
 router.get('/:id', passport.authenticate('jwt', { session: false }), bookingController.findOneBooking);
 router.get('/', passport.authenticate('jwt', { session: false }), bookingController.findAllUserBookings);
+router.get('/:doctorId/:date', passport.authenticate('jwt', { session: false }), bookingController.findAvailableTimeSlots);
 
 router.post('/', passport.authenticate('jwt', { session: false }), bookingController.createBooking);
 router.put('/:id', passport.authenticate('jwt', { session: false }), bookingController.updateBooking);

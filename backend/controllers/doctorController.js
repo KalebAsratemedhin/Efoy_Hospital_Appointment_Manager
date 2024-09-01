@@ -1,5 +1,5 @@
+const Booking = require("../models/bookingModel")
 const Doctor = require("../models/doctorModel")
-
 
 
 const findAllDoctors = async (req, res) => {
@@ -45,6 +45,7 @@ const findOneDoctor = async (req, res) => {
     }
 
 }
+
 
 module.exports = {
     findAllDoctors,

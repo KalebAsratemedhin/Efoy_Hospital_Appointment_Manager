@@ -6,13 +6,13 @@ import { SigninCredential } from "../../types/SigninCredential";
 export const authAPI = createApi({
     reducerPath: 'authApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:3000',
+        baseUrl: 'http://localhost:3000/auth',
         credentials: "include"
     }),
     endpoints: (builder) => ({
         signup: builder.mutation<User, SignupCredential >({
             query: (credential) => ({
-                url: '/auth/signup',
+                url: '/signup',
                 method: 'Post',
                 body: credential,
                 
@@ -20,7 +20,7 @@ export const authAPI = createApi({
         }),
         signin: builder.mutation<User, SigninCredential >({
             query: (credential) => ({
-                url: '/auth/signin',
+                url: '/signin',
                 method: 'Post',
                 body: credential,
                 
@@ -28,14 +28,14 @@ export const authAPI = createApi({
         }),
         signout: builder.mutation<void, void >({
             query: () => ({
-                url: '/auth/signout',
+                url: '/signout',
                 method: 'Post'
                 
             })
         }),
         getCurrentUser: builder.query<User, void>({
             query: () => ({
-                url: '/auth/current-user',
+                url: '/current-user',
                 method: 'Get'
             })
         })

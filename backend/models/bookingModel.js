@@ -23,6 +23,15 @@ const bookingSchema = mongoose.Schema(
             },
             required: true
         },
+        time: {
+            type: String,
+            requried: true,
+        },
+        reason: {
+            type: String,
+            required: true,
+        },
+
         status: {
             type: String,
             default: "pending"

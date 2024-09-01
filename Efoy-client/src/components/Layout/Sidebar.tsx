@@ -31,6 +31,14 @@ const Sidebar = () => {
     await signout()
   }
 
+  useEffect(() => {
+    if(isSuccess){
+      dispatch(clearAuth())
+      navigate('/')
+    }
+
+  }, [isSuccess])
+
   if(isLoading)
     return <Spinner />
     
@@ -39,13 +47,7 @@ const Sidebar = () => {
 
   
 
-  useEffect(() => {
-    if(isSuccess){
-      dispatch(clearAuth())
-      navigate('/')
-    }
 
-  }, [isSuccess])
 
 
   return (
@@ -60,7 +62,7 @@ const Sidebar = () => {
             <Link className="flex gap-3 h-12 border border-tertiary rounded-lg items-center pl-4 hover:bg-tertiary" to='/appointments'>  <BsClipboardCheckFill /> Appointments</Link>
             <Link className="flex gap-3 h-12 border border-tertiary rounded-lg items-center pl-4 hover:bg-tertiary" to='/appointments'>  <VscCalendar /> Calendar</Link>
 
-            <Link className="flex gap-3 h-12 border border-tertiary rounded-lg items-center pl-4 hover:bg-tertiary" to='/book'> <FaUserMd /> Doctors</Link> 
+            <Link className="flex gap-3 h-12 border border-tertiary rounded-lg items-center pl-4 hover:bg-tertiary" to='/doctors'> <FaUserMd /> Doctors</Link> 
             <Link className="flex gap-3 h-12 border border-tertiary rounded-lg items-center pl-4 hover:bg-tertiary" to='/favorites'> <MdFavoriteBorder />Favorites</Link>
             <Link className="flex gap-3 h-12 border border-tertiary rounded-lg items-center pl-4 hover:bg-tertiary" to='/settings'> <IoSettingsOutline />  Settings</Link>
 
