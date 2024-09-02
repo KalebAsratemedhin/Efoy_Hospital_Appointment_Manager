@@ -7,8 +7,6 @@ import Spinner from "../utils/Spinner"
 import Error from "../utils/Error"
 import { useDispatch, useSelector } from "react-redux"
 import { authSelector, clearAuth, getAuth } from "../../redux/slices/authSlice"
-import NotFound from "../utils/NotFound"
-import { useEffect } from "react"
 import { CustomSerializedError } from "../../types/CustomSerializedError"
 
 const Layout = () => {
@@ -16,7 +14,6 @@ const Layout = () => {
   const {isLoading: isUserLoading, isSuccess: isUserSuccess, isError: isUserError, error: userError, data: user, refetch} = useGetCurrentUserQuery()
   const authState = useSelector(authSelector)
   const dispatch = useDispatch()
-  const navigate = useNavigate()
 
 
   if(isUserLoading)
@@ -28,7 +25,7 @@ const Layout = () => {
       dispatch(clearAuth())
 
     }
-    return <Error message={error.data.message} />
+    return <Error error={error} />
 
   }
     

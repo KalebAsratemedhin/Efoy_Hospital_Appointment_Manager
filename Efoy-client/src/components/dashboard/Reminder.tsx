@@ -1,48 +1,13 @@
 
-// const Reminder = () => {
-//   return (
-//     <div className="border-purple-300 rounded-md">
-
-//     </div>
-//   )
-// }
-
-// export default Reminder
-
-import React, { useState, useEffect } from 'react';
 import { FaCalendarAlt, FaClock } from 'react-icons/fa';
+import { useFindCurrentUserBookingsQuery } from '../../redux/api/bookingAPI';
+import { BookingResponse } from '../../types/BookingResponse';
+import CountDown from './CountDown';
 
-const Countdown = () => {
-  const curr: string = new Date().toISOString()
-  const eventDate =   new Date('2024-08-29T15:01:26.409Z')
-  const now = new Date()
-  const calculateTimeLeft = () => {
+const Reminder = () => {
+  const {isLoading, isError, isSuccess, error, data} = useFindCurrentUserBookingsQuery()
 
-    return  {
-        'days': Math.floor(eventDate.getDay() - now.getDay()),
-        'hours': Math.floor(eventDate.getHours() - now.getHours()),
-        'minutes': Math.floor(60 - eventDate.getMinutes() - now.getMinutes()),
-      };
-  };
-
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [eventDate]);
-
-  const timerComponents = Object.entries(timeLeft).map(([interval, value]) => (
-    <div key={interval} className="flex flex-col items-center">
-      <div className="text-3xl font-semibold text-indigo-600">
-        {value}
-      </div>
-      <div className="text-sm text-gray-600">{interval}</div>
-    </div>
-  ));
+  const eventDate = data ? findNext(data) : undefined
 
   return (
     <div className="bg-white  shadow-lg rounded-lg p-6 flex flex-col items-center space-y-4">
@@ -50,17 +15,25 @@ const Countdown = () => {
         <FaCalendarAlt className="h-6 w-6" />
         <h2 className="text-xl font-bold">Your next appointment</h2>
       </div>
-      <div className="flex space-x-6">
-        {timerComponents.length ? timerComponents : <span>Time's up!</span>}
-      </div>
-      <div className="flex items-center space-x-2 text-gray-600">
-        <FaClock className="h-5 w-5" />
-        <p className="text-sm">
-          Event Date: {eventDate.toLocaleString()}
-        </p>
-      </div>
+      {eventDate && <CountDown eventDate={eventDate} />}
     </div>
   );
 };
 
-export default Countdown;
+export default Reminder;
+
+
+const findNext = (data: BookingResponse[]) => {
+  const now = new Date()
+
+  for(const booking of data){
+    const date = new Date(booking.appointmentDate.split('T')[0] + ' ' + booking.time)
+
+    if(date > now){
+      return date
+    }
+
+  }
+  return undefined
+
+}

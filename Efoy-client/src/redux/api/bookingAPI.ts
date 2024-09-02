@@ -53,6 +53,18 @@ export const bookingAPI = createApi({
                 method: 'Get'
             })
         }),
+        findPatientSummary: builder.query<number[], string>({
+            query: (patientId) => ({
+                url: `/patient/${patientId}`,
+                method: 'Get'
+            })
+        }),
+        findDoctorSummary: builder.query<number[], string>({
+            query: (doctorId) => ({
+                url: `/doctor/${doctorId}`,
+                method: 'Get'
+            })
+        }),
 
     })
 })
@@ -63,6 +75,8 @@ export const {
     useDeleteBookingMutation,
     useFindCurrentUserBookingsQuery,
     useFindOneBookingQuery,
-    useFindAvailableTimeSlotsQuery
+    useFindAvailableTimeSlotsQuery,
+    useFindPatientSummaryQuery,
+    useFindDoctorSummaryQuery
 
 } = bookingAPI

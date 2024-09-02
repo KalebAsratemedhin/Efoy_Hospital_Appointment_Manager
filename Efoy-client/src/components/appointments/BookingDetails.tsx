@@ -5,6 +5,8 @@ import Error from "../utils/Error";
 import { CustomSerializedError } from "../../types/CustomSerializedError";
 import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { authSelector } from '../../redux/slices/authSlice';
 interface FormData {
   appointmentDate: string;
   time: string;
@@ -15,9 +17,9 @@ const BookingDetails = () => {
   const {id} = useParams()
   const {isLoading, isSuccess, isError, error, data} = useFindOneBookingQuery(id as string)
   const [updateBooking, {isLoading: isUpdateLoading, isSuccess: isUpdateSuccess, isError: isUpdateError, error: updateError, data: updateData} ]= useUpdateBookingMutation()
-
-  const customError = error as CustomSerializedError
+  const authState = useSelector(authSelector)
   const doctor = data?.doctorId
+  const patient = data?.patientId
   let appointment = data
   const {
     register,
@@ -56,7 +58,7 @@ const BookingDetails = () => {
   };
 
   if (isLoading || isUpdateLoading ) return <Spinner />;
-  if (isError ) return <Error message={customError.data.message} />;
+  if (isError || isUpdateError  ) return <Error error={error || updateError} />;
   if(isUpdateSuccess)
     appointment = updateData
 
@@ -65,6 +67,7 @@ const BookingDetails = () => {
   return (
       <div className="max-w-lg mx-auto mt-10 p-8 bg-white rounded-lg shadow-lg">
         <h1 className="text-3xl font-bold mb-6 text-indigo-600">Details</h1>
+        { authState.role === "patient" && 
         <div className="mb-6">
           <h2 className="text-xl font-semibold text-gray-800">Doctor Information</h2>
           <p className="text-gray-700">
@@ -76,7 +79,27 @@ const BookingDetails = () => {
           <p className="text-gray-700">
             <strong>Experience:</strong> {doctor?.experience} years
           </p>
+      </div>
+
+        } 
+        {
+          authState.role === "doctor" && 
+          <div className="mb-6">
+          <h2 className="text-xl font-semibold text-gray-800">Patient Information</h2>
+          <p className="text-gray-700">
+            <strong>Name:</strong> {patient?.fullName}
+          </p>
+          <p className="text-gray-700">
+            <strong>Email:</strong> {patient?.email}
+          </p>
+          <p className="text-gray-700">
+            <strong>Phone Number:</strong> {patient?.phoneNumber}
+          </p>
+          <p className="text-gray-700">
+            <strong>Age:</strong> {patient?.age} years
+          </p>
         </div>
+        }
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label htmlFor="reason" className="block text-gray-700 font-semibold mb-2">
@@ -128,12 +151,12 @@ const BookingDetails = () => {
             </select>
             {errors.time && <p className="text-red-500 text-sm mt-1">{errors.time.message}</p>}
           </div>
-          <button
+          {authState.role === "patient"  && <button
             type="submit"
             className="w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
             Save
-          </button>
+          </button>}
         </form>
       </div>
     

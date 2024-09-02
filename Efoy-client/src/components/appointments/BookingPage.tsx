@@ -44,18 +44,19 @@ const BookingPage = () => {
       doctorId: id as string,
     };
 
+
     try {
       const result = await createBooking(bookingData).unwrap();
       console.log('res book', result)
+
     } catch (error) {
       console.error(error);
     }
   };
 
-  const customError = error as CustomSerializedError;
 
   if (isLoading || isCreateLoading) return <Spinner />;
-  if (isError || isCreateError) return <Error message={customError.data.message} />;
+  if (isError || isCreateError) return <Error error={error || createError} />;
   if (isSuccess)
     return (
       <div className="max-w-lg mx-auto mt-10 p-8 bg-white rounded-lg shadow-lg">

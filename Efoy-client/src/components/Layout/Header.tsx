@@ -1,10 +1,11 @@
 import { Link, useLocation } from "react-router-dom"
 import { TfiSearch } from "react-icons/tfi";
-import { useSelector } from "react-redux";
-import { authSelector } from "../../redux/slices/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { authSelector, clearAuth } from "../../redux/slices/authSlice";
 import { useGetCurrentUserQuery } from "../../redux/api/authAPI";
 import { IoNotifications } from "react-icons/io5";
 import { IoSettingsOutline } from "react-icons/io5";
+import { CustomSerializedError } from "../../types/CustomSerializedError";
 
 
 
@@ -13,9 +14,19 @@ const Header = () => {
   let title = pathname.split('/')[1]
   title = title.slice(0,1).toUpperCase().concat(title.slice(1))
   const authState = useSelector(authSelector)
-  const {data: user} = useGetCurrentUserQuery()
+  const {data: user, isError: isUserError, error: userError} = useGetCurrentUserQuery()
 
   const initials = user?.fullName.split(' ').map((name) => name[0].toUpperCase()).join('');  
+  const dispatch = useDispatch()
+  
+  if(isUserError){
+    const error = userError as CustomSerializedError
+    if(error.data.message === "No token provided"){
+      dispatch(clearAuth())
+
+    }
+
+  }
   
   const handleSearch = () => {
 

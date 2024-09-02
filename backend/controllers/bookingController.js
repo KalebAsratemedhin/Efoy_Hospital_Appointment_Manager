@@ -53,7 +53,7 @@ const findAvailableTimeSlots = async (req, res) => {
 
         console.log("h slots")
 
-        const allSlots = generateTimeSlots(start, end, interval);
+        const allSlots = generateTimeSlots(date, start, end, interval);
         console.log("h bookings", allSlots)
 
         const bookings = await Booking.find({doctorId, appointmentDate: date})
@@ -142,10 +142,73 @@ const deleteBooking = async (req, res) => {
 
 }
 
+const doctorSummary = async(req, res) => {
+    try {
+        const {doctorId} = req.params
+
+        const bookings = await Booking.find({doctorId})
+
+        const data = Array(12).fill(0)
+        // 2024-09-02T12:39:45.406Z,
+
+        console.log("bookings in summary", bookings)
+
+
+        for (const booking of bookings){
+        console.log("booking of bookings", booking)
+
+            const month = new Date(booking.appointmentDate).getMonth()
+            console.log("month", month)
+            data[month] += 1
+        }
+
+        console.log("data monthly", data)
+        res.status(200).json(data)
+
+
+        
+    } catch (error) {
+        res.status(500).json({message: error.message})
+    }
+}
+
+const patientSummary = async (req, res) => {
+    try {
+        console.log("mello")
+        const {patientId} = req.params
+
+        const bookings = await Booking.find({patientId})
+
+        const data = Array(12).fill(0)
+        // 2024-09-02T12:39:45.406Z,
+
+        console.log("bookings in summary", bookings)
+
+
+        for (const booking of bookings){
+        console.log("booking of bookings", booking)
+
+            const month = new Date(booking.appointmentDate).getMonth()
+            console.log("month", month)
+            data[month] += 1
+        }
+
+        console.log("data monthly", data)
+        res.status(200).json(data)
+
+
+        
+    } catch (error) {
+        res.status(500).json({message: error.message})
+    }
+}
+
 module.exports = {
     findAllUserBookings,
     findOneBooking,
     findAvailableTimeSlots,
+    patientSummary,
+    doctorSummary,
     createBooking,
     updateBooking,
     deleteBooking

@@ -6,13 +6,12 @@ import DoctorProfile from "./DoctorProfile";
 
 const DoctorsList = () => {
     const {isLoading, isSuccess, isError, error, data} = useFindAllDoctorsQuery()
-    const customError = error as CustomSerializedError
 
     if(isLoading)
         return <Spinner />
     
     if(isError)
-        return <Error message={customError.data.message} />
+        return <Error error={error} />
 
     if(isSuccess)
     return (

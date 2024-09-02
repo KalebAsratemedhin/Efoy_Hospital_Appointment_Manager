@@ -1,25 +1,24 @@
 import { Link } from "react-router-dom"
 import { BookingResponse } from "../../types/BookingResponse";
-import { useDeleteBookingMutation } from "../../redux/api/bookingAPI";
+import { useDeleteBookingMutation, useUpdateBookingMutation } from "../../redux/api/bookingAPI";
 import Spinner from "../utils/Spinner";
 import Error from "../utils/Error";
 import { CustomSerializedError } from "../../types/CustomSerializedError";
 
-const BookingCardPatient = ({booking, refetch}: {booking: BookingResponse, refetch: () => void}) => {
+const BookingCardDoctor = ({booking, refetch}: {booking: BookingResponse, refetch: () => void}) => {
   const doctor = booking.doctorId
+  const patient = booking.patientId
 
-  const initials = doctor.fullName.split(' ').map((name) => name[0].toUpperCase()).join('');  
-  const [deleteBooking, {isLoading, isError, isSuccess, error}] = useDeleteBookingMutation()
+  const initials = patient?.fullName.split(' ').map((name) => name[0].toUpperCase()).join('');  
+  const [updateBooking, {isLoading: isUpdateLoading, isSuccess: isUpdateSuccess, isError: isUpdateError, error: updateError, data: updateData} ]= useUpdateBookingMutation()
 
-  const customError = error as CustomSerializedError
-
-  const handleDelete = async () => {
-    await deleteBooking(booking._id as string)
+  const handleStatus = async () => {
+    await updateBooking({id: booking._id as string, update: {status: "serviced"}})
 
   }
-  if (isLoading ) return <Spinner />;
-  if (isError ) return <Error error={error} />;
-  if(isSuccess)
+  if (isUpdateLoading ) return <Spinner />;
+  if (isUpdateError ) return <Error error={updateError} />;
+  if(isUpdateSuccess)
     refetch()
  
 
@@ -36,12 +35,12 @@ const BookingCardPatient = ({booking, refetch}: {booking: BookingResponse, refet
            
         </div>
         <div className="flex flex-col pt-2 flex-grow ">
-          <p className="text-xl">{doctor.fullName}</p>
+          <p className="text-xl">{patient?.fullName}</p>
           
           <div className="flex items-center gap-2 text-gray-500">
-            <p>{doctor.speciality}</p>
+            <p>{patient?.email}</p>
             <p className="bg-gray-700 w-1 h-1 rounded-full"></p>
-            <p>{doctor.experience}</p>
+            <p>{patient?.username}</p>
           </div>
           <div className="flex flex-col  text-gray-500">
             <p>Date: {new Date(booking.appointmentDate).toDateString()}  {booking.time}</p>
@@ -51,7 +50,9 @@ const BookingCardPatient = ({booking, refetch}: {booking: BookingResponse, refet
 
         </div>
         <div className="flex items-center mt-4 gap-2 p-2">
-          <button onClick={handleDelete} className="text-secondary hover:text-primary" >Delete</button>
+            {booking.status === "pending" && 
+                <button onClick={handleStatus} className="text-secondary hover:text-primary" >Serviced</button>
+            }
           <Link className="text-secondary hover:text-primary" to={`/appointments/${booking._id}`}>More</Link>
 
         </div>
@@ -60,4 +61,4 @@ const BookingCardPatient = ({booking, refetch}: {booking: BookingResponse, refet
   )
 }
 
-export default BookingCardPatient
+export default BookingCardDoctor

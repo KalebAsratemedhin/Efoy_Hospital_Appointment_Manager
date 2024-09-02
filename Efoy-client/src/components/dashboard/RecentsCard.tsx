@@ -1,6 +1,5 @@
-import React from 'react'
 
-const Recents = () => {
+const RecentsCard = () => {
   return (
     <div className='bg-white rounded-md shadow-md p-4 min-w-72'>
         <div className='flex gap-3'>
@@ -20,4 +19,4 @@ const Recents = () => {
   )
 }
 
-export default Recents
+export default RecentsCard

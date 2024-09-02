@@ -6,14 +6,14 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Toolti
 // Register necessary components
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const BarChart = () => {
+const BarChart = ({chartTitle, label, chartData}: {chartTitle: string, label: string, chartData: number[]}) => {
   // Sample data for the chart
   const data = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
     datasets: [
       {
-        label: 'Patients',
-        data: [50, 100, 150, 200, 250, 300, 500, 550, 650, 800, 750, 900],
+        label: label,
+        data: chartData,
         backgroundColor: 'rgba(75, 192, 192, 0.6)',
         borderColor: 'rgba(75, 192, 192, 1)',
         borderWidth: 1,
@@ -30,7 +30,7 @@ const BarChart = () => {
       },
       title: {
         display: true,
-        text: 'Monthly Patient Data',
+        text: chartTitle,
       },
     },
     scales: {
