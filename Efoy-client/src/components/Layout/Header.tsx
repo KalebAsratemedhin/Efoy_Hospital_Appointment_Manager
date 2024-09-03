@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { TfiSearch } from "react-icons/tfi";
 import { useDispatch, useSelector } from "react-redux";
 import { authSelector, clearAuth } from "../../redux/slices/authSlice";
@@ -11,6 +11,7 @@ import { CustomSerializedError } from "../../types/CustomSerializedError";
 
 const Header = () => {
   const {pathname} = useLocation()
+  const navigate = useNavigate()
   let title = pathname.split('/')[1]
   title = title.slice(0,1).toUpperCase().concat(title.slice(1))
   const authState = useSelector(authSelector)
@@ -21,7 +22,7 @@ const Header = () => {
   
   if(isUserError){
     const error = userError as CustomSerializedError
-    if(error.data.message === "No token provided"){
+    if(error?.data?.message === "No token provided"){
       dispatch(clearAuth())
 
     }
@@ -51,8 +52,8 @@ const Header = () => {
           {
             authState.username ?
             <div className="flex gap-4  justify-end items-center">
-              <IoSettingsOutline className="w-8 h-8 text-primary" />
-              <IoNotifications className="w-8 h-8 text-primary"  />
+              <IoSettingsOutline onClick={() => navigate('/settings') } className="w-8 h-8 text-secondary hover:text-primary" />
+              <IoNotifications onClick={() => navigate('/notifications') } className="w-8 h-8 text-secondary hover:text-primary"  />
             
               <div className="w-14 h-14 rounded-full flex justify-center items-center bg-gray-300 text-lg ">
                 {initials}

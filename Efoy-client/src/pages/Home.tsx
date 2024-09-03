@@ -1,5 +1,5 @@
 
-
+import RatingStars from "../components/rating/RatingStars"
 const Home = () => {
   return (
     <div className=" h-full p-10">
@@ -11,6 +11,7 @@ const Home = () => {
         time and resources to get top level health care. Leave your appointments to us and focus on your health.
       </p>
         <h1 className="text-xl mt-8">Effective Health care at your finger tips!</h1>
+
     </div>
   )
 }

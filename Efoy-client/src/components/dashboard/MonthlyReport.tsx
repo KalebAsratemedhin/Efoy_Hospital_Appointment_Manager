@@ -19,7 +19,7 @@ const MonthlyReport = () => {
     if (isSuccess && data)
 
     return (
-      <div className="bg-white w-96 rounded-md shadow-md">
+      <div className="bg-white w-96 p-6 rounded-md shadow-md">
           <BarChart label={'Appointments'} chartData={data} chartTitle="Visit History" />
       </div>
     )

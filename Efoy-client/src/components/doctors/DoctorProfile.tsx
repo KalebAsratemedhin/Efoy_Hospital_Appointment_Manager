@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Doctor } from "../../types/Doctor"
+import RatingDisplay from "../rating/RatingDisplay";
 
 const DoctorProfile = ({doctor} : {doctor: Doctor}) => {
   const initials = doctor.fullName.split(' ').map((name) => name[0].toUpperCase()).join('');  
@@ -26,7 +27,7 @@ const DoctorProfile = ({doctor} : {doctor: Doctor}) => {
             <p>{doctor.experience}</p>
           </div>
           <div className="flex gap-2 text-yellow-600">
-            <p>****</p> 
+           <RatingDisplay value={doctor.rating as number} />
           </div>
           
           
@@ -38,7 +39,7 @@ const DoctorProfile = ({doctor} : {doctor: Doctor}) => {
         </div>
         <div className="flex mt-4 gap-2 p-2">
           <Link className="text-secondary hover:text-primary" to={`/book/${doctor._id}`}>Book</Link>
-          <Link className="text-secondary hover:text-primary" to='/doc-details'>More</Link>
+          <Link className="text-secondary hover:text-primary" to={`/doctors/${doctor._id}`}>More</Link>
 
         </div>
 

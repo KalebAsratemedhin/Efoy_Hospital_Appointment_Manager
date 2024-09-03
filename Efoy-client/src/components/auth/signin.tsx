@@ -36,6 +36,7 @@ const Signin = () => {
 
         }
         if(authState.username){
+            console.log(authState.username, 'username')
             navigate('/dashboard')
         }
 
@@ -45,7 +46,7 @@ const Signin = () => {
         return <Spinner />
         
       if(isError)
-        return <Error message="Couldn't signin in user." />
+        return <Error error={error} />
     
   return (
     <div className="border shadow-lg bg-white  h-full p-4 flex flex-col justify-center items-center rounded-md">

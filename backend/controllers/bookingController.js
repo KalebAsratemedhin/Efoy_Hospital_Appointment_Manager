@@ -74,7 +74,6 @@ const findAvailableTimeSlots = async (req, res) => {
 
 const createBooking = async (req, res) => {
     try {
-        console.log("booking req body", req.body)
         const {doctorId, appointmentDate, time, reason} = req.body
 
         const existing = await Booking.find({doctorId, appointmentDate, time})
@@ -105,10 +104,8 @@ const createBooking = async (req, res) => {
 const updateBooking = async (req, res) => {
     try {
         const {id} = req.params;
-        console.log("hi", id, req.body)
 
         const result = await Booking.findByIdAndUpdate(id, req.body);
-        console.log('res', result)
 
         return res.status(201).json(result)
 
@@ -123,15 +120,12 @@ const deleteBooking = async (req, res) => {
     try {
         
         const {id} = req.params;
-        console.log("hi del", id, req.body)
         const result = await Booking.findByIdAndDelete(id);
-        console.log('res del', result)
 
 
         if(!result){
             return res.status(404).json({message: "Not found"})
         }
-        console.log('res del past', result)
 
         return res.status(204).json({message: "Sucessfully deleted."})
 
@@ -174,26 +168,18 @@ const doctorSummary = async(req, res) => {
 
 const patientSummary = async (req, res) => {
     try {
-        console.log("mello")
         const {patientId} = req.params
 
         const bookings = await Booking.find({patientId})
 
         const data = Array(12).fill(0)
-        // 2024-09-02T12:39:45.406Z,
-
-        console.log("bookings in summary", bookings)
 
 
         for (const booking of bookings){
-        console.log("booking of bookings", booking)
-
             const month = new Date(booking.appointmentDate).getMonth()
-            console.log("month", month)
             data[month] += 1
         }
 
-        console.log("data monthly", data)
         res.status(200).json(data)
 
 

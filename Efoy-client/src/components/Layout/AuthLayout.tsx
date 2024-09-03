@@ -12,7 +12,6 @@ import { CustomSerializedError } from "../../types/CustomSerializedError"
 const Layout = () => {
   const {pathname} = useLocation()
   const {isLoading: isUserLoading, isSuccess: isUserSuccess, isError: isUserError, error: userError, data: user, refetch} = useGetCurrentUserQuery()
-  const authState = useSelector(authSelector)
   const dispatch = useDispatch()
 
 

@@ -15,15 +15,17 @@ import Doctors from "./pages/Doctors"
 import BookingPage from "./pages/Book"
 import Appointments from "./pages/Appointments"
 import BookingDetails from "./components/appointments/BookingDetails"
+import DoctorDetails from "./components/doctors/DoctorDetails"
 
 const AppRoutes = () => {
     const dispatch = useDispatch()
     const authState = useSelector(authSelector)
   
     useEffect(() => {
-      dispatch(getAuth())  
+      if(!authState.username)
+        dispatch(getAuth())  
   
-    }, [getAuth])
+    }, [getAuth, authState])
 
 
  
@@ -38,6 +40,8 @@ const AppRoutes = () => {
                 <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/doctors" element={<Doctors />} />
+                <Route path="/doctors/:id" element={<DoctorDetails />} />
+
                 <Route path="/book/:id" element={<BookingPage />} />
                 <Route path="/appointments" element={<Appointments />} />
                 <Route path="/appointments/:id" element={<Appointments />} />

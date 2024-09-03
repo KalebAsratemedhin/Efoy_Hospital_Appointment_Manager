@@ -38,6 +38,9 @@ const doctorSchema = mongoose.Schema(
         profilePic: {
             type: String
         },
+        rating: {
+            type: Number
+        },
         speciality: {
             type: String,
             required: true

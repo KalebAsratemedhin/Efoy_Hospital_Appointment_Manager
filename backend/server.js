@@ -8,6 +8,9 @@ const bookingRoutes = require('./routes/bookingRoutes.js')
 const authRoutes = require('./routes/authRoutes.js')
 const doctorRoutes = require('./routes/doctorRoutes.js')
 const patientRoutes = require('./routes/patientRoutes.js')
+const commentRoutes = require('./routes/commentRoutes.js')
+const ratingRoutes = require('./routes/ratingRoutes.js')
+
 const cors = require('cors');    
 require('./strategies/jwt_strategy');
 
@@ -32,6 +35,9 @@ app.use(cookieParser());
 app.use(passport.initialize());
 
 app.use('/bookings', bookingRoutes);
+app.use('/comments', commentRoutes);
+app.use('/ratings', ratingRoutes);
+
 app.use('/doctor', doctorRoutes);
 app.use('/patient', patientRoutes);
 app.use('/auth', authRoutes);
