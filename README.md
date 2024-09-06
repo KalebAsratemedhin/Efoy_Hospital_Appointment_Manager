@@ -28,6 +28,4 @@ It is an application for hospitals.
 ![alt text](<screenshots/Screenshot from 2024-09-06 17-06-25.png>)
 ![alt text](<screenshots/Screenshot from 2024-09-06 17-06-38.png>)
 ![alt text](<screenshots/Screenshot from 2024-09-06 17-06-45.png>)
-![alt text](<screenshots/Screenshot from 2024-09-06 17-06-57.png>)
-![alt text](<screenshots/Screenshot from 2024-09-06 17-06-57.png>)
 ![alt text](<screenshots/Screenshot from 2024-09-06 17-07-04.png>)
