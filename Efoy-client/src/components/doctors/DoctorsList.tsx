@@ -15,7 +15,7 @@ const DoctorsList = () => {
 
     if(isSuccess)
     return (
-        <div>
+        <div className="flex flex-wrap gap-3">
             {data.map(doctor => {
                 return <DoctorProfile key={doctor.username} doctor={doctor} />
             })}

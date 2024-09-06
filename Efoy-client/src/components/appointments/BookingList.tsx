@@ -28,6 +28,8 @@ const BookingList = () => {
             return <BookingCardDoctor key={booking._id} booking={booking} refetch={refetch} />
           })
         }
+
+        {!data.length && <h1 className="text-xl text-gray-500">No appointments yet.</h1> }
           
       </div>
     )

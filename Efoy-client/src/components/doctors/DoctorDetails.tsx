@@ -72,7 +72,7 @@ const DoctorDetails = () => {
 
       <div className='m-6'>
         <div className='flex gap-4 rounded-md'>
-          <div className='w-1/2 bg-white p-4  h-72 overflow-y-auto'>
+          <div className='w-1/2 bg-white p-4 h-[500px] overflow-y-auto'>
             <CommentList doctorId={id as string} /> 
           </div>
           <div className='w-1/2 bg-white p-4  h-full'>

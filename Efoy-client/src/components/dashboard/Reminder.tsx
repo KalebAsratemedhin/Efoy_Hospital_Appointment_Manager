@@ -16,6 +16,7 @@ const Reminder = () => {
         <h2 className="text-xl font-bold">Your next appointment</h2>
       </div>
       {eventDate && <CountDown eventDate={eventDate} />}
+      {!eventDate && <h1 className='text-gray-500'>No upcoming appointment!</h1> }
     </div>
   );
 };

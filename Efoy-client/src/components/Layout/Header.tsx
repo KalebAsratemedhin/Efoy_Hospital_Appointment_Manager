@@ -7,8 +7,6 @@ import { IoNotifications } from "react-icons/io5";
 import { IoSettingsOutline } from "react-icons/io5";
 import { CustomSerializedError } from "../../types/CustomSerializedError";
 
-
-
 const Header = () => {
   const {pathname} = useLocation()
   const navigate = useNavigate()
@@ -37,13 +35,13 @@ const Header = () => {
   return (
     <div className="bg-white shadow-sm w-full flex justify-between items-center min-h-16 px-4 py-2">
         <div>
-          {pathname === '/' && <h1 className="font-medium text-3xl ">Efoy <span className="text-gray-400 block text-base my-auto">Your Hospital Appointment Manager</span></h1>
+          {pathname === '/' && <h1 className="font-medium text-3xl ">Efoy </h1>
           }
 
           {title}
         </div>
 
-        <div className=" rounded-full flex justify-between items-center px-3 py-2 bg-gray-100">
+        <div className=" rounded-full sm:flex justify-between items-center px-3 py-2 bg-gray-100 hidden">
           <input type="search" className="bg-gray-100 focus:outline-none  mr-2 rounded-md px-2 appearance-none "  />
           <TfiSearch className="text-xl mr-2 hover:cursor-pointer" onClick={handleSearch} />
         </div>

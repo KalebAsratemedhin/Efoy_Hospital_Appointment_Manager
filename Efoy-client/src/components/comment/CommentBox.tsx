@@ -1,7 +1,8 @@
 import { useForm } from "react-hook-form"
-import { useCreateCommentMutation } from "../../redux/api/commentAPI";
+import { useCreateCommentMutation, useFindAllCommentsQuery } from "../../redux/api/commentAPI";
 import Spinner from "../utils/Spinner";
 import Error from "../utils/Error";
+import { useEffect } from "react";
 
 interface FormData{
     content: string;
@@ -10,6 +11,7 @@ interface FormData{
 const CommentBox = ({doctorId}: {doctorId: string}) => { 
     const {formState:{errors}, register, handleSubmit } = useForm<FormData>()
     const [commentDoc, {isLoading, isSuccess, isError, error, data}] = useCreateCommentMutation()
+    const {refetch} = useFindAllCommentsQuery(doctorId)
 
 
     const onSubmit = async (data: FormData) => {
@@ -24,8 +26,15 @@ const CommentBox = ({doctorId}: {doctorId: string}) => {
 
     }
 
+    useEffect(() => {
+        if(isSuccess)
+            refetch()
+    }, [isSuccess, refetch])
+
     if (isLoading ) return <Spinner />;
     if (isError ) return <Error error={error} />;
+
+    
 
     // if (isSuccess)
         
