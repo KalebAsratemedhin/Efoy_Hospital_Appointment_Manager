@@ -1,8 +1,14 @@
 # Efoy Hospital Appointment Manager
-It is an application for hospitals.
+It is an appointment booking application for hospitals.
+
+## Home Page
+![alt text](<screenshots/Screenshot from 2024-09-06 17-06-25.png>)
+![alt text](<screenshots/Screenshot from 2024-09-06 17-06-38.png>)
+![alt text](<screenshots/Screenshot from 2024-09-06 17-06-45.png>)
+![alt text](<screenshots/Screenshot from 2024-09-06 17-07-04.png>)
 
 ## Project Description
-- The application will be made Using MERN stack
+- The application is made Using MERN stack
 
 ## Software Architecture
 - Client Server architecture will be used in this project.
@@ -24,8 +30,3 @@ It is an application for hospitals.
 - After having serviced an appointment with a doctor, the patient should be able to write reviews and rate the doctor based on their experience.
 
 
-## Home Page
-![alt text](<screenshots/Screenshot from 2024-09-06 17-06-25.png>)
-![alt text](<screenshots/Screenshot from 2024-09-06 17-06-38.png>)
-![alt text](<screenshots/Screenshot from 2024-09-06 17-06-45.png>)
-![alt text](<screenshots/Screenshot from 2024-09-06 17-07-04.png>)
