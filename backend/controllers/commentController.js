@@ -5,6 +5,11 @@ const createComment = async(req, res) => {
     try {
         const body = req.body
         const user = req.user
+
+
+        if(user.data._id.toString() === body.doctorId){
+            return res.status(400).json({message: "You cannot comment on yourself."})
+        }
         const result = await Comment.create({
             ...body,
             commenterId: user.data._id

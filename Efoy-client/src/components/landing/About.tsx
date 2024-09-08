@@ -19,7 +19,10 @@ const About = () => {
           <p className="text-gray-600">
             Efoy is a leading hospital appointment management platform designed to make healthcare more accessible and convenient. We connect patients with the best doctors across various specialties, ensuring seamless booking, management, and tracking of appointments.
           </p>
-          <p className="text-gray-600 mt-5">
+
+          <h2 className="text-secondary text-xl mt-5">Our Mission</h2>
+
+          <p className="text-gray-600 ">
             Our mission is to simplify the process of managing healthcare appointments, allowing patients to focus on their health while we handle the logistics. With Efoy, you can trust that your healthcare needs are in good hands.
           </p>
         </div>

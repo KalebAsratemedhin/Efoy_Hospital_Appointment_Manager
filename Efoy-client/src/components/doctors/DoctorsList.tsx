@@ -1,8 +1,8 @@
 import { useFindAllDoctorsQuery } from "../../redux/api/userAPI"
 import Spinner from "../utils/Spinner";
 import Error from "../utils/Error";
-import { CustomSerializedError } from "../../types/CustomSerializedError";
-import DoctorProfile from "./DoctorProfile";
+
+import DoctorCard from "./DoctorCard";
 
 const DoctorsList = () => {
     const {isLoading, isSuccess, isError, error, data} = useFindAllDoctorsQuery()
@@ -15,9 +15,9 @@ const DoctorsList = () => {
 
     if(isSuccess)
     return (
-        <div className="flex flex-wrap gap-3">
+        <div className="flex flex-wrap gap-5 p-12">
             {data.map(doctor => {
-                return <DoctorProfile key={doctor.username} doctor={doctor} />
+                return <DoctorCard key={doctor.username} doctor={doctor} />
             })}
         </div>
     )

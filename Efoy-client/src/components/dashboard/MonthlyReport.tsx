@@ -19,7 +19,7 @@ const MonthlyReport = () => {
     if (isSuccess && data)
 
     return (
-      <div className="bg-white w-96 p-6 rounded-md shadow-md">
+      <div className="bg-white w-full h-72 sm:h-auto md:w-6/12 p-6 rounded-md shadow-md">
           <BarChart label={'Appointments'} chartData={data} chartTitle="Visit History" />
       </div>
     )
@@ -33,9 +33,13 @@ const MonthlyReport = () => {
     if (isSuccess && data)
 
     return (
-      <div className="bg-white w-96 p-6 rounded-md shadow-md">
-          <BarChart label={'Patients'} chartData={data} chartTitle="Visit History" />
+      <div className="bg-white w-full h-72 sm:h-auto md:w-6/12 p-6 rounded-md shadow-md ">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-2">Monthly Patients Report</h2>
+          <div className=" ">
+            <BarChart label={'Patients'} chartData={data} chartTitle="Visit History" />
+          </div>
       </div>
+     
     )
   }
 }

@@ -13,7 +13,7 @@ const CommentList = ({doctorId}: {doctorId: string}) => {
 
   if (isSuccess)
     return (
-      <div className="flex gap-2 flex-wrap  flex-col justify-center items-center">
+      <div className="flex gap-2 flex-wrap   flex-col justify-center items-center">
         
         { 
           data.map((comment) => {

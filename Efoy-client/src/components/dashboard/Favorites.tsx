@@ -1,6 +1,6 @@
-import React from 'react'
+import { Doctor } from '../../types/Doctor'
 
-const Favorites = () => {
+const Favorites = ({doctor}: {doctor: Doctor}) => {
   return (
     <div className='bg-white max-w-96 rounded-md shadow-sm flex gap-2 p-3'>
       <div className='bg-gray-400 rounded-full w-20 h-20'>
@@ -8,12 +8,10 @@ const Favorites = () => {
       </div>
       <div>
 
-        <h1>Dr. Kebede</h1>
-        <p>Pediatrician .. Tikur Anbessa graduate</p>
-        <p>4+ years of experience</p>
-        
+        <h1>{doctor.fullName}</h1>
+        <p >{doctor.speciality}</p>
+        <p>{doctor.experience}</p>
 
-        <p>* * * *</p>
 
       </div>
       

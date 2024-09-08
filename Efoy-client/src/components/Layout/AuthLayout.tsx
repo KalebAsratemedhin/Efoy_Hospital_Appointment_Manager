@@ -5,14 +5,16 @@ import Sidebar from "./Sidebar"
 import { useGetCurrentUserQuery } from "../../redux/api/authAPI"
 import Spinner from "../utils/Spinner"
 import Error from "../utils/Error"
-import { useDispatch, useSelector } from "react-redux"
-import { authSelector, clearAuth, getAuth } from "../../redux/slices/authSlice"
+import { useDispatch } from "react-redux"
+import {  clearAuth } from "../../redux/slices/authSlice"
 import { CustomSerializedError } from "../../types/CustomSerializedError"
+import { useState } from "react"
 
 const Layout = () => {
   const {pathname} = useLocation()
   const {isLoading: isUserLoading, isSuccess: isUserSuccess, isError: isUserError, error: userError, data: user, refetch} = useGetCurrentUserQuery()
   const dispatch = useDispatch()
+  const [isOpen, setIsOpen] = useState(false)
 
 
   if(isUserLoading)
@@ -27,6 +29,11 @@ const Layout = () => {
     return <Error error={error} />
 
   }
+
+  const handleSidebarToggle = () => {
+    setIsOpen(!isOpen)
+
+  }
     
   
 
@@ -35,11 +42,14 @@ const Layout = () => {
 
 
         {pathname !== "/" && 
-          <Sidebar />
+          <div className="relative">
+            <Sidebar isOpen={isOpen} onSidebarToggle={handleSidebarToggle}  />
+
+          </div>       
         }
     
-        <div className="flex flex-col w-full overflow-y-auto bg-custom-background">
-          <Header />
+        <div className="flex flex-col w-full overflow-y-auto bg-gray-100">
+          <Header onSidebarToggle={handleSidebarToggle} />
           <div className="flex-grow  ">
             <Outlet />
           </div>

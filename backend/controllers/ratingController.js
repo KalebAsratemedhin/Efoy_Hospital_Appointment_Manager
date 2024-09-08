@@ -6,6 +6,10 @@ const createRating = async(req, res) => {
         const {doctorId, value } = req.body
         const rater = req.user
 
+        if(rater.data._id.toString() === doctorId){
+            return res.status(400).json({message: "You cannot rate yourself."})
+        }
+
         const [duplicate] = await Rating.find({doctorId, raterId: rater.data._id})
 
         if(duplicate)
@@ -93,12 +97,21 @@ const getRating = async(req, res) => {
     
 }
 
+const getFavorites = async(req, res) => {
+    const user = req.user
+    const favorites = await Rating.find({raterId: user.data._id}).populate('doctorId')
+    console.log("favorites", favorites)
+    
+    return res.status(200).json(favorites)
+    
+}
+
 
 
 module.exports = {
     createRating,
     deleteRating,
     updateRating,
-    getRating
- 
+    getRating,
+    getFavorites 
 }

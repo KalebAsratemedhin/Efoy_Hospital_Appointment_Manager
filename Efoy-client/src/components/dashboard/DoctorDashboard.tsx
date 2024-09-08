@@ -1,40 +1,39 @@
-import { Link } from "react-router-dom"
-import Favorites from "./Favorites"
-import Reminder from "./Reminder"
-import Interactions from "./Interactions"
-import MonthlyReport from "./MonthlyReport"
+import Reminder from "./Reminder";
+import MonthlyReport from "./MonthlyReport";
+import { useGetCurrentUserQuery } from "../../redux/api/authAPI";
+import DoctorProfile from "../doctors/DoctorProfile";
+import { Doctor } from "../../types/Doctor";
+import Spinner from "../utils/Spinner";
+import Error from "../utils/Error";
 
 const DoctorDashboard = () => {
+  const { isLoading: isUserLoading, isSuccess: isUserSuccess, isError: isUserError, error: userError, data: user, refetch } = useGetCurrentUserQuery();
+
+  if (isUserLoading) return <Spinner />;
+  if (isUserError) return <Error error={userError} />;
+
   return (
-    <div className="w-full ">
-        <div className="flex flex-col p-4 w-full">
-            {/* <div className="p-4 w-full flex-grow"> */}
-              <div className="flex justify-between items-center mb-4">
-                <h1 className="text-xl">Monthly Patients Report</h1>
-                {/* <Link className="text-primary" to='/appointments'>More</Link> */}
-              </div>
-              <div className="flex flex-wrap justify-between w-full">
-                <MonthlyReport />
-                <Reminder />
+    <div className="min-h-screen bg-gray-100 p-6">
+      <div className="max-w-6xl mx-auto mb-8">
+        <h1 className="text-3xl font-bold text-gray-800 mb-4">Doctor Dashboard</h1>
+        <p className="text-gray-600">Welcome back, Dr. {user?.fullName}</p>
+      </div>
 
-              </div>
-
-
-            {/* </div> */}
+        <div className="flex flex-wrap gap-4 justify-between max-w-6xl mx-auto rounded-lg mb-8">
+            <MonthlyReport />
+            <Reminder />
         </div>
-        <div className="p-4">
-              <div className="flex justify-between items-center mb-4">
-                <h1 className="text-xl">My Network</h1>
-                <Link className="text-primary" to='/appointments'>More</Link>
-              </div>
-              <div className="">
-                <Interactions />
 
-              </div>
-            
+      <div className="max-w-6xl mx-auto  mb-8">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-semibold text-gray-800">Public Profile</h2>
         </div>
+        <DoctorProfile doctor={user as Doctor} />
+        
+      </div>
+=
     </div>
-  )
-}
+  );
+};
 
-export default DoctorDashboard
+export default DoctorDashboard;

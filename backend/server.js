@@ -36,8 +36,8 @@ app.use(passport.initialize());
 
 app.use('/bookings', bookingRoutes);
 app.use('/comments', commentRoutes);
-app.use('/ratings', ratingRoutes);
-
+app.use('/ratings', ratingRoutes);  
+ 
 app.use('/doctor', doctorRoutes);
 app.use('/patient', patientRoutes);
 app.use('/auth', authRoutes);

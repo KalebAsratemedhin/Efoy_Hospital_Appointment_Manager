@@ -1,11 +1,12 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Rating } from "../../types/Rating";
+import { PopulatedRating } from "../../types/PopulatedRating";
 
 
 export const ratingAPI = createApi({
     reducerPath: 'ratingAPI',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:3000/Ratings',
+        baseUrl: 'http://localhost:3000/ratings',
         credentials: "include"
     }),
     endpoints: (builder) => ({
@@ -38,6 +39,12 @@ export const ratingAPI = createApi({
                 url: `/${id}`,
                 method: 'Get'
             })
+        }),
+        findCurrentUserFavorites: builder.query<PopulatedRating[], void>({
+            query: () => ({
+                url: `/favorites`,
+                method: 'Get'
+            })
         })
 
     })
@@ -47,6 +54,7 @@ export const {
     useCreateRatingMutation, 
     useUpdateRatingMutation,
     useDeleteRatingMutation,
-    useFindCurrentUserRatingQuery
+    useFindCurrentUserRatingQuery,
+    useFindCurrentUserFavoritesQuery
 
 } = ratingAPI

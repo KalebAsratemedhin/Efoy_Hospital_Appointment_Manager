@@ -16,6 +16,8 @@ import BookingPage from "./pages/Book"
 import Appointments from "./pages/Appointments"
 import BookingDetails from "./components/appointments/BookingDetails"
 import DoctorDetails from "./components/doctors/DoctorDetails"
+import ContactPage from "./pages/Contact"
+import AboutPage from "./pages/About"
 
 const AppRoutes = () => {
     const dispatch = useDispatch()
@@ -56,6 +58,9 @@ const AppRoutes = () => {
 
             <Route element={<NormalLayout />}>
                 <Route path="/" element={<Home />} />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/contact" element={<ContactPage />} />
+
 
 
             </Route>
