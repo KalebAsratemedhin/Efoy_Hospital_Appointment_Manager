@@ -6,7 +6,7 @@ import { SigninCredential } from "../../types/SigninCredential";
 export const authAPI = createApi({
     reducerPath: 'authApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:3000/auth',
+        baseUrl: 'http://localhost:5000/auth',
         credentials: "include"
     }),
     endpoints: (builder) => ({

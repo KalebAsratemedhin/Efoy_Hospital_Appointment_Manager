@@ -4,7 +4,7 @@ const Doctor = require('../models/doctorModel')
 const Patient = require('../models/patientModel')
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const secret = process.env.jwt_secret;
+const secret = process.env.JWT_SECRET;
 
 
 const getUser = async(req, res) => {
@@ -169,6 +169,17 @@ const login = async (req, res) => {
 
 }
 
+const googleAuthSuccess = async (req, res) => {
+    console.log("google auth success", req.user)
+
+    const token = jwt.sign({ id: req.user._id, role: 'patient'}, process.env.JWT_SECRET, { expiresIn: '2h' });
+ 
+    res.cookie('token', token, { httpOnly: true, maxAge: 3600000});
+    const redirectUrl = `http://localhost:3000/google-auth?username=${req.user.username}&role=patient`;
+
+    res.redirect(redirectUrl)
+ }
+
 
 
 const logout = async (req, res) => {
@@ -185,5 +196,6 @@ module.exports = {
     getUser,
     signup,
     login,
+    googleAuthSuccess,
     logout
-}
+} 

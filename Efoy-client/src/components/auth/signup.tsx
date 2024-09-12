@@ -10,6 +10,7 @@ import { SignupCredential } from "../../types/SignupCredential";
 import { useDispatch } from "react-redux";
 import { setAuth } from "../../redux/slices/authSlice";
 import { User } from "../../types/User";
+import { FcGoogle } from "react-icons/fc";
 
 
 interface FormData{
@@ -68,14 +69,17 @@ const Signup = () => {
         return <Spinner />
     
     if (isError)
-        return <Error message="Could not signup." />
+        return <Error error={error} />
         
 
     return (
       <div className="border shadow-lg bg-white  h-full p-4 flex flex-col justify-center items-center rounded-md ">
          <h1 className="text-3xl text-blue-950 font-semibold mb-2">Welcome to Efoy! </h1>
          <p className="text-3xl text-purple-500 font-semibold ">Signup </p>
-         
+
+        <div className="px-10 py-5 w-full">
+            <Link to={'http://localhost:5000/auth/google'} className="border p-4 w-full flex justify-center items-center gap-2 rounded-md text-gray-600 hover:shadow-sm"> <FcGoogle className="w-8 h-8" /> Sign up with Google</Link>        
+        </div>         
          
           <form noValidate onSubmit={handleSubmit(onSubmit)} className="mt-2  p-10">
             <div className="flex justify-between items-center">

@@ -8,31 +8,29 @@ const patientSchema = mongoose.Schema(
         },
         username: {
             type: String,
-            required: true,
+            required: true,            
+            unique: true,
+
         },
         email: {
             type: String,
-            required: true
+            required: true,
+            unique: true,
         },
         password: {
             type: String,
-            requried: true
         },
         phoneNumber: {
             type: String,
-            required: true
         },
         gender: {
             type: String,
-            required: true,
         },
         address: {
             type: String,
-            required: true,
         },
         age: {
             type: Number,
-            required: true,
         },
 
         profilePic: {

@@ -6,7 +6,7 @@ import { BookingResponse } from "../../types/BookingResponse";
 export const bookingAPI = createApi({
     reducerPath: 'bookingAPI',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:3000/bookings',
+        baseUrl: 'http://localhost:5000/bookings',
         credentials: "include"
     }),
     endpoints: (builder) => ({

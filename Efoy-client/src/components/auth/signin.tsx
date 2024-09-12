@@ -6,6 +6,8 @@ import Error from "../utils/Error";
 import { useEffect } from "react";
 import { authSelector, setAuth } from "../../redux/slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { FcGoogle } from "react-icons/fc";
+
 
 interface FormData{
     username: string;
@@ -51,6 +53,9 @@ const Signin = () => {
   return (
     <div className="border shadow-lg bg-white  h-full p-4 flex flex-col justify-center items-center rounded-md">
         <h1 className="text-3xl text-blue-950 font-semibold ">Welcome back!</h1>
+        <div className="px-10 mt-4 py-3 w-full">
+            <Link to={'http://localhost:5000/auth/google'} className="border p-2 w-full flex justify-center items-center gap-2 rounded-md text-gray-600 hover:shadow-sm"> <FcGoogle className="w-8 h-8" /> Sign in with Google</Link>        
+        </div>    
         <form noValidate onSubmit={handleSubmit(onSubmit)} className="mt-2  p-10">
         <div className="flex justify-center gap-8 mb-4 ">
                 <div className="flex gap-2">

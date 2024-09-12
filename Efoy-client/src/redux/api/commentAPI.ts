@@ -5,7 +5,7 @@ import { CommentI } from "../../types/Comment";
 export const commentAPI = createApi({
     reducerPath: 'commentAPI',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:3000/comments',
+        baseUrl: 'http://localhost:5000/comments',
         credentials: "include"
     }),
     endpoints: (builder) => ({
