@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-const secret = process.env.jwt_secret 
+const secret = process.env.JWT_SECRET
 const passport = require('passport');
 const passportJWT = require('passport-jwt');
 const JWTStrategy = passportJWT.Strategy;
