@@ -17,11 +17,11 @@ const GoogleAuth = () => {
             navigate('/dashboard')
         }
 
-        // if()
 
     }, [])
   return (
-    <div>
+    <div className="flex justify-center items-center">
+        <h1 className="text-red text-3xl font-medium">Error signing you in with google</h1>
 
     </div>
   )
