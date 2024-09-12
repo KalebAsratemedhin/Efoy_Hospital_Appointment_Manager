@@ -6,7 +6,7 @@ import { PopulatedRating } from "../../types/PopulatedRating";
 export const ratingAPI = createApi({
     reducerPath: 'ratingAPI',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:3000/ratings',
+        baseUrl: 'http://localhost:5000/ratings',
         credentials: "include"
     }),
     endpoints: (builder) => ({

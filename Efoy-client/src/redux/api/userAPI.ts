@@ -5,7 +5,7 @@ import { Doctor } from "../../types/Doctor";
 export const userAPI = createApi({
     reducerPath: 'userAPI',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:3000',
+        baseUrl: 'http://localhost:5000',
         credentials: "include"
     }),
     endpoints: (builder) => ({
