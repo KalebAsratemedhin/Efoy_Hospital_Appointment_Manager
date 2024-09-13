@@ -61,7 +61,7 @@ const DoctorRegistrationInfo = ({register, errors}: {register: UseFormRegister<F
             
             <p className="text-red-500 text-base mt-1">{errors.educationLevel?.message}</p>
         </div>
-        <button type='submit' className="w-full  bg-purple-700 text-lg font-semibold hover:shadow-md text-white py-2 rounded-full">Signup</button> 
+        <button type='submit' className="w-full  bg-purple-700 text-lg font-semibold hover:shadow-md text-white py-2 rounded-full">Submit</button> 
     
     </div>
   )

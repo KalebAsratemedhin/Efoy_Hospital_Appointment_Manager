@@ -38,7 +38,7 @@ const getUser = async(req, res) => {
 const signup = async (req, res) => {
     console.log("Hello signup")
     try {
-        const {role, fullName, password, email, phoneNumber, username, address, age, gender} = req.body;
+        const {role, fullName, password, email, phoneNumber} = req.body;
     console.log(req.body)
 
         if (role == "patient"){
@@ -53,14 +53,9 @@ const signup = async (req, res) => {
                 fullName: fullName,
                 phoneNumber: phoneNumber,
                 email: email,
-                password: hashedPassword,
-                username: username,
-                address: address,
-                gender: gender,
-                age: age,
-                
+                password: hashedPassword
             });
-            console.log(`patient ${patient}`)
+
             const payload = { id: patient._id , role: role};
             const token = jwt.sign(payload, secret, { expiresIn: '1h' });
             res.cookie('token', token, {
@@ -83,11 +78,8 @@ const signup = async (req, res) => {
                 educationLevel: educationLevel,
                 phoneNumber: phoneNumber,
                 email: email,
-                password: hashedPassword,
-                username: username,
-                address: address,
-                gender: gender,
-                age: age,
+                password: hashedPassword
+               
             });
             console.log(`doctor ${doctor}`)
             const payload = { id: doctor._id , role: role};
@@ -112,10 +104,11 @@ const signup = async (req, res) => {
 }
 const login = async (req, res) => {
     try {
-        const {role, username, password} = req.body;
+        const {role, email, password} = req.body;
         if (role == "patient"){
-            const [patient] = await Patient.find({username});
+            const [patient] = await Patient.findOne({email});
             console.log(patient, "patient login")
+
             if(!patient){
                 return res.status(404).json({message: "No such account"});
 
@@ -128,7 +121,7 @@ const login = async (req, res) => {
                     httpOnly: true, 
                     maxAge: 3600000, 
                     })
-                    res.status(201).json({username: username, role: "patient"});
+                    res.status(201).json({id: patient._id, role: "patient"});
                 } else {
                   return res.status(400).json({ error: 'Incorrect password' });
                 }
@@ -149,7 +142,7 @@ const login = async (req, res) => {
                     httpOnly: true, 
                     maxAge: 3600000, 
                 })
-                res.status(201).json({username, role: "doctor"});
+                res.status(201).json({id: patient._id, role: "doctor"});
                 } else {
                   return res.status(400).json({ error: 'Incorrect password' });
                 }
@@ -171,11 +164,12 @@ const login = async (req, res) => {
 
 const googleAuthSuccess = async (req, res) => {
     console.log("google auth success", req.user)
+    const {role} = req.query
 
     const token = jwt.sign({ id: req.user._id, role: 'patient'}, process.env.JWT_SECRET, { expiresIn: '2h' });
  
     res.cookie('token', token, { httpOnly: true, maxAge: 3600000});
-    const redirectUrl = `http://localhost:3000/google-auth?username=${req.user.username}&role=patient`;
+    const redirectUrl = `http://localhost:3000/google-auth?id=${req.user._id}&role=${role}`;
 
     res.redirect(redirectUrl)
  }
@@ -192,10 +186,38 @@ const logout = async (req, res) => {
         .json({ success: true, message: 'User logged out successfully' })
 }
 
+
+const updateUserProfile = async (req, res) => {
+
+    console.log("ello", req.user)
+    try {
+        const {id, role} = req.user
+        const update = req.body
+
+        if (role === "doctor"){
+            const result = await Doctor.findByIdAndUpdate(id, update)
+
+        } else if(role === 'patient'){
+            const result = await Patient.findByIdAndUpdate(id, update)
+
+        } else{
+            throw Error("No such role")
+        }
+        
+        
+        res.status(200).json(result.toObject())
+        
+    } catch (error) {
+        console.log("error", error)
+    }
+
+}
+
 module.exports = {
     getUser,
     signup,
     login,
     googleAuthSuccess,
+    updateUserProfile,
     logout
 } 

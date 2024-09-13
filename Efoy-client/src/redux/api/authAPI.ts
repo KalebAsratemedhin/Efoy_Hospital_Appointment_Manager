@@ -38,7 +38,14 @@ export const authAPI = createApi({
                 url: '/current-user',
                 method: 'Get'
             })
-        })
+        }),
+        updateCurrentUser: builder.mutation<User, User >({
+            query: () => ({
+                url: '/user/profile',
+                method: 'Post'
+                
+            })
+        }),
     })
 })
 
@@ -47,4 +54,5 @@ export const {
     useSignupMutation,
     useSignoutMutation,
     useGetCurrentUserQuery,
+    useUpdateCurrentUserMutation
 } = authAPI

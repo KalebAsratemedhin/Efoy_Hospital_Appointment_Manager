@@ -18,11 +18,13 @@ export const userAPI = createApi({
         }),
 
         findAllDoctors: builder.query<Doctor[], void>({
-            query: () => ({
+            query: (user) => ({
                 url: '/doctor',
-                method: 'Get'
+                method: 'Get',
+                body: user
             })
         }),
+
 
     })
 })

@@ -13,7 +13,6 @@ import Settings from "./pages/Settings"
 import Doctors from "./pages/Doctors"
 import BookingPage from "./pages/Book"
 import Appointments from "./pages/Appointments"
-import BookingDetails from "./components/appointments/BookingDetails"
 import DoctorDetails from "./components/doctors/DoctorDetails"
 import ContactPage from "./pages/Contact"
 import AboutPage from "./pages/About"
@@ -25,7 +24,7 @@ const AppRoutes = () => {
     const authState = useSelector(authSelector)
   
     useEffect(() => {
-      if(!authState.username)
+      if(!authState.id)
         dispatch(getAuth())  
   
     }, [getAuth, authState])
@@ -37,10 +36,6 @@ const AppRoutes = () => {
       <>
       <Router>
           <Routes>
-            
-           {/* {authState.username && 
-            
-           } */}
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/signin" element={<SigninPage />} />
 

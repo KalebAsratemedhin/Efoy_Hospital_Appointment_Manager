@@ -25,5 +25,6 @@ router.get('/google/callback', (req, res, next) => {
     next();
   }, passport.authenticate('google', { session: false }), authController.googleAuthSuccess);
 
+router.post('/user/profile',  passport.authenticate('jwt', { session: false }), authController.updateUserProfile)
 
 module.exports = router

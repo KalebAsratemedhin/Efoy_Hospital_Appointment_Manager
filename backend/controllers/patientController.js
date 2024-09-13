@@ -29,6 +29,8 @@ const findOnePatient = async (req, res) => {
 
 }
 
+
+
 module.exports = {
     findAllPatients,
     findOnePatient,

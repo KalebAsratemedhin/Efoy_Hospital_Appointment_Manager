@@ -6,11 +6,6 @@ const doctorSchema = mongoose.Schema(
             type: String,
             required: true,
         },
-        username: {
-            type: String,
-            required: true,
-            unique: true,
-        },
         email: {
             type: String,
             required: true,
@@ -18,23 +13,18 @@ const doctorSchema = mongoose.Schema(
         },
         password: {
             type: String,
-            requried: true
         },
         phoneNumber: {
             type: String,
-            required: true
         },
-        gender: {
+        sex: {
             type: String,
-            required: true,
         },
         address: {
             type: String,
-            required: true,
         },
         age: {
             type: Number,
-            required: true,
         },
 
         profilePic: {

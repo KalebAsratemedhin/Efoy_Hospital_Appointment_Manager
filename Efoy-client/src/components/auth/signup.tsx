@@ -10,7 +10,6 @@ import { useDispatch } from "react-redux";
 import { setAuth } from "../../redux/slices/authSlice";
 import DoctorRegistrationInfo from "./DoctorRegistrationInfo";
 
-
 interface FormData{
     password: string;
     fullName: string;

@@ -2,36 +2,35 @@ import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 
 interface AuthState{
-    username: string | null;
-    token: string | null;
+    id: string | null;
     role: string | null;
-    
+
 }
 
-const initialState = {username: null, token: null} as AuthState
+const initialState = {id: null, role: null} as AuthState
 
 const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
         setAuth(state, action){
-            state.username = action.payload.username 
+            state.id = action.payload.id
             state.role = action.payload.role 
-            localStorage.setItem('username', state.username as string)
+            localStorage.setItem('id', state.id as string)
             localStorage.setItem('role', state.role as string)
 
         },
 
         getAuth(state){
-            state.username = localStorage.getItem('username')
+            state.id = localStorage.getItem('id')
             state.role = localStorage.getItem('role')
 
         },
 
         clearAuth(state){
-            state.username = null
+            state.id = null
             state.role = null
-            localStorage.removeItem('username')
+            localStorage.removeItem('id')
             localStorage.removeItem('role')
 
         }

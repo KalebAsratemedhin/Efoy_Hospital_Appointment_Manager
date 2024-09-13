@@ -6,12 +6,6 @@ const patientSchema = mongoose.Schema(
             type: String,
             required: true,
         },
-        username: {
-            type: String,
-            required: true,            
-            unique: true,
-
-        },
         email: {
             type: String,
             required: true,
@@ -23,7 +17,7 @@ const patientSchema = mongoose.Schema(
         phoneNumber: {
             type: String,
         },
-        gender: {
+        sex: {
             type: String,
         },
         address: {

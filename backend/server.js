@@ -18,29 +18,46 @@ const ratingRoutes = require('./routes/ratingRoutes.js')
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  passReqToCallback: true,
   callbackURL: 'http://localhost:5000/auth/google/callback'
 },
-async (accessToken, refreshToken, profile, done) => {
+async (req, accessToken, refreshToken, profile, done) => {
   
   try {
-    // Find the user in the database based on their Google ID
-    console.log("google auth middleware", profile)
+    const {role} = req.query;
+
+    console.log("google auth middleware", profile, role)
     const email = profile.emails[0].value
-    const username = email.split("@")[0]
 
+    if (role === "patient"){
+      const user = await Patient.findOne({ email: email });
 
-    let [user] = await Patient.find({ email: email });
+      if (!user) {
+        const user = await Patient.create({
+          fullName: profile.displayName,
+          email: email
+          
+        })
+      
+      }
+  
+    } else if(role === "doctor"){
 
-    if (!user) {
-      const user = await Patient.create({
-        fullName: profile.displayName,
-        email: email,
-        username: username, 
-        
-      })
-    
+      const user = await Doctor.findOne({ email: email });
+
+      if (!user) {
+        const user = await Doctor.create({
+          fullName: profile.displayName,
+          email: email
+          
+        })
+      
+      }
+
+    } else{
+      done(err, null)
     }
-
+    
     done(null, user);
   } catch (err) {
     done(err, null);
@@ -48,6 +65,7 @@ async (accessToken, refreshToken, profile, done) => {
 }));
 
 const cors = require('cors');      
+const Doctor = require("./models/doctorModel.js");
 require('./strategies/jwt_strategy');
 
 const corsOpts = {
