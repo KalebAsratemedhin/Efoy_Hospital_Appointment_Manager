@@ -1,5 +1,5 @@
-const Booking = require("../models/bookingModel")
-const Doctor = require("../models/doctorModel")
+const Booking = require("../models/booking")
+const Doctor = require("../models/doctor")
 
 
 const findAllDoctors = async (req, res) => {

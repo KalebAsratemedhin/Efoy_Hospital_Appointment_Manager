@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const bookingController = require("../controllers/bookingController");
+const bookingController = require("../controllers/booking");
 const passport = require('../strategies/jwt_strategy');
 
 router.get('/patient/:patientId', passport.authenticate('jwt', { session: false }), bookingController.patientSummary);

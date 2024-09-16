@@ -1,6 +1,6 @@
 const passport = require('../strategies/jwt_strategy.js'); 
 const authenticateToken = require('../middlewares/authenticateToken.js')
-const Doctor = require('../models/doctorModel')
+const Doctor = require('../models/doctor.js')
 const Patient = require('../models/patientModel')
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -163,14 +163,16 @@ const login = async (req, res) => {
 }
 
 const googleAuthSuccess = async (req, res) => {
-    console.log("google auth success", req.user)
-    const {role} = req.query
+    const state = JSON.parse(Buffer.from(req.query.state, 'base64').toString('utf8'));
+    const role = state.role
+    console.log("google auth success", req.user, role)
 
-    const token = jwt.sign({ id: req.user._id, role: 'patient'}, process.env.JWT_SECRET, { expiresIn: '2h' });
+
+    const token = jwt.sign({ id: req.user._id, role: role}, process.env.JWT_SECRET, { expiresIn: '2h' });
  
     res.cookie('token', token, { httpOnly: true, maxAge: 3600000});
     const redirectUrl = `http://localhost:3000/google-auth?id=${req.user._id}&role=${role}`;
-
+ 
     res.redirect(redirectUrl)
  }
 

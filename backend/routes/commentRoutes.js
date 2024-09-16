@@ -1,7 +1,7 @@
 const express = require("express");
 
 const router = express.Router()
-const commentController = require('../controllers/commentController')
+const commentController = require('../controllers/comment')
 const passport = require('../strategies/jwt_strategy');
 
 

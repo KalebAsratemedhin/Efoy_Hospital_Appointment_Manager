@@ -5,7 +5,7 @@ const passport = require('passport');
 const passportJWT = require('passport-jwt');
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
-const Doctor = require('../models/doctorModel')
+const Doctor = require('../models/doctor')
 const Patient = require('../models/patientModel')
 
 

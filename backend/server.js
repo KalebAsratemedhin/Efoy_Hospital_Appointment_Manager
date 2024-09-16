@@ -9,7 +9,7 @@ const Patient = require('./models/patientModel.js')
 const cookieParser = require('cookie-parser')
 const connectDatabase = require('./config/db.js');
 const bookingRoutes = require('./routes/bookingRoutes.js')
-const authRoutes = require('./routes/authRoutes.js')
+const authRoutes = require('./routes/auth.js')
 const doctorRoutes = require('./routes/doctorRoutes.js')
 const patientRoutes = require('./routes/patientRoutes.js')
 const commentRoutes = require('./routes/commentRoutes.js')
@@ -24,11 +24,11 @@ passport.use(new GoogleStrategy({
 async (req, accessToken, refreshToken, profile, done) => {
   
   try {
-    const {role} = req.query;
-
-    console.log("google auth middleware", profile, role)
+    const state = JSON.parse(Buffer.from(req.query.state, 'base64').toString('utf8'));
+    const role = state.role 
+    console.log("role", role)
     const email = profile.emails[0].value
-
+ 
     if (role === "patient"){
       const user = await Patient.findOne({ email: email });
 
@@ -65,7 +65,7 @@ async (req, accessToken, refreshToken, profile, done) => {
 }));
 
 const cors = require('cors');      
-const Doctor = require("./models/doctorModel.js");
+const Doctor = require("./models/doctor.js");
 require('./strategies/jwt_strategy');
 
 const corsOpts = {

@@ -1,4 +1,4 @@
-const Booking = require("../models/bookingModel");
+const Booking = require("../models/booking");
 const formatTime = require("../utils/formatTime")
 const generateTimeSlots = require("../utils/generateTimeSlots")
 

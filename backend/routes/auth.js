@@ -1,5 +1,5 @@
 const express = require('express');
-const authController = require('../controllers/authController.js')
+const authController = require('../controllers/auth.js')
 const authenticateToken = require('../middlewares/authenticateToken.js')
 const passport = require('passport');
 
@@ -15,11 +15,20 @@ router.post('/signin', authController.login)
 
 router.post('/signout', authController.logout)
 
-router.get('/google', (req, res, next) => {
+router.get('/google/:role', (req, res, next) => {
     console.log('Google Auth Request Initiated');
-    next();
-  }, passport.authenticate('google', { scope: ['profile', 'email'] }));
+    console.log("auth first",req.params )
 
+    next();
+  }, (req, res, next) => {
+    const state = req.query.state;  
+    console.log("auth state", req.query)
+    
+    passport.authenticate('google', {
+      scope: ['profile', 'email'],
+      state: state  
+    })(req, res, next);
+  });
 router.get('/google/callback', (req, res, next) => {
     console.log('Google Auth Callback Initiated');
     next();
