@@ -1,3 +1,5 @@
+import { Doctor } from "./Doctor";
+
 export interface User{
     _id: string;
     fullName: string;
@@ -6,8 +8,9 @@ export interface User{
     phoneNumber?: string;
     age?: number;
     address?: string;
-    sex: string;
+    sex?: string;
     role: string;
     profilePic: string;
+    doctorData?: Doctor;
 
 }

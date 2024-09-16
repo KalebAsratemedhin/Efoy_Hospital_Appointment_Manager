@@ -35,7 +35,7 @@ const Header = ({onSidebarToggle}: {onSidebarToggle: () => void}) => {
         
         <div>
           {
-            authState.username ?
+            authState.id ?
              <AuthHeaderInfo /> :
             <div className="flex gap-2">
               <Link className="text-purple-500 border border-purple-500 hover:bg-purple-500 hover:text-white px-3 py-1 rounded-md" to='/signin'>signin</Link>

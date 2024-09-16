@@ -2,36 +2,20 @@ const mongoose = require('mongoose');
 
 const doctorSchema = mongoose.Schema(
     {
-        fullName: {
-            type: String,
-            required: true,
-        },
-        email: {
-            type: String,
-            required: true,
-            unique: true,
-        },
-        password: {
-            type: String,
-        },
-        phoneNumber: {
-            type: String,
-        },
-        sex: {
-            type: String,
-        },
-        address: {
-            type: String,
-        },
-        age: {
-            type: Number,
-        },
-
-        profilePic: {
-            type: String
+        user_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true
         },
         rating: {
-            type: Number
+            type: Number,
+            min: 0,  
+            max: 5, 
+            default: 0  
+        },
+        orgID: {
+            type: String,
+            required: true,
         },
         speciality: {
             type: String,
@@ -45,9 +29,12 @@ const doctorSchema = mongoose.Schema(
             type: String,
             required: true
         }
+    },
+    {
+        timestamps: true  
     }
-)
+);
 
-const Doctor = mongoose.model('Doctor', doctorSchema)
+const Doctor = mongoose.model('Doctor', doctorSchema);
 
-module.exports = Doctor
+module.exports = Doctor;

@@ -19,7 +19,12 @@ const userSchema = mongoose.Schema(
         },
         password: {
             type: String,
-            required: function () { return !this.googleId },  
+            validate: {
+                validator: function(value) {
+                    return this.googleId || (value && value.length > 0);
+                },
+                message: 'Password is required for non-Google users.'
+            }
         },
         phoneNumber: {
             type: String,
@@ -39,14 +44,13 @@ const userSchema = mongoose.Schema(
             type: String,
         },
         googleId: {  
-            type: String,
-            unique: true,
+            type: String
         }
     },
     {
         timestamps: true,  
     }
-);
+); 
 
 const User = mongoose.model('User', userSchema);
 module.exports = User;

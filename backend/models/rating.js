@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
-const commentSchema = mongoose.Schema({
-    commenterId: {
+const ratingSchema = mongoose.Schema({
+    raterId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true
@@ -11,15 +11,16 @@ const commentSchema = mongoose.Schema({
         ref: "User",
         required: true
     },
-    content: {
-        type: String,
+    value: {
+        type: Number,
         required: true,
-        minlength: 1,  
+        min: 0,  
+        max: 5   
     }
 }, {
-    timestamps: true 
+    timestamps: true  
 });
 
-const Comment = mongoose.model('Comment', commentSchema);
+const Rating = mongoose.model('Rating', ratingSchema);
 
-module.exports = Comment;
+module.exports = Rating;

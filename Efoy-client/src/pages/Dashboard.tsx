@@ -8,7 +8,7 @@ import PatientDashboard from "../components/dashboard/PatientDashboard"
 const DashboardPage = () => {
   const authState = useSelector((state: RootState) => state.auth)
 
-  if(!authState.username)
+  if(!authState.id)
     return <NotFound />
 
   return (

@@ -1,5 +1,5 @@
 const Doctor = require('../models/doctor')
-const Rating = require('../models/ratingModel')
+const Rating = require('../models/rating')
 
 const createRating = async(req, res) => {
     try {

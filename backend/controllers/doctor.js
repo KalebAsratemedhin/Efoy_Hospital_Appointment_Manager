@@ -1,5 +1,6 @@
 const Booking = require("../models/booking")
-const Doctor = require("../models/doctor")
+const Doctor = require("../models/doctor");
+const User = require("../models/user");
 
 
 const findAllDoctors = async (req, res) => {
@@ -7,9 +8,16 @@ const findAllDoctors = async (req, res) => {
         const { query } = req.query;
 
         if(!query){
-            const doctors = await Doctor.find({});
+            const doctors = await User.find({role: 'doctor'})
+            const result = []
 
-            return res.status(200).json(doctors)
+            for (doctor of doctors){
+                const docData = await Doctor.findOne({user_id: doctor._id})
+                result.push({...doctor.toObject(), doctorData: docData})
+
+            }
+
+            return res.status(200).json(result)
 
         } else{
             const doctors = await Doctor.find({
@@ -35,9 +43,11 @@ const findAllDoctors = async (req, res) => {
 const findOneDoctor = async (req, res) => {
     try {
         const {id} = req.params
-        const doctor = await Doctor.findById(id);
+        const user = await User.findById(id);
 
-        return res.status(200).json(doctor)
+        const doctor = await Doctor.findOne({user_id: id})
+
+        return res.status(200).json({...user.toObject(), doctorData: doctor})
 
     } catch (error) {
         res.status(500).send({message: error.message})

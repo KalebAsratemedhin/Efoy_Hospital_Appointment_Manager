@@ -6,9 +6,7 @@ const passportJWT = require('passport-jwt');
 const JWTStrategy = passportJWT.Strategy;
 const ExtractJWT = passportJWT.ExtractJwt;
 const Doctor = require('../models/doctor')
-const Patient = require('../models/patientModel')
-
-
+const User = require('../models/user')
 
 
 const opts = {
@@ -20,31 +18,21 @@ const opts = {
 
 passport.use(new JWTStrategy(opts, async (jwt_payload, done) => {
   try {
-    if(jwt_payload.role == "patient"){
 
-      const patient = await Patient.findById(jwt_payload.id)
+    if(jwt_payload.role == "doctor"){
+      const doctor = await Doctor.findOne({user_id: jwt_payload.id}).populate('user_id')
+      return done(null, {role: jwt_payload.role, data: doctor});
 
-      if (patient) {
-        return done(null, {role: jwt_payload.role, data: patient});
-      } else {
-        return done(null, false);
-      }
-      
-    } else if(jwt_payload.role == "doctor"){
-      const doctor = await Doctor.findById(jwt_payload.id)
-      
-      if (doctor) {
-        return done(null, {role: jwt_payload.role, data: doctor});
-      } else {
-        return done(null, false);
-      }
-
-    } else{
-      console.log("passport found no role");
-      done(null, false);
     }
 
-   
+    const user = await User.findById(jwt_payload.id)
+
+    if (user) {
+      return done(null, {role: jwt_payload.role, data: user});
+    } else {
+      return done(null, false);
+    }
+      
   } catch (error) {
     return done(error, false);
   }

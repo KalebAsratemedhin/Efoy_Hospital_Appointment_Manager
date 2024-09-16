@@ -9,6 +9,7 @@ import Error from "../utils/Error";
 import { useDispatch } from "react-redux";
 import { setAuth } from "../../redux/slices/authSlice";
 import DoctorRegistrationInfo from "./DoctorRegistrationInfo";
+import { SignupCredential } from "../../types/SignupCredential";
 
 interface FormData{
     password: string;
@@ -35,14 +36,15 @@ const Signup = ({role}: {role: string}) => {
     const dispatch = useDispatch()
     const onSubmit =  async (data: FormData) => {
         if (isValid){
-            // const result = await signupUser(data as SignupCredential)
-            console.log('result signup', data)
+            const result = await signupUser(data as SignupCredential)
+            console.log('result signup', result)
         }
 
     
     } 
     const handleStep = () => {
         console.log("errors", errors)
+        console.log(role)
         if( isValid )
             setStep(step + 1)
 
@@ -50,7 +52,7 @@ const Signup = ({role}: {role: string}) => {
 
     useEffect(() => {
         if(isSuccess){
-            dispatch(setAuth(signupData ))
+            dispatch(setAuth({id: signupData._id, role: signupData.role} ))
             navigate('/dashboard')
 
         }
@@ -138,7 +140,7 @@ const Signup = ({role}: {role: string}) => {
                   <p className="text-red-500 text-base mt-1">{errors.phoneNumber?.message}</p>
               </div>
               {role === "patient" && 
-                <button onClick={handleStep} className="w-full bg-purple-700 text-lg font-semibold hover:shadow-md text-white py-2 rounded-full">Signup</button>
+                <button type="submit"  className="w-full bg-purple-700 text-lg font-semibold hover:shadow-md text-white py-2 rounded-full">Signup</button>
               }
               {role === "doctor" && 
                 <button onClick={handleStep} className="w-full bg-purple-700 text-lg font-semibold hover:shadow-md text-white py-2 rounded-full">Next</button>

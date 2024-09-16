@@ -10,13 +10,13 @@ import { FcGoogle } from "react-icons/fc";
 
 
 interface FormData{
-    username: string;
+    email: string;
     password: string;
     role: string;
 }
 
 const Signin = () => {
-    const {formState: {errors}, register, handleSubmit} = useForm<FormData>({
+    const {formState: {errors}, watch, register, handleSubmit} = useForm<FormData>({
         defaultValues: {
             role: 'patient',
         },
@@ -26,19 +26,21 @@ const Signin = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const authState = useSelector(authSelector)
+    const state = btoa(JSON.stringify({ role: watch('role') }))
     const onSubmit = async(data: FormData) => {
 
         const result = await signinUser(data)
         console.log('singin result', result)
 
     }
+
     useEffect(() => {
         if(isSuccess){
             dispatch(setAuth(data))
 
         }
-        if(authState.username){
-            console.log(authState.username, 'username')
+        if(authState.id){
+            console.log(authState.id, 'email')
             navigate('/dashboard')
         }
 
@@ -54,7 +56,7 @@ const Signin = () => {
     <div className="border shadow-lg bg-white  h-full p-4 flex flex-col justify-center items-center rounded-md">
         <h1 className="text-3xl text-blue-950 font-semibold ">Welcome back!</h1>
         <div className="px-10 mt-4 py-3 w-full">
-            <Link to={'http://localhost:5000/auth/google'} className="border p-2 w-full flex justify-center items-center gap-2 rounded-md text-gray-600 hover:shadow-sm"> <FcGoogle className="w-8 h-8" /> Sign in with Google</Link>        
+            <Link to={`http://localhost:5000/auth/google`} className="border p-2 w-full flex justify-center items-center gap-2 rounded-md text-gray-600 hover:shadow-sm"> <FcGoogle className="w-8 h-8" /> Sign in with Google</Link>        
         </div>    
         <form noValidate onSubmit={handleSubmit(onSubmit)} className="mt-2  p-10">
         <div className="flex justify-center gap-8 mb-4 ">
@@ -77,12 +79,12 @@ const Signin = () => {
 
             </div>
             <div className="my-3">
-                <label className="text-gray-500 text-base" htmlFor="username">Username</label>
-                    <input className="block border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-lg h-12 px-2 w-full border" id="username" type="text" {...register('username', {
-                        required: "Username is required"
+                <label className="text-gray-500 text-base" htmlFor="email">Email</label>
+                    <input className="block border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-lg h-12 px-2 w-full border" id="email" type="text" {...register('email', {
+                        required: "Email is required"
                     })} />
                 
-                <p className="text-red-500 text-base mt-1">{errors.username?.message}</p>
+                <p className="text-red-500 text-base mt-1">{errors.email?.message}</p>
             </div>
             <div className="my-3">
                 <label className="text-gray-500 text-base" htmlFor="password">Password</label>

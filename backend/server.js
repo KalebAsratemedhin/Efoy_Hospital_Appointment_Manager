@@ -4,68 +4,41 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
-const Patient = require('./models/patientModel.js')
+const User = require('./models/user.js')
 
 const cookieParser = require('cookie-parser')
 const connectDatabase = require('./config/db.js');
-const bookingRoutes = require('./routes/bookingRoutes.js')
-const authRoutes = require('./routes/auth.js')
-const doctorRoutes = require('./routes/doctorRoutes.js')
-const patientRoutes = require('./routes/patientRoutes.js')
-const commentRoutes = require('./routes/commentRoutes.js')
-const ratingRoutes = require('./routes/ratingRoutes.js')
 
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  passReqToCallback: true,
   callbackURL: 'http://localhost:5000/auth/google/callback'
 },
 async (req, accessToken, refreshToken, profile, done) => {
   
   try {
-    const state = JSON.parse(Buffer.from(req.query.state, 'base64').toString('utf8'));
-    const role = state.role 
-    console.log("role", role)
-    const email = profile.emails[0].value
- 
-    if (role === "patient"){
-      const user = await Patient.findOne({ email: email });
+    let user = await User.findOne({ googleId: profile.id });
 
-      if (!user) {
-        const user = await Patient.create({
-          fullName: profile.displayName,
-          email: email
-          
-        })
-      
-      }
-  
-    } else if(role === "doctor"){
+    if (!user) {
+        user = await User.create({
+            googleId: profile.id,
+            fullName: profile.displayName,
+            email: profile.emails[0].value,
+            profilePic: profile.photos[0].value,
+        });
 
-      const user = await Doctor.findOne({ email: email });
+        console.log("user", user)
 
-      if (!user) {
-        const user = await Doctor.create({
-          fullName: profile.displayName,
-          email: email
-          
-        })
-      
-      }
-
-    } else{
-      done(err, null)
     }
-    
-    done(null, user);
+
+    return done(null, user);
+   
   } catch (err) {
     done(err, null);
   }
 }));
 
 const cors = require('cors');      
-const Doctor = require("./models/doctor.js");
 require('./strategies/jwt_strategy');
 
 const corsOpts = {
@@ -88,13 +61,13 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(passport.initialize());
 
-app.use('/bookings', bookingRoutes);
-app.use('/comments', commentRoutes);
-app.use('/ratings', ratingRoutes);    
+app.use('/bookings', require('./routes/booking.js'));
+app.use('/comments', require('./routes/comment.js'));
+app.use('/ratings', require('./routes/rating.js'));    
  
-app.use('/doctor', doctorRoutes);
-app.use('/patient', patientRoutes);
-app.use('/auth', authRoutes);
+app.use('/doctor', require('./routes/doctor.js'));
+app.use('/user', require('./routes/user.js'));
+app.use('/auth', require('./routes/auth.js'));
 
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -23,14 +23,14 @@ const DoctorCard = ({ doctor }: { doctor: Doctor }) => {
       <div className="flex flex-col px-4 w-64 pb-4 ">
         <p className="text-xl mb-2">{doctor.fullName}</p>
         <div className="flex items-center gap-2 text-gray-500 mb-2 flex-wrap">
-          <p>{doctor.speciality}</p>
+          <p>{doctor.doctorData?.speciality}</p>
           <p className="bg-gray-700 w-1 h-1 rounded-full"></p>
-          <p>{doctor.experience}</p>
+          <p>{doctor.doctorData?.experience}</p>
         </div>
         <div className="flex gap-2 text-yellow-600 mb-2">
           <RatingDisplay value={doctor.rating as number} />
         </div>
-        {authState.username && (
+        {authState.id && (
           <div className="flex gap-4">
             <Link className="text-secondary hover:text-primary" to={`/book/${doctor._id}`}>
               Book

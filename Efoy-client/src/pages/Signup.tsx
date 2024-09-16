@@ -3,9 +3,6 @@ import Signup from "../components/auth/signup"
 import { FcGoogle } from "react-icons/fc";
 import { useState } from "react";
 
-import { IoArrowBackSharp } from "react-icons/io5";
-import { IoArrowForwardSharp } from "react-icons/io5";
-
 
 const SignupPage = () => {
   const [role, setRole] = useState('patient')

@@ -28,7 +28,7 @@ const DoctorProfile = ({doctor} : {doctor: Doctor}) => {
         <p className="text-lg text-gray-600 mt-2">{doctor?.speciality}</p>
         <p className="text-gray-500 mt-1">{doctor?.experience}</p>
         <div className="mt-4">
-        { authState.username !== doctor.username ?
+        { authState.id !== doctor?._id ?
           <RatingStars doctorId={doctor?._id as string} /> :
           <RatingDisplay value={doctor.rating as number} />
         }
@@ -39,23 +39,23 @@ const DoctorProfile = ({doctor} : {doctor: Doctor}) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <p className="text-lg">
               <span className="font-medium text-gray-800">Email:</span>
-              <span className="ml-2 text-gray-600">{doctor?.email}</span>
+              <span className="ml-2 text-gray-600">{doctor.email}</span>
             </p>
             <p className="text-lg">
               <span className="font-medium text-gray-800">Experience:</span>
-              <span className="ml-2 text-gray-600">{doctor?.experience}</span>
+              <span className="ml-2 text-gray-600">{doctor?.doctorData?.experience}</span>
             </p>
             <p className="text-lg">
               <span className="font-medium text-gray-800">Education Level:</span>
-              <span className="ml-2 text-gray-600">{doctor?.educationLevel}</span>
+              <span className="ml-2 text-gray-600">{doctor?.doctorData?.educationLevel}</span>
             </p>
             <p className="text-lg">
               <span className="font-medium text-gray-800">Phone Number:</span>
-              <span className="ml-2 text-gray-600">{doctor?.phoneNumber}</span>
+              <span className="ml-2 text-gray-600">{doctor.phoneNumber}</span>
             </p>
             <p className="text-lg">
               <span className="font-medium text-gray-800">Rating:</span>
-              <span className="ml-2 text-gray-600">{doctor?.rating}</span>
+              <span className="ml-2 text-gray-600">{doctor?.doctorData?.rating}</span>
             </p>
           </div>
         </div>
@@ -68,7 +68,7 @@ const DoctorProfile = ({doctor} : {doctor: Doctor}) => {
               <CommentList doctorId={doctor._id as string} />
             </div>
             { 
-              authState.username !== doctor.username &&
+              authState.id !== doctor._id &&
               <div className="bg-gray-50 w-1/2 rounded-lg p-4">
               <CommentBox doctorId={doctor._id as string} />
               </div>
