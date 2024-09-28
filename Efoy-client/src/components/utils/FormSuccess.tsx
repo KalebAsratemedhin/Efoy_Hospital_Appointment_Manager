@@ -1,12 +1,22 @@
-import { SerializedError } from "@reduxjs/toolkit";
-import { CustomSerializedError } from "../../types/CustomSerializedError";
-import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { useEffect, useState } from 'react';
 
-const FormSuccess = ({ message }: { message: string }) => {
+const FormSuccess = ({ message, duration = 3000 }: { message: string; duration?: number }) => {
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setVisible(false);
+    }, duration);
+
+    return () => clearTimeout(timer); 
+  }, [duration]);
+
+  if (!visible) return null; 
+
   return (
     <div className="flex justify-center items-center w-full">
       <div className="bg-green-100 text-green-600 border border-green-300 rounded-lg p-4 w-full">
-        <div className="flex items-center  w-72 h-10">
+        <div className="flex items-center w-72 h-10 text-wrap">
           <svg
             className="w-10 h-10 mr-2"
             xmlns="http://www.w3.org/2000/svg"

@@ -1,13 +1,26 @@
 import { SerializedError } from "@reduxjs/toolkit";
 import { CustomSerializedError } from "../../types/CustomSerializedError";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { useEffect, useState } from "react";
 
-const FormError = ({ error }: { error: SerializedError | FetchBaseQueryError | string | undefined }) => {
+const FormError = ({ error, duration = 3000 }: { error: SerializedError | FetchBaseQueryError | string | undefined, duration?: number}) => {
   const err = error as CustomSerializedError
+
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setVisible(false);
+    }, duration);
+
+    return () => clearTimeout(timer); 
+  }, [duration]);
+
+  if (!visible) return null; 
     return (
       <div className="flex justify-center items-center w-full">
         <div className="bg-red-100 text-red-600 border border-red-300 rounded-lg p-4 w-full">
-          <div className="flex items-center  w-72 h-10">
+          <div className="flex items-center  w-72 h-10 text-wrap">
             <svg
               className="w-15 h-10 mr-2"
               xmlns="http://www.w3.org/2000/svg"

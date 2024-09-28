@@ -23,9 +23,19 @@ export const userAPI = createApi({
                 body: user
             })
         }),
+
         updateUser: builder.mutation<User, {id: string, update: UserUpdate}>({
             query: ({id, update}) => ({
                 url: `/user/${id}`,
+                method: 'Put',
+                body: update,
+                
+            })
+        }),
+
+        updateProfilePicture: builder.mutation<User, {id: string, update: any}>({
+            query: ({id, update}) => ({
+                url: `/user/profile-pic/${id}`,
                 method: 'Put',
                 body: update,
                 
@@ -39,6 +49,9 @@ export const userAPI = createApi({
 export const {
     useFindOneDoctorQuery,
     useFindAllDoctorsQuery,
-    useUpdateUserMutation
+    useUpdateUserMutation,
+    useUpdateProfilePictureMutation
+
+
 
 } = userAPI

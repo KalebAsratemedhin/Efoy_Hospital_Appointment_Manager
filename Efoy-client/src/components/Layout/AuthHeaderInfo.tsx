@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { useGetCurrentUserQuery } from "../../redux/api/authAPI";
 import { IoNotifications } from "react-icons/io5";
 import { IoSettingsOutline } from "react-icons/io5";
@@ -33,9 +33,12 @@ const AuthHeaderInfo = () => {
             <IoSettingsOutline onClick={() => navigate('/settings') } className="w-7 h-7 text-secondary hover:text-primary sm:block hidden" />
             <IoNotifications onClick={() => navigate('/notifications') } className="w-7 h-7 text-secondary hover:text-primary sm:block hidden"  />
         
-            {/* {data.profilePic}
-            <Link to={data.profilePic}>profile</Link> */}
-            {data.profilePic ? <img className="w-12 h-12 rounded-full flex justify-center items-center text-lg " src={data.profilePic} alt="profile" /> : <div className="w-12 h-12 rounded-full flex justify-center items-center bg-gray-300 text-lg ">{initials}</div> }
+            {
+            data.profilePic ? 
+                <img className="w-8 h-8 rounded-full flex justify-center items-center text-lg " src={data.profilePic} alt="profile" /> 
+                : 
+                <div className="w-12 h-12 rounded-full flex justify-center items-center bg-gray-300 text-lg ">{initials}</div> 
+            }
             
         </div>
     </div>

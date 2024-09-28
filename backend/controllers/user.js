@@ -1,4 +1,5 @@
 const User = require("../models/user")
+const upload = require("../middlewares/fileUpload")
 
 
 const findAllUsers = async (req, res) => {
@@ -55,10 +56,44 @@ const updateUser = async (req, res) => {
 
 }
 
+const updateProfilePicture = async (req, res) => {
+    console.log("upload", req.body)
+    upload(req, res, async (err) => {
+      if (err) {
+        console.log("err", err)
+
+        return res.status(400).json({ message: err });
+      }
+      
+      try {
+        console.log("try catch", req.body)
+
+        const userId = req.params.id;
+        const user = await User.findById(userId);
+        
+        if (!user) {
+          return res.status(404).json({ message: "User not found" });
+        }
+
+        console.log("try catch end file", req.file)
+
+  
+        user.profilePic = `http://localhost:${process.env.PORT}/uploads/${req.file.filename}`;
+        await user.save();
+  
+        res.status(200).json({ message: "Profile picture updated", user });
+      } catch (error) {
+        res.status(500).json({ message: error.message });
+      }
+    });
+  }
+  
+
 
 
 module.exports = {
     findAllUsers,
     findOneUser,
-    updateUser
+    updateUser,
+    updateProfilePicture
 }
