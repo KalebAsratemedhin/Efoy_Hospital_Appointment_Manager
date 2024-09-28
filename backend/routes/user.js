@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const userController = require("../controllers/user");
-const passport = require('../strategies/jwt_strategy');
+const { authenticateUser } = require('../middlewares/auth');
 
-router.get('/:id', passport.authenticate('jwt', { session: false }), userController.findOneUser);
-router.get('/', passport.authenticate('jwt', { session: false }), userController.findAllUsers);
+router.get('/:id', authenticateUser, userController.findOneUser);
+router.get('/', authenticateUser, userController.findAllUsers);
   
 module.exports = router; 
   

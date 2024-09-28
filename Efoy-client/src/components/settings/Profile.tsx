@@ -9,9 +9,8 @@ interface FormData {
     fullName: string;
     email: string;
     address: string;
-    gender: string;
+    sex: string;
     age: number;
-    username: string;
     password: string;
     profilePic: string;
   }
@@ -20,9 +19,7 @@ const Profile = () => {
     const {isSuccess, data: user} = useGetCurrentUserQuery()
 
     const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm<FormData>({
-        defaultValues: {
 
-        }
     });
 
     const onSubmit = () => {
@@ -34,10 +31,8 @@ const Profile = () => {
           reset({
             fullName: user.fullName || '',
             email: user.email || '',
-            gender: user.gender || '',
+            sex: user.sex || '',
             age: user.age,
-            username: user.username || '',
-            password: '', 
             address: user.address || '',
             profilePic: user.profilePic || ''
           });
@@ -123,11 +118,11 @@ const Profile = () => {
               </div>
     
               <div>
-                <label htmlFor="gender" className="block text-custom-light-dark mb-2 text-base font-normal">Gender</label>
+                <label htmlFor="sex" className="block text-custom-light-dark mb-2 text-base font-normal">Sex</label>
                 <input
-                  id="gender"
+                  id="sex"
                   type="text"
-                  {...register('gender')}
+                  {...register('sex')}
                   className="w-full p-2 border border-custom-light-grey rounded-xl text-custom-light-purple text-base font-normal focus:outline-none focus:ring-2 focus:ring-custom-bright-purple focus:border-transparent"
                 />
               </div>
@@ -144,15 +139,7 @@ const Profile = () => {
             </div>
     
             <div className="space-y-2 md:col-span-2">
-              <div>
-                <label htmlFor="username" className="block text-custom-light-dark mb-2 text-base font-normal">Username</label>
-                <input
-                  id="username"
-                  type="text"
-                  {...register('username')}
-                  className="w-full p-2 border border-custom-light-grey rounded-xl text-custom-light-purple text-base font-normal focus:outline-none focus:ring-2 focus:ring-custom-bright-purple focus:border-transparent"
-                />
-              </div>
+          
     
               <div>
                 <label htmlFor="password" className="block text-custom-light-dark mb-2 text-base font-normal">Password</label>

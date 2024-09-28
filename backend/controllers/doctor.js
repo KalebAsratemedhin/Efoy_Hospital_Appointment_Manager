@@ -3,6 +3,8 @@ const Doctor = require("../models/doctor");
 const User = require("../models/user");
 
 
+
+
 const findAllDoctors = async (req, res) => {
     try {
         const { query } = req.query;

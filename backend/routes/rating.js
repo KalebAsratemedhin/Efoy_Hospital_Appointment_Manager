@@ -1,13 +1,13 @@
 const express = require("express");
 
 const router = express.Router()
-const ratingController = require('../controllers/rating')
-const passport = require('../strategies/jwt_strategy');
+const {getFavorites, getRating, createRating, deleteRating, updateRating} = require('../controllers/rating');
+const { authenticateUser } = require("../middlewares/auth");
 
-router.get('/favorites', passport.authenticate('jwt', { session: false }), ratingController.getFavorites )
-router.get('/:id', passport.authenticate('jwt', { session: false }), ratingController.getRating )
-router.post('/', passport.authenticate('jwt', { session: false }), ratingController.createRating )
-router.delete('/:id', passport.authenticate('jwt', { session: false }), ratingController.deleteRating )
-router.put('/:id', passport.authenticate('jwt', { session: false }), ratingController.updateRating )
+router.get('/favorites', authenticateUser, getFavorites )
+router.get('/:id', authenticateUser, getRating )
+router.post('/', authenticateUser, createRating )
+router.delete('/:id', authenticateUser, deleteRating )
+router.put('/:id', authenticateUser, updateRating )
 
 module.exports = router   

@@ -1,11 +1,11 @@
 const express = require('express');
 const authController = require('../controllers/auth.js')
-const authenticateToken = require('../middlewares/authenticateToken.js')
+const {isAdmin, authenticateUser} = require('../middlewares/auth.js')
 const passport = require('passport');
 
 const router = express.Router();
  
-router.get('/current-user', authenticateToken,  authController.getUser)
+router.get('/current-user', authenticateUser,  authController.getUser)
 
 router.post('/signup', authController.signup);
 
@@ -25,6 +25,9 @@ router.get('/google/callback', (req, res, next) => {
     next(); 
   }, passport.authenticate('google', { session: false }), authController.googleAuthSuccess);
 
-router.post('/user/profile',  passport.authenticate('jwt', { session: false }), authController.updateUserProfile)
+
+router.get('/auth/error', (req, res) => {
+    res.status(401).json({ error: 'Google OAuth authentication failed' });
+});
 
 module.exports = router

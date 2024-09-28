@@ -1,5 +1,4 @@
-const passport = require('../strategies/jwt_strategy.js'); 
-const authenticateToken = require('../middlewares/authenticateToken.js')
+
 const Doctor = require('../models/doctor.js')
 const User = require('../models/user.js')
 const bcrypt = require('bcryptjs');
@@ -47,26 +46,14 @@ const signup = async (req, res) => {
                 password: hashedPassword
             });
 
-            if (role === "doctor"){
-                const { speciality, experience, educationLevel, orgID} = req.body;
-                const doctor = await Doctor.create({
-                    user_id: user._id,
-                    speciality: speciality,
-                    orgID: orgID,
-                    experience: experience,
-                    educationLevel: educationLevel,
-                  
-                });
-
-            }
-
-            const payload = { id: user._id , role: role};
+           
+            const payload = { id: user._id , role: user.role};
             const token = jwt.sign(payload, secret, { expiresIn: '1h' });
             res.cookie('token', token, {
                 httpOnly: true, 
                 maxAge: 3600000,  
             })
-            res.status(201).json({...user.toObject(), role: role});
+            res.status(201).json(user.toObject());
 
                 
     } catch (error) {
@@ -90,11 +77,12 @@ const login = async (req, res) => {
             if (isMatch) {
                 const payload = { id: user._id , role: user.role};
                 const token = jwt.sign(payload, secret, { expiresIn: '2h' });
+                
                 res.cookie('token', token, {
                 httpOnly: true, 
                 maxAge: 3600000, 
                 })
-                res.status(201).json({id: user._id, role: role});
+                res.status(201).json({id: user._id, role: user.role});
             } else {
                 return res.status(400).json({ error: 'Incorrect password' });
             }
@@ -139,16 +127,11 @@ const updateUserProfile = async (req, res) => {
     try {
         const {id, role} = req.user
 
-        const { fullName, email, phoneNumber, speciality, experience, educationLevel } = req.body;
+        const update = req.body;
 
         const updatedUser = await User.findByIdAndUpdate(
             id,
-            {
-                fullName,
-                email,
-                phoneNumber,
-
-            },
+            update,
             { new: true }
         );
     
@@ -158,29 +141,11 @@ const updateUserProfile = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        if (role === "doctor"){
-            const updatedDoctor = await Doctor.findOneAndUpdate(
-                { user_id: doctorId },  
-                {
-                    speciality,
-                    experience,
-                    educationLevel
-                },
-                { new: true }
-            );
-
-            return res.status(200).json()
-        }
-
-        res.status(200).json({
-            user: updatedUser,
-            doctor: updatedDoctor
-        });
+        res.status(200).json(updatedUser)
         
-        
-    } catch (error) {
-        console.log("error", error)
-    }
+    } catch (error) { 
+        res.status(500).json({message: "Internal Sever Error."})
+    } 
 
 }
 

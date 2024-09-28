@@ -39,13 +39,12 @@ export const authAPI = createApi({
                 method: 'Get'
             })
         }),
-        updateCurrentUser: builder.mutation<User, User >({
+        googleAuth: builder.query<void, void>({
             query: () => ({
-                url: '/user/profile',
-                method: 'Post'
-                
+                url: '/google'
             })
-        }),
+        })
+        
     })
 })
 
@@ -54,5 +53,5 @@ export const {
     useSignupMutation,
     useSignoutMutation,
     useGetCurrentUserQuery,
-    useUpdateCurrentUserMutation
+    useGoogleAuthQuery
 } = authAPI

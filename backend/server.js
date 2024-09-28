@@ -17,7 +17,10 @@ passport.use(new GoogleStrategy({
 async (req, accessToken, refreshToken, profile, done) => {
   
   try {
+    console.log('profile', profile)
+
     let user = await User.findOne({ googleId: profile.id });
+    console.log('user', user)
 
     if (!user) {
         user = await User.create({
@@ -30,7 +33,7 @@ async (req, accessToken, refreshToken, profile, done) => {
         console.log("user", user)
 
     }
-
+ 
     return done(null, user);
    
   } catch (err) {
@@ -39,7 +42,6 @@ async (req, accessToken, refreshToken, profile, done) => {
 }));
 
 const cors = require('cors');      
-require('./strategies/jwt_strategy');
 
 const corsOpts = {
     origin: 'http://localhost:3000',
@@ -68,6 +70,8 @@ app.use('/ratings', require('./routes/rating.js'));
 app.use('/doctor', require('./routes/doctor.js'));
 app.use('/user', require('./routes/user.js'));
 app.use('/auth', require('./routes/auth.js'));
+app.use('/doctor-applications', require('./routes/doctorApplication.js'));
+
 
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
