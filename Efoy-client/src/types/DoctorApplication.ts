@@ -10,9 +10,17 @@ export interface DoctorApplication{
 
 }
 
+export interface DoctorApplicationCreate{
+    speciality: string;
+    experience: string;
+    educationLevel: string;
+    orgID: string;
+}
+
 export interface DoctorApplicationUpdate{
     speciality?: string;
     experience?: string;
     educationLevel?: string;
     orgID?: string;
 }
+

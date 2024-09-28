@@ -1,7 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { User } from "../../types/User";
-import { SignupCredential } from "../../types/SignupCredential";
-import { SigninCredential } from "../../types/SigninCredential";
+import { SigninCredential, SignupCredential, User } from "../../types/User";
 
 export const authAPI = createApi({
     reducerPath: 'authApi',

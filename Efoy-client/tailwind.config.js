@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily:{
+        
+      },
       colors: {
         'custom-background': '#ebf3fa',
         'primary': '#7b10b0',

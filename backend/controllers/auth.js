@@ -84,7 +84,7 @@ const login = async (req, res) => {
                 })
                 res.status(201).json({id: user._id, role: user.role});
             } else {
-                return res.status(400).json({ error: 'Incorrect password' });
+                return res.status(400).json({ message: 'Incorrect password' });
             }
             });
 
@@ -101,10 +101,10 @@ const googleAuthSuccess = async (req, res) => {
     console.log("google auth success", req.user)
 
 
-    const token = jwt.sign({ id: req.user._id, role: req.user.role}, process.env.JWT_SECRET, { expiresIn: '2h' });
+    const token = jwt.sign({ id: req.user.id, role: req.user.role}, process.env.JWT_SECRET, { expiresIn: '2h' });
  
     res.cookie('token', token, { httpOnly: true, maxAge: 3600000});
-    const redirectUrl = `http://localhost:3000/google-auth?id=${req.user._id}&role=${req.user.role}`;
+    const redirectUrl = `http://localhost:3000/google-auth?id=${req.user.id}&role=${req.user.role}`;
  
     res.redirect(redirectUrl)
  }

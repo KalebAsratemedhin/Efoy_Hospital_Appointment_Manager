@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { authSelector, setAuth } from "../../redux/slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { FcGoogle } from "react-icons/fc";
+import FormError from "../utils/FormError";
 
 
 interface FormData{
@@ -46,11 +47,6 @@ const Signin = () => {
 
     }, [isSuccess, authState])
 
-    if(isLoading)
-        return <Spinner />
-        
-      if(isError)
-        return <Error error={error} />
     
   return (
     <div className="border shadow-lg bg-white  h-full p-4 flex flex-col justify-center items-center rounded-md">
@@ -65,6 +61,10 @@ const Signin = () => {
                 <p>or</p>
                 <p className="bg-gray-400 h-[1px] w-1/3"></p>
             </div>  
+
+            {isLoading && <Spinner />}
+            {isError && <FormError error={error} />}
+
             <div className="my-3">
                 <label className="text-gray-500 text-base" htmlFor="email">Email</label>
                     <input className="block border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-lg h-12 px-2 w-full border" id="email" type="text" {...register('email', {

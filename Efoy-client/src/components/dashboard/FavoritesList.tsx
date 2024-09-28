@@ -11,7 +11,8 @@ const FavoritesList = () => {
     if (isSuccess){
         console.log("data favs", data)
         return (
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-4 bg-white shadow-md rounded-md p-8">
+                {!data.length && <p>No favorites yet.</p> }
                 {
                     data.map(rating => {
                         return <DoctorCard doctor={rating.doctorId}/>

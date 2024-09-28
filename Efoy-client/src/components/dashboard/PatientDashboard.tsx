@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom"
-import Favorites from "./Favorites"
 import Reminder from "./Reminder"
 import MonthlyReport from "./MonthlyReport"
 import FavoritesList from "./FavoritesList"
+import Welcome from "./Welcome"
 
 
 const PatientDashboard = () => {
@@ -10,7 +10,8 @@ const PatientDashboard = () => {
     <div className="w-full ">
         <div className="flex w-full">
           <div className="flex flex-col p-4 w-full">
-            <div className="flex justify-between items-center mb-4">
+              <Welcome />
+            <div className="flex justify-between items-center my-4 ">
               <h1 className="text-xl">Monthly Report</h1>
             </div>
             <div className="flex justify-between gap-2 flex-wrap">
@@ -28,6 +29,7 @@ const PatientDashboard = () => {
               </div>
               <div className="">
                 <FavoritesList />
+
               </div>
             
         </div>

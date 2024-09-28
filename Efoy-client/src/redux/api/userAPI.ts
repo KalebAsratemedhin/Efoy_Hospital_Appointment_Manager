@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { User } from "../../types/User";
-import { Doctor } from "../../types/Doctor";
+import { Doctor, User, UserUpdate } from "../../types/User";
 
 export const userAPI = createApi({
     reducerPath: 'userAPI',
@@ -24,6 +23,14 @@ export const userAPI = createApi({
                 body: user
             })
         }),
+        updateUser: builder.mutation<User, {id: string, update: UserUpdate}>({
+            query: ({id, update}) => ({
+                url: `/user/${id}`,
+                method: 'Put',
+                body: update,
+                
+            })
+        }),
 
 
     })
@@ -32,5 +39,6 @@ export const userAPI = createApi({
 export const {
     useFindOneDoctorQuery,
     useFindAllDoctorsQuery,
+    useUpdateUserMutation
 
 } = userAPI

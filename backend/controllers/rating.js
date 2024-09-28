@@ -6,7 +6,7 @@ const createRating = async(req, res) => {
         const {doctorId, value } = req.body
         const rater = req.user
 
-        if(rater.data._id.toString() === doctorId){
+        if(rater.id.toString() === doctorId){
             return res.status(400).json({message: "You cannot rate yourself."})
         }
 
@@ -89,17 +89,15 @@ const updateTotalRating = async(doctorId) => {
 
 
 const getRating = async(req, res) => {
-    const user = req.user
     const {id} = req.params
-    const [rating] = await Rating.find({raterId: user.data._id, doctorId: id})
+    const [rating] = await Rating.find({raterId: req.user.id, doctorId: id})
     
     return res.status(200).json(rating)
     
 }
 
 const getFavorites = async(req, res) => {
-    const user = req.user
-    const favorites = await Rating.find({raterId: user.data._id}).populate('doctorId')
+    const favorites = await Rating.find({raterId: req.user.id}).populate('doctorId')
     console.log("favorites", favorites)
     
     return res.status(200).json(favorites)

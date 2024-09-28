@@ -59,8 +59,28 @@ const findOneDoctor = async (req, res) => {
 }
 
 
+const updateDoctor = async (req, res) => {
+    try {
+        const {id} = req.params
+        if(req.user.id !== id){
+            return res.status(401).json({message: 'Unauthorized.'})
+        }
+
+        const doc = await Doctor.findOneAndUpdate({user_id: id}, req.body);
+
+        return res.status(200).json(doc)
+
+    } catch (error) {
+        res.status(500).send({message: error.message})
+
+    }
+
+}
+
+
 module.exports = {
     findAllDoctors,
     findOneDoctor,
+    updateDoctor
 
 }

@@ -1,3 +1,5 @@
+import { User } from "./User";
+
 export interface Booking {
     _id?: string,
     patientId?: string,
@@ -7,4 +9,14 @@ export interface Booking {
     reason?: string,
     status?: string,
     
+}
+
+export interface BookingPopulated {
+    _id?: string,
+    patientId?: User,
+    doctorId: User,
+    appointmentDate: string,
+    time: string,
+    reason: string,
+    status?: string,
 }

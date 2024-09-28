@@ -3,7 +3,7 @@ const DoctorApplication = require('../models/doctorApplication');
 const createApplication = async (req, res) => {
     try {
         const { speciality, experience, educationLevel, orgID } = req.body;
-        const userId = req.user._id;  
+        const userId = req.user.id;  
 
         const existingApplication = await DoctorApplication.findOne({ userId });
         if (existingApplication) {
@@ -27,7 +27,7 @@ const createApplication = async (req, res) => {
 
 const updateApplication = async (req, res) => {
     try {
-        const userId = req.user._id;
+        const userId = req.user.id;
         const { speciality, experience, educationLevel, orgID } = req.body;
 
         const application = await DoctorApplication.findOneAndUpdate(
@@ -69,7 +69,7 @@ const evaluateApplication = async (req, res) => {
 
 const deleteApplication = async (req, res) => {
     try {
-        const userId = req.user._id;
+        const userId = req.user.id;
 
         const application = await DoctorApplication.findOneAndDelete({ userId });
 

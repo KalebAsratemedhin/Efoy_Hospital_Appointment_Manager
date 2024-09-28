@@ -19,7 +19,7 @@ const AuthHeaderInfo = () => {
     if(isLoading)
         return <Spinner />
     
-    if(isError && (error as CustomSerializedError).data.message === "No token provided"){
+    if(isError && (error as CustomSerializedError).data.message === "Access denied. No token provided."){
         dispatch(clearAuth())
         return <Error error={error} />
     }
