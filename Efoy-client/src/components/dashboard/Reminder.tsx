@@ -1,13 +1,25 @@
 
 import { FaCalendarAlt, FaClock } from 'react-icons/fa';
-import { useFindCurrentUserBookingsQuery } from '../../redux/api/bookingAPI';
-import { BookingResponse } from '../../types/BookingResponse';
+import { useFindCurrentUserBookingsQuery, useFindRecentBookingQuery } from '../../redux/api/bookingAPI';
 import CountDown from './CountDown';
+import { Booking, BookingPopulated } from '../../types/Booking';
+import Error from '../utils/Error';
+import Spinner from '../utils/Spinner';
 
 const Reminder = () => {
-  const {isLoading, isError, isSuccess, error, data} = useFindCurrentUserBookingsQuery()
-
+  const {isLoading, isError, isSuccess, error, data} = useFindRecentBookingQuery()
   const eventDate = data ? findNext(data) : undefined
+  console.log('apps', data)
+
+
+  // if(isError)
+  //   return <Error error={error} />
+  // if(isLoading)
+  //   return <Spinner />
+
+  
+  if(isSuccess)
+
 
   return (
     <div className="bg-white  shadow-lg rounded-lg p-6 flex flex-col items-center space-y-4 md:w-5/12">
@@ -27,17 +39,15 @@ const Reminder = () => {
 export default Reminder;
 
 
-const findNext = (data: BookingResponse[]) => {
+const findNext = (data: Booking) => {
   const now = new Date()
 
-  for(const booking of data){
-    const date = new Date(booking.appointmentDate.split('T')[0] + ' ' + booking.time)
+  const date = new Date(data.appointmentDate.split('T')[0] + ' ' + data.time)
 
-    if(date > now){
-      return date
-    }
-
+  if(date > now){
+    return date
   }
+
   return undefined
 
 }

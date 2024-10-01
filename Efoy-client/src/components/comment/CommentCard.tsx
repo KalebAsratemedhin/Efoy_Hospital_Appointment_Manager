@@ -1,51 +1,3 @@
-// import { CommentI } from "../../types/Comment"
-// import { MdDeleteOutline } from "react-icons/md";
-// import { CiEdit } from "react-icons/ci";
-
-
-// const CommentCard = ({comment, refetch, isEditable}: {comment: CommentI, isEditable: boolean, refetch: () => void}) => {
-//   const commenter = comment.commenterId
-//   const initials = commenter?.fullName.split(' ').map((name) => name[0].toUpperCase()).join(''); 
-
-//   const handleDelete = () => {
-
-
-//   }
-
-//   const handleEdit = () => {
-
-//   }
-
-//   return (
-//     <div className="bg-white border rounded-md flex  w-full ">
-//         <div className="w-20 flex flex-col items-center p-2  ">
-//           {
-//            commenter?.profilePic ? 
-//            <img src="" alt="" /> :
-//            <div className="w-16 h-16 rounded-full flex justify-center items-center bg-gray-300 text-lg ">
-//               {initials}
-//             </div>
-//           }
-           
-//         </div>
-//         <div className="flex-grow pt-2 text-gray-500">
-//           <p className="text-black">{commenter?.fullName}</p>
-//           <p className="italic">@{commenter?.username}</p>
-
-//           {comment.content}
-//         </div>
-//         {isEditable && 
-//           <div className="w-14  flex gap-2 p-2">
-//             <MdDeleteOutline onClick={handleDelete} />
-//             <CiEdit onClick={handleEdit} /> 
-//           </div>
-//         }
-
-//     </div>
-//   )
-// }
-
-// export default CommentCard
 
 
 import { CommentI } from "../../types/Comment";
@@ -101,7 +53,7 @@ const CommentCard = ({ comment, refetch, isEditable }: { comment: CommentI; isEd
     return <Error error={error || updateError} />
 
   return (
-    <div className="bg-white border rounded-md flex w-full">
+    <div className="bg-white border rounded-md flex flex-wrap w-full">
       <div className="w-20 flex flex-col items-center p-2">
         {commenter?.profilePic ? (
           <img src={commenter.profilePic} alt="Profile" className="w-16 h-16 rounded-full" />
@@ -113,7 +65,7 @@ const CommentCard = ({ comment, refetch, isEditable }: { comment: CommentI; isEd
       </div>
       <div className="flex-grow pt-2 text-gray-500">
         <p className="text-black">{commenter?.fullName}</p>
-        <p className="italic">@{commenter?.username}</p>
+        <p className="italic">{commenter?.email}</p>
 
         {isEditing ? (
           <textarea

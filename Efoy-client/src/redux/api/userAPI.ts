@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { User } from "../../types/User";
-import { Doctor } from "../../types/Doctor";
+import { Doctor, User, UserUpdate } from "../../types/User";
 
 export const userAPI = createApi({
     reducerPath: 'userAPI',
@@ -19,10 +18,37 @@ export const userAPI = createApi({
 
         findAllDoctors: builder.query<Doctor[], void>({
             query: () => ({
+                
                 url: '/doctor',
                 method: 'Get'
             })
         }),
+
+        updateUser: builder.mutation<User, {id: string, update: UserUpdate}>({
+            query: ({id, update}) => ({
+                url: `/user/${id}`,
+                method: 'Put',
+                body: update,
+                
+            })
+        }),
+
+        updateProfilePicture: builder.mutation<User, {id: string, update: any}>({
+            query: ({id, update}) => ({
+                url: `/user/profile-pic/${id}`,
+                method: 'Put',
+                body: update,
+                
+            })
+        }),
+
+        searchDoctors: builder.query<Doctor[], string>({
+            query: (searchTerm) => ({
+               url: `/doctor?search=${searchTerm}`,
+               method: 'Get'
+            })
+        }),
+
 
     })
 })
@@ -30,5 +56,10 @@ export const userAPI = createApi({
 export const {
     useFindOneDoctorQuery,
     useFindAllDoctorsQuery,
+    useSearchDoctorsQuery,
+    useUpdateUserMutation,
+    useUpdateProfilePictureMutation
+
+
 
 } = userAPI

@@ -1,12 +1,14 @@
-import { bookingAPI, useFindAvailableTimeSlotsQuery, useFindOneBookingQuery, useUpdateBookingMutation } from '../../redux/api/bookingAPI'
+import { useFindOneBookingQuery, useUpdateBookingMutation } from '../../redux/api/bookingAPI'
 import { useParams } from 'react-router-dom'
 import Spinner from "../utils/Spinner";
+import FormError from "../utils/FormError";
+import FormSuccess from "../utils/FormSuccess";
 import Error from "../utils/Error";
-import { CustomSerializedError } from "../../types/CustomSerializedError";
 import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { authSelector } from '../../redux/slices/authSlice';
+import TimeDate from './TimeDate';
 interface FormData {
   appointmentDate: string;
   time: string;
@@ -30,11 +32,7 @@ const BookingDetails = () => {
     formState: { errors },
   } = useForm<FormData>({
   });
-  const selectedDate = watch("appointmentDate");
-
-  const { data: availableSlots, isSuccess: isSlotsFetchSuccess } = useFindAvailableTimeSlotsQuery({ doctorId: doctor?._id as string, date: selectedDate });
-
-
+  
   useEffect(() => {
     reset(
       {
@@ -47,22 +45,13 @@ const BookingDetails = () => {
   }, [data, reset])
 
   const onSubmit = async (data: FormData) => {
-    
-
-    try {
-      const result = await updateBooking({id: id as string, update: data}).unwrap();
-      console.log('res book update', result)
-    } catch (error) {
-      console.error(error);
-    }
+    await updateBooking({id: id as string, update: data}).unwrap();
+  
   };
 
-  if (isLoading || isUpdateLoading ) return <Spinner />;
-  if (isError || isUpdateError  ) return <Error error={error || updateError} />;
-  if(isUpdateSuccess)
-    appointment = updateData
-
-  if (isSuccess && data)
+  if (isLoading) return <Spinner />;
+  if (isError) return <Error error={error} />;
+  if (isSuccess)
 
   return (
       <div className="max-w-lg mx-auto mt-10 p-8 bg-white rounded-lg shadow-lg">
@@ -74,10 +63,11 @@ const BookingDetails = () => {
             <strong>Name:</strong> {doctor?.fullName}
           </p>
           <p className="text-gray-700">
-            <strong>Specialty:</strong> {doctor?.speciality}
+          
+            <strong>Specialty:</strong> {data.doctorData?.speciality}
           </p>
           <p className="text-gray-700">
-            <strong>Experience:</strong> {doctor?.experience} years
+            <strong>Experience:</strong> {data.doctorData?.experience} years
           </p>
       </div>
 
@@ -115,42 +105,21 @@ const BookingDetails = () => {
             />
             {errors.reason && <p className="text-red-500 text-sm mt-1">{errors.reason.message}</p>}
           </div>
-          <div>
-            <label htmlFor="appointmentDate" className="block text-gray-700 font-semibold mb-2">
-              Date
-            </label>
-            <input
-              type="date"
-              id="appointmentDate"
-              {...register("appointmentDate", { required: "Date is required" })}
-              className={`w-full px-4 py-2 border ${
-                errors.appointmentDate ? "border-red-500" : "border-gray-300"
-              } rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500`}
-            />
-            {errors.appointmentDate && <p className="text-red-500 text-sm mt-1">{errors.appointmentDate.message}</p>}
-          </div>
-          <div>
-            <label htmlFor="time" className="block text-gray-700 font-semibold mb-2">
-              Time
-            </label>
-            <select
-              id="time"
-              {...register("time", { required: "Time is required" })}
-              className={`w-full px-4 py-2 border ${
-                errors.time ? "border-red-500" : "border-gray-300"
-              } rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500`}
-            >
-              <option disabled selected>
-                {data.time}
-              </option>
-              {availableSlots && availableSlots.map((slot) => (
-                <option key={slot} value={slot}>
-                  {slot}
-                </option>
-              ))}
-            </select>
-            {errors.time && <p className="text-red-500 text-sm mt-1">{errors.time.message}</p>}
-          </div>
+
+          <TimeDate 
+            register={register}
+            errors={errors}
+            watch={watch}
+            setValue={setValue}
+            doctorId={data.doctorId._id}
+          />
+
+          {isUpdateError && <FormError error={error} />}
+          {isUpdateLoading && <Spinner />}
+          {isUpdateSuccess && <FormSuccess message={"Booking has been updated."} />}
+
+
+         
           {authState.role === "patient"  && <button
             type="submit"
             className="w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"

@@ -31,7 +31,7 @@ const DoctorDashboard = () => {
         <DoctorProfile doctor={user as Doctor} />
         
       </div>
-=
+
     </div>
   );
 };

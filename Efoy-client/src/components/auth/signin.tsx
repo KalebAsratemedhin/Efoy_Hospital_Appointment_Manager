@@ -7,16 +7,17 @@ import { useEffect } from "react";
 import { authSelector, setAuth } from "../../redux/slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { FcGoogle } from "react-icons/fc";
+import FormError from "../utils/FormError";
 
 
 interface FormData{
-    username: string;
+    email: string;
     password: string;
     role: string;
 }
 
 const Signin = () => {
-    const {formState: {errors}, register, handleSubmit} = useForm<FormData>({
+    const {formState: {errors}, watch, register, handleSubmit} = useForm<FormData>({
         defaultValues: {
             role: 'patient',
         },
@@ -26,63 +27,55 @@ const Signin = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const authState = useSelector(authSelector)
+    const state = btoa(JSON.stringify({ role: watch('role') }))
     const onSubmit = async(data: FormData) => {
 
         const result = await signinUser(data)
         console.log('singin result', result)
 
     }
+
     useEffect(() => {
         if(isSuccess){
+            console.log('just success', authState)
+            
+
+
             dispatch(setAuth(data))
 
         }
-        if(authState.username){
-            console.log(authState.username, 'username')
+        if(authState.id){
+            console.log(authState.id, 'email', authState.role)
             navigate('/dashboard')
         }
 
     }, [isSuccess, authState])
 
-    if(isLoading)
-        return <Spinner />
-        
-      if(isError)
-        return <Error error={error} />
     
   return (
     <div className="border shadow-lg bg-white  h-full p-4 flex flex-col justify-center items-center rounded-md">
         <h1 className="text-3xl text-blue-950 font-semibold ">Welcome back!</h1>
-        <div className="px-10 mt-4 py-3 w-full">
-            <Link to={'http://localhost:5000/auth/google'} className="border p-2 w-full flex justify-center items-center gap-2 rounded-md text-gray-600 hover:shadow-sm"> <FcGoogle className="w-8 h-8" /> Sign in with Google</Link>        
-        </div>    
-        <form noValidate onSubmit={handleSubmit(onSubmit)} className="mt-2  p-10">
-        <div className="flex justify-center gap-8 mb-4 ">
-                <div className="flex gap-2">
-                    <label className="text-gray-700" htmlFor="role">Patient</label>
-                    <input type="radio" className="" value={"patient"} {...register('role', {
-                        required: true
-                    })} />
-                </div>
+        
+        <form noValidate onSubmit={handleSubmit(onSubmit)} className="  px-10 py-5">
+            <div className="mt-4 py-3 w-full">
+                <Link to={`http://localhost:5000/auth/google`} className="border p-2 w-full flex justify-center items-center gap-2 rounded-md text-gray-600 hover:shadow-sm"> <FcGoogle className="w-8 h-8" /> Sign in with Google</Link>        
+            </div>  
+            <div className="flex justify-between items-center my-8  w-full">
+                <p className="bg-gray-400 h-[1px] w-1/3"></p>
+                <p>or</p>
+                <p className="bg-gray-400 h-[1px] w-1/3"></p>
+            </div>  
 
-                <div className="flex gap-2">
-                    <label className="text-gray-700" htmlFor="role">Doctor</label>
-                    <input type="radio" className="" value={"doctor"} {...register('role', {
-                        required: true
-                    })} />
-                </div>
+            {isLoading && <Spinner />}
+            {isError && <FormError error={error} />}
 
-                {errors.role && <p className="text-red-500 text-base mt-1">{errors.role.message}</p>}
-
-
-            </div>
             <div className="my-3">
-                <label className="text-gray-500 text-base" htmlFor="username">Username</label>
-                    <input className="block border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-lg h-12 px-2 w-full border" id="username" type="text" {...register('username', {
-                        required: "Username is required"
+                <label className="text-gray-500 text-base" htmlFor="email">Email</label>
+                    <input className="block border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-lg h-12 px-2 w-full border" id="email" type="text" {...register('email', {
+                        required: "Email is required"
                     })} />
                 
-                <p className="text-red-500 text-base mt-1">{errors.username?.message}</p>
+                <p className="text-red-500 text-base mt-1">{errors.email?.message}</p>
             </div>
             <div className="my-3">
                 <label className="text-gray-500 text-base" htmlFor="password">Password</label>

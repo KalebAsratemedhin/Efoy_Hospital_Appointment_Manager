@@ -1,7 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { User } from "../../types/User";
-import { SignupCredential } from "../../types/SignupCredential";
-import { SigninCredential } from "../../types/SigninCredential";
+import { SigninCredential, SignupCredential, User } from "../../types/User";
 
 export const authAPI = createApi({
     reducerPath: 'authApi',
@@ -38,7 +36,13 @@ export const authAPI = createApi({
                 url: '/current-user',
                 method: 'Get'
             })
+        }),
+        googleAuth: builder.query<void, void>({
+            query: () => ({
+                url: '/google'
+            })
         })
+        
     })
 })
 
@@ -47,4 +51,5 @@ export const {
     useSignupMutation,
     useSignoutMutation,
     useGetCurrentUserQuery,
+    useGoogleAuthQuery
 } = authAPI
