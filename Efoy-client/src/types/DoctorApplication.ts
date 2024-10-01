@@ -1,6 +1,7 @@
-export interface DoctorApplication{
+import { User } from "./User";
+
+export interface Application{
     _id?: string;
-    userId?: string;
     speciality: string;
     experience: string;
     educationLevel: string;
@@ -9,6 +10,17 @@ export interface DoctorApplication{
     appliedAt?: string; 
 
 }
+
+export interface DoctorApplication extends Application{
+    userId: string;
+
+}
+
+export interface DoctorApplicationPopulated extends Application{
+    userId: User;
+    
+}
+
 
 export interface DoctorApplicationCreate{
     speciality: string;

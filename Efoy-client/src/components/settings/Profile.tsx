@@ -43,12 +43,12 @@ const Profile = () => {
  
   if (isSuccess) return (
     <div className="mx-auto bg-white p-10 grid lg:grid-cols-3">
-      <ProfilePicture user={user} />
+      <ProfilePicture user={user} />  
 
       <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 lg:col-span-2 lg:grid-cols-2 gap-8">
 
         
-        <div className="space-y-2 lg:col-span-1">
+        <div className="space-y-2 md:col-span-1">
         {isUpdateError && <FormError error={updateError} />}
         {isUpdateSuccess && <FormSuccess message={"Successfully updated."} />}
 

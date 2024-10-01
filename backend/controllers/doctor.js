@@ -7,14 +7,19 @@ const User = require("../models/user");
 
 const findAllDoctors = async (req, res) => {
     try {
-        const { query } = req.query;
 
-        if(!query){
+        console.log('query', req.query, )
+        const { query } = req.query;
+        const searchTerm = req.query?.search 
+
+        if(!searchTerm){
+            console.log('return all ', searchTerm)
+
             const doctors = await User.find({role: 'doctor'})
             const result = []
 
             for (doctor of doctors){
-                const docData = await Doctor.findOne({user_id: doctor._id})
+                const docData = await Doctor.findOne({userId: doctor._id})
                 result.push({...doctor.toObject(), doctorData: docData})
 
             }
@@ -22,15 +27,29 @@ const findAllDoctors = async (req, res) => {
             return res.status(200).json(result)
 
         } else{
-            const doctors = await Doctor.find({
+            console.log('searching', searchTerm)
+            const doctors = await User.find({
                 $or: [
-                  { fullName: { $regex: query, $options: 'i' } },
-                  { speciality: { $regex: query, $options: 'i' } },
+                  { fullName: { $regex: searchTerm, $options: 'i' } },
+                  { speciality: { $regex: searchTerm, $options: 'i' } },
                 ],
+                role: 'doctor'
               });
 
             
-              return res.status(200).json(doctors)
+
+              const result = []
+
+              for (doctor of doctors){
+                  const docData = await Doctor.findOne({userId: doctor._id})
+                  result.push({...doctor.toObject(), doctorData: docData})
+  
+              }
+              console.log('searched', result)
+
+
+            
+              return res.status(200).json(result)
             
         }
         
@@ -47,7 +66,7 @@ const findOneDoctor = async (req, res) => {
         const {id} = req.params
         const user = await User.findById(id);
 
-        const doctor = await Doctor.findOne({user_id: id})
+        const doctor = await Doctor.findOne({userId: id})
 
         return res.status(200).json({...user.toObject(), doctorData: doctor})
 
@@ -57,6 +76,30 @@ const findOneDoctor = async (req, res) => {
     }
 
 }
+
+
+// const searchDoctors = async (req, res) => {
+//     try {
+//         const searchTerm = req.query.search || ''
+        
+//         const doctors = await Doctor.find({
+//             name: { $regex: searchTerm, $options: 'i' }, // Case-insensitive search
+//         });
+//         res.json(doctors);
+
+//         const doctor = await Doctor.findOne({userId: id})
+
+//         return res.status(200).json({...user.toObject(), doctorData: doctor})
+
+//     } catch (error) {
+//         res.status(500).send({message: error.message})
+
+//     }
+
+// }
+
+
+
 
 
 const updateDoctor = async (req, res) => {

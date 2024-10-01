@@ -6,21 +6,24 @@ const {
     evaluateApplication,
     deleteApplication,
     getAllApplications,
-    getOneApplication
+    getOneApplication,
+    getMyApplication
 } = require('../controllers/doctorApplication');
 
 const { authenticateUser, isAdmin } = require('../middlewares/auth.js');
 
-router.post('/applications', authenticateUser, createApplication);
+router.post('/', authenticateUser, createApplication);
 
-router.put('/applications', authenticateUser, updateApplication);
+router.put('/', authenticateUser, updateApplication);
 
-router.put('/applications/:applicationId/evaluate', authenticateUser, isAdmin, evaluateApplication);
+router.put('/evaluate/:applicationId', authenticateUser, isAdmin, evaluateApplication);
 
-router.delete('/applications', authenticateUser, deleteApplication);
+router.delete('/', authenticateUser, deleteApplication);
 
-router.get('/applications', authenticateUser, isAdmin, getAllApplications);
+router.get('/', authenticateUser, isAdmin, getAllApplications);
 
-router.get('/applications/:applicationId', authenticateUser, getOneApplication);
+router.get('/current-user', authenticateUser, getMyApplication);
+router.get('/:applicationId', authenticateUser, isAdmin, getOneApplication);
+
 
 module.exports = router;

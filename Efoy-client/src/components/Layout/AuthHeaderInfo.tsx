@@ -35,10 +35,12 @@ const AuthHeaderInfo = () => {
         
             {
             data.profilePic ? 
-                <img className="w-8 h-8 rounded-full flex justify-center items-center text-lg " src={data.profilePic} alt="profile" /> 
+                <img className="w-8 h-8 rounded-full flex justify-center items-center text-lg " src={data.profilePic} alt="profile" referrerPolicy="no-referrer" /> 
                 : 
                 <div className="w-12 h-12 rounded-full flex justify-center items-center bg-gray-300 text-lg ">{initials}</div> 
             }
+
+
             
         </div>
     </div>

@@ -11,8 +11,8 @@ import { VscCalendar } from "react-icons/vsc";
 import { useSignoutMutation } from "../../redux/api/authAPI";
 import Spinner from "../utils/Spinner";
 import Error from "../utils/Error";
-import { useDispatch } from "react-redux";
-import { clearAuth } from "../../redux/slices/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { authSelector, clearAuth } from "../../redux/slices/authSlice";
 import { useEffect } from "react";
 import { IoArrowBack } from "react-icons/io5";
 
@@ -22,6 +22,7 @@ const Sidebar = ({isOpen, onSidebarToggle}:{isOpen: boolean, onSidebarToggle: ()
   const [signout, {isSuccess, isError, error, isLoading}] = useSignoutMutation()
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const authState = useSelector(authSelector)
 
   const handleSignout = async () => {
     await signout()
@@ -48,17 +49,32 @@ const Sidebar = ({isOpen, onSidebarToggle}:{isOpen: boolean, onSidebarToggle: ()
             <IoArrowBack onClick={onSidebarToggle} className="w-14 h-14 font-bold sm:hidden" />
 
         </div>
-        <div className="flex flex-col gap-2 px-4">
+        {
+          authState.role === "admin" ? 
+
+          <div className="flex flex-col gap-2 px-4">
+            <Link className="flex gap-3 h-12 border border-tertiary rounded-lg items-center pl-4 hover:bg-tertiary" to='/'> <IoHomeOutline className="" width='20px' /> Home</Link>
+            <Link className="flex gap-3 h-12 border border-tertiary rounded-lg items-center pl-4 hover:bg-tertiary" to='/dashboard'> <RiDashboardHorizontalFill/> Dashboard</Link>
+            <Link className="flex gap-3 h-12 border border-tertiary rounded-lg items-center pl-4 hover:bg-tertiary" to='/applications'>  <BsClipboardCheckFill /> Applications</Link> 
+            <Link className="flex gap-3 h-12 border border-tertiary rounded-lg items-center pl-4 hover:bg-tertiary" to='/doctors'> <FaUserMd /> Doctors</Link> 
+            <Link className="flex gap-3 h-12 border border-tertiary rounded-lg items-center pl-4 hover:bg-tertiary" to='/settings'> <IoSettingsOutline />  Settings</Link>
+
+            <button onClick={handleSignout} className="flex gap-3 h-12 border border-tertiary rounded-lg items-center pl-4 hover:bg-tertiary" type="button" > <PiSignOut /> Signout</button>
+          </div>
+
+          :
+          <div className="flex flex-col gap-2 px-4">
             <Link className="flex gap-3 h-12 border border-tertiary rounded-lg items-center pl-4 hover:bg-tertiary" to='/'> <IoHomeOutline className="" width='20px' /> Home</Link>
             <Link className="flex gap-3 h-12 border border-tertiary rounded-lg items-center pl-4 hover:bg-tertiary" to='/dashboard'> <RiDashboardHorizontalFill/> Dashboard</Link>
             <Link className="flex gap-3 h-12 border border-tertiary rounded-lg items-center pl-4 hover:bg-tertiary" to='/appointments'>  <BsClipboardCheckFill /> Appointments</Link>
-            <Link className="flex gap-3 h-12 border border-tertiary rounded-lg items-center pl-4 hover:bg-tertiary" to='/appointments'>  <VscCalendar /> Calendar</Link>
 
             <Link className="flex gap-3 h-12 border border-tertiary rounded-lg items-center pl-4 hover:bg-tertiary" to='/doctors'> <FaUserMd /> Doctors</Link> 
             <Link className="flex gap-3 h-12 border border-tertiary rounded-lg items-center pl-4 hover:bg-tertiary" to='/settings'> <IoSettingsOutline />  Settings</Link>
 
             <button onClick={handleSignout} className="flex gap-3 h-12 border border-tertiary rounded-lg items-center pl-4 hover:bg-tertiary" type="button" > <PiSignOut /> Signout</button>
-        </div>
+          </div>
+
+        }
     </div>
   )
 }

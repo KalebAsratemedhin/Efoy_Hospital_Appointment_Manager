@@ -26,7 +26,7 @@ async (req, accessToken, refreshToken, profile, done) => {
 
     if (!user) {
         user = await User.create({
-            googleId: profile.id,
+            googleId: profile.id,  
             fullName: profile.displayName,
             email: profile.emails[0].value,
             profilePic: profile.photos[0].value,

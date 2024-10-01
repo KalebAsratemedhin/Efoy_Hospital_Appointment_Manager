@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { DoctorApplication, DoctorApplicationUpdate } from "../../types/DoctorApplication";
+import { DoctorApplication, DoctorApplicationCreate, DoctorApplicationPopulated, DoctorApplicationUpdate } from "../../types/DoctorApplication";
 
 export const applicationAPI = createApi({
     reducerPath: 'applicationAPI',
@@ -8,7 +8,7 @@ export const applicationAPI = createApi({
         credentials: "include"
     }),
     endpoints: (builder) => ({
-        apply: builder.mutation<DoctorApplication, DoctorApplication>({
+        apply: builder.mutation<DoctorApplication, DoctorApplicationCreate>({
             query: (credential) => ({
                 url: '/',
                 method: 'Post',
@@ -18,7 +18,7 @@ export const applicationAPI = createApi({
         }),
         updateApplication: builder.mutation<DoctorApplication, {id: string, update: DoctorApplicationUpdate} >({
             query: ({id, update}) => ({
-                url: `/${id}`,
+                url: `/`,
                 method: 'Put',
                 body: update,
                 
@@ -32,14 +32,21 @@ export const applicationAPI = createApi({
             })
         }),
 
-        findMyApplication: builder.query<DoctorApplication, string>({
-            query: (userId) => ({
-                url: `/current-user/${userId}`,
+        findMyApplication: builder.query<DoctorApplication, void>({
+            query: () => ({
+                url: `/current-user`,
                 method: 'Get'
             })
         }),
 
-        findAllApplications: builder.query<DoctorApplication[], void>({
+        findOneApplication: builder.query<DoctorApplicationPopulated, string>({
+            query: (id) => ({
+                url: `/${id}`,
+                method: 'Get'
+            })
+        }),
+
+        findAllApplications: builder.query<DoctorApplicationPopulated[], void>({
             query: () => ({
                 url: '/',
                 method: 'Get'
@@ -64,6 +71,7 @@ export const {
     useUpdateApplicationMutation,
     useDeleteApplicationMutation,
     useFindMyApplicationQuery,
+    useFindOneApplicationQuery,
     useFindAllApplicationsQuery,
     useEvaluateApplicationMutation
 

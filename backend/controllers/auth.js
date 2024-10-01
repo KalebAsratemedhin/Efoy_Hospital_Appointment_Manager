@@ -13,7 +13,7 @@ const getUser = async(req, res) => {
         const user = await User.findById(id)
 
         if (user.role === 'doctor') {
-            const doctor = await Doctor.findOne({ user_id: user._id });
+            const doctor = await Doctor.findOne({ userId: user._id});
             return res.status(200).json({ ...user.toObject(), doctorData: doctor })
 
         }

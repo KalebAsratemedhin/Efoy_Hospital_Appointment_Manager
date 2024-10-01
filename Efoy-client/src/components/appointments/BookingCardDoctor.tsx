@@ -1,10 +1,8 @@
 import { Link } from "react-router-dom"
 import { BookingResponse } from "../../types/BookingResponse";
-import { useDeleteBookingMutation, useUpdateBookingMutation } from "../../redux/api/bookingAPI";
+import { useUpdateBookingMutation } from "../../redux/api/bookingAPI";
 import Spinner from "../utils/Spinner";
 import Error from "../utils/Error";
-import { CustomSerializedError } from "../../types/CustomSerializedError";
-
 const BookingCardDoctor = ({booking, refetch}: {booking: BookingResponse, refetch: () => void}) => {
   const doctor = booking.doctorId
   const patient = booking.patientId
@@ -24,10 +22,10 @@ const BookingCardDoctor = ({booking, refetch}: {booking: BookingResponse, refetc
 
   return (
     <div className="bg-white rounded-md p-4 flex gap-4 w-[600px] shadow-sm hover:shadow-md">
-        <div className="w-32 flex justify-center items-center">
+        <div className="w-20 flex justify-center items-center">
           {
-           doctor.profilePic ? 
-           <img src={doctor.profilePic} alt="profile" /> :
+           patient.profilePic ? 
+           <img className="w-12 h-12" src={patient.profilePic} alt="profile" /> :
            <div className="w-24 h-24 rounded-full flex justify-center items-center bg-gray-300 text-lg ">
               {initials}
             </div>
@@ -43,7 +41,7 @@ const BookingCardDoctor = ({booking, refetch}: {booking: BookingResponse, refetc
             <p>{patient?.username}</p>
           </div>
           <div className="flex flex-col  text-gray-500">
-            <p>Date: {new Date(booking.appointmentDate).toDateString()}  {booking.time}</p>
+            <p>Date: {new Date(booking.appointmentDate.split('T')[0] + ' ' + booking.time).toLocaleString()}</p>
             <p>Reason: {booking.reason}</p>
           </div>
 

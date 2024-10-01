@@ -7,6 +7,7 @@ import DoctorCard from "./DoctorCard";
 const DoctorsList = () => {
     const {isLoading, isSuccess, isError, error, data} = useFindAllDoctorsQuery()
 
+
     if(isLoading)
         return <Spinner />
     

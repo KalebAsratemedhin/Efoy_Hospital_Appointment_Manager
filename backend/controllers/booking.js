@@ -1,19 +1,58 @@
 const Booking = require("../models/booking");
-const formatTime = require("../utils/formatTime")
+const Doctor = require("../models/doctor");
+const {convertTo24HourFormat} = require("../utils/formatTime")
 const generateTimeSlots = require("../utils/generateTimeSlots")
 
 const findAllUserBookings = async (req, res) => {
     try {
-        console.log("role", req.user)
+        const { page = 1, limit = 10 } = req.query;
+        const skip = (page - 1) * limit;
+
+        console.log("role", req.user.role)
 
         if(req.user.role == "patient"){
-            const bookings = await Booking.find({patientId: req.user.data._id}).populate('patientId').populate('doctorId');
-            console.log("bookings", bookings)
-            return res.status(200).json(bookings)
+            const bookings = await Booking.find({patientId: req.user.id}).sort({
+                appointmentDate: 1,
+                time: 1,
+              }).skip(skip)
+                .limit(parseInt(limit))
+                .populate('patientId')
+                .populate('doctorId')
+              
+            
+            const result = []
+            console.log('bookings before', bookings)
+
+
+            for( booking of bookings){
+                const doc = await Doctor.findOne({userId: booking.doctorId})
+                result.push({...booking.toObject(), doctorData: doc})
+            }
+
+            const totalBookings = await Booking.countDocuments();
+
+            console.log('bookings result', result)
+
+            return res.status(200).json({
+                totalPages: Math.ceil(totalBookings / limit),
+                currentPage: page,
+                bookings: result,
+            });
+
+
+
 
         } else if (req.user.role == "doctor"){
-            const bookings = await Booking.find({doctorId: req.user.data._id}).populate('patientId').populate('doctorId');
-            return res.status(200).json(bookings)
+            const bookings = await Booking.find({doctorId: req.user.id}).populate('patientId').populate('doctorId');
+
+            const result = []
+
+            for( booking of bookings){
+                const doc = await Doctor.findOne({userId: booking.doctorId})
+                result.push({...booking.toObject(), doctorData: doc})
+            }
+            console.log('bookings result', result)
+            return res.status(200).json(result)
 
         } else{
             throw Error("No such role")
@@ -27,12 +66,33 @@ const findAllUserBookings = async (req, res) => {
 
 }
 
+const findRecentBooking = async (req, res) => {
+    const query = req.user.role === "patient" ? { patientId: req.user.id } : { doctorId: req.user.id };
+  
+    const now = new Date();
+  
+    const [booking] = await Booking.find({
+        ...query,
+        appointmentDate: { $gte: now }  
+      })
+      .sort({
+        appointmentDate: 1,  
+        time: 1 
+      })
+      .limit(1);
+  
+    console.log('Recent booking:', booking);
+    res.status(200).json(booking);
+  };
+  
+
 const findOneBooking = async (req, res) => {
     try {
         const {id} = req.params
         const booking = await Booking.findById(id).populate('patientId').populate('doctorId');;
-
-        return res.status(200).json(booking)
+        const doc = await Doctor.findOne({userId: booking.doctorId})
+        console.log("doc", doc)
+        return res.status(200).json({...booking.toObject(), doctorData: doc})
 
     } catch (error) {
         res.status(500).send({message: error.message})
@@ -55,7 +115,9 @@ const findAvailableTimeSlots = async (req, res) => {
 
         const allSlots = generateTimeSlots(date, start, end, interval);
         console.log("h bookings", allSlots)
+        ;
 
+              
         const bookings = await Booking.find({doctorId, appointmentDate: date})
 
         const doctorBookedSlots = bookings.map(booking => booking.time)
@@ -83,10 +145,10 @@ const createBooking = async (req, res) => {
             
         }
         const booking = await Booking.create({
-            patientId: req.user.data._id,
+            patientId: req.user.id,
             doctorId: doctorId,
             appointmentDate: appointmentDate,
-            time: time,
+            time: convertTo24HourFormat(time),
             reason: reason,
             status: "pending" 
             
@@ -104,8 +166,13 @@ const createBooking = async (req, res) => {
 const updateBooking = async (req, res) => {
     try {
         const {id} = req.params;
+        const { appointmentDate, time, reason } = req.body
 
-        const result = await Booking.findByIdAndUpdate(id, req.body);
+        const result = await Booking.findByIdAndUpdate(id, {
+            appointmentDate: appointmentDate,
+            time: convertTo24HourFormat(time),
+            reason: reason,
+        });
 
         return res.status(201).json(result)
 
@@ -192,6 +259,7 @@ const patientSummary = async (req, res) => {
 module.exports = {
     findAllUserBookings,
     findOneBooking,
+    findRecentBooking,
     findAvailableTimeSlots,
     patientSummary,
     doctorSummary,

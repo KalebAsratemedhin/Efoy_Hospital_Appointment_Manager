@@ -1,4 +1,7 @@
 const DoctorApplication = require('../models/doctorApplication');
+const Doctor = require('../models/doctor');
+const User = require('../models/user');
+
 
 const createApplication = async (req, res) => {
     try {
@@ -61,7 +64,33 @@ const evaluateApplication = async (req, res) => {
             return res.status(404).json({ message: 'Application not found.' });
         }
 
+        if(status === 'approved'){
+            const duplicate = await Doctor.findOne({userId: application.userId})
+
+            const doctor = await Doctor.create({
+                speciality: application.speciality,
+                experience: application.experience,
+                educationLevel: application.educationLevel,
+                orgID: application.orgID,
+                userId: application.userId
+
+            })
+
+            const user = await User.findOneAndUpdate({_id: application.userId}, {role: 'doctor'}, 
+                { new: true })
+            console.log('user after eval', user)
+        }
+
+        if(status === 'rejected' || status === 'pending'){
+            const doctor = await Doctor.findOneAndDelete({userId: application.userId})
+            const user = await User.findOneAndUpdate({_id: application.userId}, {role: 'patient'}, 
+                { new: true })
+            console.log('user after eval', user)
+            
+        }
+
         res.status(200).json({ message: `Application ${status} successfully`, application });
+    
     } catch (error) {
         res.status(500).json({ error: 'Server error' });
     }
@@ -85,7 +114,7 @@ const deleteApplication = async (req, res) => {
 
 const getAllApplications = async (req, res) => {
     try {
-        const applications = await DoctorApplication.find().populate('userId', 'email name');
+        const applications = await DoctorApplication.find().populate('userId');
 
         res.status(200).json(applications);
     } catch (error) {
@@ -93,15 +122,11 @@ const getAllApplications = async (req, res) => {
     }
 };
 
-const getOneApplication = async (req, res) => {
+const getMyApplication = async (req, res) => {
     try {
-        const { applicationId } = req.params;
+        const userId = req.user.id
 
-        const application = await DoctorApplication.findById(applicationId).populate('userId', 'email name');
-
-        if (!application) {
-            return res.status(404).json({ message: 'Application not found.' });
-        }
+        const application = await DoctorApplication.findOne({userId: userId});
 
         res.status(200).json(application);
     } catch (error) {
@@ -109,11 +134,24 @@ const getOneApplication = async (req, res) => {
     }
 };
 
+const getOneApplication = async (req, res) => {
+    try {
+        const {applicationId} = req.params
+
+        const application = await DoctorApplication.findById(applicationId).populate('userId');
+
+        res.status(200).json(application);
+    } catch (error) {
+        res.status(500).json({ error: 'Server error' });
+    }
+};
 module.exports = {
     createApplication,
     updateApplication,
     evaluateApplication,
     deleteApplication,
     getAllApplications,
-    getOneApplication
+    getOneApplication,
+    getMyApplication
+
 };

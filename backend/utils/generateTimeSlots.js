@@ -1,5 +1,5 @@
 
-const formatTime = require('./formatTime')
+const {formatTime} = require('./formatTime')
 
 function generateTimeSlots(date, start, end, interval) {
     console.log("mello")

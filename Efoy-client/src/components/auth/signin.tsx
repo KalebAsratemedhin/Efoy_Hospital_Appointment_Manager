@@ -37,11 +37,15 @@ const Signin = () => {
 
     useEffect(() => {
         if(isSuccess){
+            console.log('just success', authState)
+            
+
+
             dispatch(setAuth(data))
 
         }
         if(authState.id){
-            console.log(authState.id, 'email')
+            console.log(authState.id, 'email', authState.role)
             navigate('/dashboard')
         }
 

@@ -13,7 +13,7 @@ const DoctorCard = ({ doctor }: { doctor: Doctor }) => {
     <div className="bg-white rounded-md   shadow-sm hover:shadow-md ">
       <div className="w-full h-52 mb-4 flex justify-center items-center">
         {doctor.profilePic ? (
-          <img src={doctor.profilePic} alt={`${doctor.fullName} profile`} className="w-full h-full rounded-full object-cover" />
+          <img src={doctor.profilePic} alt={`${doctor.fullName} profile`} className="w-full h-full rounded-t-md object-cover" />
         ) : (
           <div className="w-full h-full  flex justify-center items-center bg-gray-300 text-lg">
             {initials}
@@ -28,7 +28,7 @@ const DoctorCard = ({ doctor }: { doctor: Doctor }) => {
           <p>{doctor.doctorData?.experience}</p>
         </div>
         <div className="flex gap-2 text-yellow-600 mb-2">
-          <RatingDisplay value={doctor.rating as number} />
+          <RatingDisplay value={doctor.doctorData.rating as number} />
         </div>
         {authState.id && (
           <div className="flex gap-4">

@@ -1,10 +1,10 @@
-import { User } from "./User";
+import { DoctorData, User } from "./User";
 
 export interface Booking {
     _id?: string,
     patientId?: string,
     doctorId?: string,
-    appointmentDate?: string,
+    appointmentDate: string,
     time?: string,
     reason?: string,
     status?: string,
@@ -19,4 +19,5 @@ export interface BookingPopulated {
     time: string,
     reason: string,
     status?: string,
+    doctorData: DoctorData
 }

@@ -1,23 +1,24 @@
 const Doctor = require('../models/doctor')
 const Rating = require('../models/rating')
+const User = require('../models/user')
 
 const createRating = async(req, res) => {
     try {
         const {doctorId, value } = req.body
         const rater = req.user
 
-        if(rater.id.toString() === doctorId){
+        if(rater.id === doctorId){
             return res.status(400).json({message: "You cannot rate yourself."})
         }
 
-        const [duplicate] = await Rating.find({doctorId, raterId: rater.data._id})
+        const [duplicate] = await Rating.find({doctorId, raterId: rater.id})
 
         if(duplicate)
             return res.status(409).json({message: "Rating exists"})
 
         const result = await Rating.create({
             doctorId,
-            raterId: rater.data._id,
+            raterId: rater.id,
             value
 
         })
@@ -81,7 +82,7 @@ const updateTotalRating = async(doctorId) => {
 
     }
 
-    const result = await Doctor.findByIdAndUpdate(doctorId, {rating: ratings.length > 0 ? total  / ratings.length : 0  })
+    const result = await Doctor.findOneAndUpdate({userId: doctorId}, {rating: ratings.length > 0 ? total  / ratings.length : 0  })
     return result
     
 }
@@ -97,10 +98,20 @@ const getRating = async(req, res) => {
 }
 
 const getFavorites = async(req, res) => {
-    const favorites = await Rating.find({raterId: req.user.id}).populate('doctorId')
+    const favorites = await Rating.distinct('doctorId', {raterId: req.user.id})
+    const result = []
     console.log("favorites", favorites)
+
+    for(fav of favorites){
+        const user = await User.findById(fav)
+        const doc = await Doctor.findOne({userId: fav})
+
+        result.push({...user.toObject(), doctorData: doc})
+        
+    }   
+    console.log("favorites result", result)
     
-    return res.status(200).json(favorites)
+    return res.status(200).json(result)
     
 }
 

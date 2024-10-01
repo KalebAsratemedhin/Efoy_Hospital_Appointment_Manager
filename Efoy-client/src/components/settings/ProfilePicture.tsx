@@ -10,27 +10,29 @@ const ProfilePicture = ({ user }: { user: User }) => {
   const initials = user?.fullName.split(" ").map((name) => name[0].toUpperCase()).join("");
   const [updateProfilePicture, { isError, error, isSuccess }] = useUpdateProfilePictureMutation();
   const [pic, setPic] = useState<File | null>(null);
-  const [picUrl, setPicUrl] = useState<string | null>(null); // State for image URL
+  const [picUrl, setPicUrl] = useState<string | null>(null); 
+  const [picChanged, setPicChanged] = useState(false)
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setPic(file);
+      setPicChanged(true)
       setPicUrl(URL.createObjectURL(file)); 
     }
   };
 
   const handleSave = async () => {
     const formData = new FormData();
-    formData.append("profilePic", pic as Blob); 
+    formData.append("profilePic", pic as Blob);
 
     await updateProfilePicture({ id: user?._id as string, update: formData });
-
-
+    setPicChanged(false)
   }
 
   return (
     <div className="flex flex-col space-y-1 items-center">
+
       <div className="w-36 h-36 rounded-lg flex items-center justify-center relative">
         <input
           type="file"
@@ -47,15 +49,17 @@ const ProfilePicture = ({ user }: { user: User }) => {
           {picUrl ? (
             <img className="bg-yellow-50 w-36 h-36 rounded-full" src={picUrl} alt="profile" />
           ) : user.profilePic ? (
-            <img className="bg-yellow-50 w-36 h-36 rounded-full" src={user.profilePic} alt="profile" />
+            <img className="bg-yellow-50 w-36 h-36 rounded-full" src={user.profilePic} alt="profile" referrerPolicy="no-referrer" />
           ) : (
             <div className='w-28 h-28 text-3xl font-medium rounded-full bg-gray-300 flex justify-center items-center'>
               <p>{initials}</p>
             </div>
           )}
         </div>
+        
+
       </div>
-      {pic && <button onClick={handleSave} className="bg-primary text-white px-8 py-2 rounded">Save</button>}
+      {picChanged && <button onClick={handleSave} className="bg-primary text-white px-8 py-2 rounded">Save</button>}
       {isError && <FormError error={error} />}
       {isSuccess && <FormSuccess message={"Successfully uploaded."} />}
     </div>

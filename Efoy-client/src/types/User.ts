@@ -14,7 +14,7 @@ export interface User{
 }
 
 export interface DoctorData {
-    user_id: string;
+    userId: string;
     speciality: string;
     experience: string;
     educationLevel: string;

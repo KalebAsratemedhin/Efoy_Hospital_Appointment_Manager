@@ -17,10 +17,10 @@ export const userAPI = createApi({
         }),
 
         findAllDoctors: builder.query<Doctor[], void>({
-            query: (user) => ({
+            query: () => ({
+                
                 url: '/doctor',
-                method: 'Get',
-                body: user
+                method: 'Get'
             })
         }),
 
@@ -42,6 +42,13 @@ export const userAPI = createApi({
             })
         }),
 
+        searchDoctors: builder.query<Doctor[], string>({
+            query: (searchTerm) => ({
+               url: `/doctor?search=${searchTerm}`,
+               method: 'Get'
+            })
+        }),
+
 
     })
 })
@@ -49,6 +56,7 @@ export const userAPI = createApi({
 export const {
     useFindOneDoctorQuery,
     useFindAllDoctorsQuery,
+    useSearchDoctorsQuery,
     useUpdateUserMutation,
     useUpdateProfilePictureMutation
 
