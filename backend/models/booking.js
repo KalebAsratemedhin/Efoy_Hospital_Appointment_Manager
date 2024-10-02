@@ -16,7 +16,6 @@ const bookingSchema = mongoose.Schema(
             type: Date,
             validate: {
                 validator: (value) => {
-                    console.log("validate", value, new Date().toISOString().split('T')[0])
                     return value.toISOString().split('T')[0] >= new Date().toISOString().split('T')[0];
                 },
                 message: props => `${props.value} is a past date`

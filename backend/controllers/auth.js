@@ -34,7 +34,6 @@ const signup = async (req, res) => {
             const hashedPassword = await bcrypt.hash(password, 10);
             const duplicate = await User.findOne({email: email})
             if (duplicate){
-                console.log(duplicate, "duplicate")
                 return res.status(500).json({message: "Duplicate account found."})
 
             }
@@ -57,7 +56,6 @@ const signup = async (req, res) => {
 
                 
     } catch (error) {
-        console.log("Error", error)
         res.status(500).json({message: "Server Error."})        
     }
 }
@@ -98,8 +96,6 @@ const login = async (req, res) => {
 }
 
 const googleAuthSuccess = async (req, res) => {
-    console.log("google auth success", req.user)
-
 
     const token = jwt.sign({ id: req.user.id, role: req.user.role}, process.env.JWT_SECRET, { expiresIn: '2h' });
  

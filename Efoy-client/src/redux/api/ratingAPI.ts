@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Rating } from "../../types/Rating";
-import { PopulatedRating } from "../../types/PopulatedRating";
+import { PopulatedRating } from "../../types/Rating";
 
 
 export const ratingAPI = createApi({

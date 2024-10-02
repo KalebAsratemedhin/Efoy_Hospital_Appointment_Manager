@@ -3,19 +3,19 @@ const Doctor = require("../models/doctor");
 const User = require("../models/user");
 
 
-
-
 const findAllDoctors = async (req, res) => {
     try {
 
-        console.log('query', req.query, )
-        const { query } = req.query;
+        const { page = 1, limit = 10 } = req.query;
+        const skip = (page - 1) * limit;
+
+
         const searchTerm = req.query?.search 
 
         if(!searchTerm){
-            console.log('return all ', searchTerm)
 
-            const doctors = await User.find({role: 'doctor'})
+            const doctors = await User.find({role: 'doctor'}).skip(skip)
+            .limit(parseInt(limit))
             const result = []
 
             for (doctor of doctors){
@@ -24,10 +24,15 @@ const findAllDoctors = async (req, res) => {
 
             }
 
-            return res.status(200).json(result)
+            const totalDoctors = await Doctor.countDocuments();
+            return res.status(200).json({
+                totalPages: Math.ceil(totalDoctors/ limit),
+                currentPage: page,
+                doctors: result,
+            });
+
 
         } else{
-            console.log('searching', searchTerm)
             const doctors = await User.find({
                 $or: [
                   { fullName: { $regex: searchTerm, $options: 'i' } },
@@ -45,7 +50,6 @@ const findAllDoctors = async (req, res) => {
                   result.push({...doctor.toObject(), doctorData: docData})
   
               }
-              console.log('searched', result)
 
 
             
@@ -76,30 +80,6 @@ const findOneDoctor = async (req, res) => {
     }
 
 }
-
-
-// const searchDoctors = async (req, res) => {
-//     try {
-//         const searchTerm = req.query.search || ''
-        
-//         const doctors = await Doctor.find({
-//             name: { $regex: searchTerm, $options: 'i' }, // Case-insensitive search
-//         });
-//         res.json(doctors);
-
-//         const doctor = await Doctor.findOne({userId: id})
-
-//         return res.status(200).json({...user.toObject(), doctorData: doctor})
-
-//     } catch (error) {
-//         res.status(500).send({message: error.message})
-
-//     }
-
-// }
-
-
-
 
 
 const updateDoctor = async (req, res) => {

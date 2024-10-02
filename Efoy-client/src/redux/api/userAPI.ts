@@ -16,10 +16,9 @@ export const userAPI = createApi({
             })
         }),
 
-        findAllDoctors: builder.query<Doctor[], void>({
-            query: () => ({
-                
-                url: '/doctor',
+        findAllDoctors: builder.query<{doctors: Doctor[], totalPages: number, currentPage: number}, {page: number, limit: number}>({
+            query: ({ page = 1, limit = 10 }) => ({
+                url: `/doctor?page=${page}&limit=${limit}`,
                 method: 'Get'
             })
         }),

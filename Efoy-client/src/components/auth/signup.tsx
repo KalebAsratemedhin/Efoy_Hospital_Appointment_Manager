@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { useSignupMutation } from "../../redux/api/authAPI";
 import Spinner from "../utils/Spinner";
 import { useDispatch } from "react-redux";
 import { setAuth } from "../../redux/slices/authSlice";
-import { SignupCredential } from "../../types/SignupCredential";
+import { SignupCredential } from "../../types/User";
 import { FcGoogle } from "react-icons/fc";
-import TextField from "../utils/TextField"; // Import the new TextField component
+import TextField from "../utils/TextField"; 
 import FormError from "../utils/FormError";
 
 interface FormData {
@@ -25,7 +25,7 @@ const Signup = () => {
   const { formState: { errors, isValid }, register, handleSubmit } = useForm<FormData>({
     mode: 'onChange'
   });
-  const [step, setStep] = useState(1);
+
   const [signupUser, { isError, isLoading, isSuccess, error, data: signupData }] = useSignupMutation();
   const navigate = useNavigate();
   const dispatch = useDispatch();

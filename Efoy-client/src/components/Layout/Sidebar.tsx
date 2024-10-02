@@ -7,7 +7,6 @@ import { FaUserMd } from "react-icons/fa";
 import { PiSignOut } from "react-icons/pi";
 import { LuStethoscope } from "react-icons/lu";
 import { BsClipboardCheckFill } from "react-icons/bs";
-import { VscCalendar } from "react-icons/vsc";
 import { useSignoutMutation } from "../../redux/api/authAPI";
 import Spinner from "../utils/Spinner";
 import Error from "../utils/Error";

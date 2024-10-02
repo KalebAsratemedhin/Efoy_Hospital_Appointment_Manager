@@ -100,7 +100,6 @@ const getRating = async(req, res) => {
 const getFavorites = async(req, res) => {
     const favorites = await Rating.distinct('doctorId', {raterId: req.user.id})
     const result = []
-    console.log("favorites", favorites)
 
     for(fav of favorites){
         const user = await User.findById(fav)
@@ -109,7 +108,6 @@ const getFavorites = async(req, res) => {
         result.push({...user.toObject(), doctorData: doc})
         
     }   
-    console.log("favorites result", result)
     
     return res.status(200).json(result)
     

@@ -8,7 +8,6 @@ const findAllUserBookings = async (req, res) => {
         const { page = 1, limit = 10 } = req.query;
         const skip = (page - 1) * limit;
 
-        console.log("role", req.user.role)
 
         if(req.user.role == "patient"){
             const bookings = await Booking.find({patientId: req.user.id}).sort({
@@ -21,7 +20,6 @@ const findAllUserBookings = async (req, res) => {
               
             
             const result = []
-            console.log('bookings before', bookings)
 
 
             for( booking of bookings){
@@ -31,7 +29,6 @@ const findAllUserBookings = async (req, res) => {
 
             const totalBookings = await Booking.countDocuments();
 
-            console.log('bookings result', result)
 
             return res.status(200).json({
                 totalPages: Math.ceil(totalBookings / limit),
@@ -43,7 +40,13 @@ const findAllUserBookings = async (req, res) => {
 
 
         } else if (req.user.role == "doctor"){
-            const bookings = await Booking.find({doctorId: req.user.id}).populate('patientId').populate('doctorId');
+            const bookings = await Booking.find({doctorId: req.user.id}).sort({
+                appointmentDate: 1,
+                time: 1,
+              }).skip(skip)
+                .limit(parseInt(limit))
+                .populate('patientId')
+                .populate('doctorId')
 
             const result = []
 
@@ -51,12 +54,19 @@ const findAllUserBookings = async (req, res) => {
                 const doc = await Doctor.findOne({userId: booking.doctorId})
                 result.push({...booking.toObject(), doctorData: doc})
             }
-            console.log('bookings result', result)
-            return res.status(200).json(result)
 
+            const totalBookings = await Booking.countDocuments();
+
+
+            return res.status(200).json({
+                totalPages: Math.ceil(totalBookings / limit),
+                currentPage: page,
+                bookings: result,
+            });
+            
         } else{
             throw Error("No such role")
-            }
+        }
         
 
     } catch (error) {
@@ -73,15 +83,17 @@ const findRecentBooking = async (req, res) => {
   
     const [booking] = await Booking.find({
         ...query,
-        appointmentDate: { $gte: now }  
-      })
+        $or: [
+            { appointmentDate: { $gt: now } }, 
+            { appointmentDate: now.toISOString().split('T')[0], time: { $gte: now.toTimeString().split(' ')[0] } } 
+          ]
+        })
       .sort({
         appointmentDate: 1,  
         time: 1 
       })
       .limit(1);
   
-    console.log('Recent booking:', booking);
     res.status(200).json(booking);
   };
   
@@ -91,7 +103,6 @@ const findOneBooking = async (req, res) => {
         const {id} = req.params
         const booking = await Booking.findById(id).populate('patientId').populate('doctorId');;
         const doc = await Doctor.findOne({userId: booking.doctorId})
-        console.log("doc", doc)
         return res.status(200).json({...booking.toObject(), doctorData: doc})
 
     } catch (error) {
@@ -103,19 +114,14 @@ const findOneBooking = async (req, res) => {
 
 const findAvailableTimeSlots = async (req, res) => {
     try {
-        console.log("hello", req.params)
         const { doctorId, date } = req.params;
-        console.log("mello", doctorId, date)
 
         const start = "08:00";
         const end = "17:30";
         const interval = 20;
 
-        console.log("h slots")
 
         const allSlots = generateTimeSlots(date, start, end, interval);
-        console.log("h bookings", allSlots)
-        ;
 
               
         const bookings = await Booking.find({doctorId, appointmentDate: date})
@@ -123,7 +129,6 @@ const findAvailableTimeSlots = async (req, res) => {
         const doctorBookedSlots = bookings.map(booking => booking.time)
 
         const availableSlots = allSlots.filter(slot => !doctorBookedSlots.includes(slot));
-        console.log("available", allSlots)
 
 
         res.json(availableSlots);
@@ -210,20 +215,13 @@ const doctorSummary = async(req, res) => {
         const bookings = await Booking.find({doctorId})
 
         const data = Array(12).fill(0)
-        // 2024-09-02T12:39:45.406Z,
-
-        console.log("bookings in summary", bookings)
-
 
         for (const booking of bookings){
-        console.log("booking of bookings", booking)
 
             const month = new Date(booking.appointmentDate).getMonth()
-            console.log("month", month)
             data[month] += 1
         }
 
-        console.log("data monthly", data)
         res.status(200).json(data)
 
 

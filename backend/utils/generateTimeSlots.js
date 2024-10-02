@@ -2,7 +2,6 @@
 const {formatTime} = require('./formatTime')
 
 function generateTimeSlots(date, start, end, interval) {
-    console.log("mello")
     const now = new Date()
     const currPref = date.split('T')[0]
     const startTime = new Date(`${currPref}T${start}:00`);

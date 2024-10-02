@@ -5,7 +5,7 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 const User = require('./models/user.js')
-const path = require('path');
+const path = require('path'); 
 
 
 const cookieParser = require('cookie-parser')
@@ -19,10 +19,8 @@ passport.use(new GoogleStrategy({
 async (req, accessToken, refreshToken, profile, done) => {
   
   try {
-    console.log('profile', profile)
 
     let user = await User.findOne({ googleId: profile.id });
-    console.log('user', user)
 
     if (!user) {
         user = await User.create({
@@ -32,7 +30,6 @@ async (req, accessToken, refreshToken, profile, done) => {
             profilePic: profile.photos[0].value,
         });
 
-        console.log("user", user)
 
     }
  

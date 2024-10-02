@@ -1,4 +1,3 @@
-import React from "react";
 import DoctorsList from "../doctors/DoctorsList";
 
 const LandingPage = () => {
@@ -93,7 +92,6 @@ const LandingPage = () => {
         </div>
       </section>
       <section className="py-10 px-4">
-        <h1 className="text-primary text-xl mb-4 ">Our Top Doctors</h1>
         <div className="overflow-y-auto">
           <DoctorsList />
         </div>

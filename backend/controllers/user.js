@@ -31,10 +31,8 @@ const findOneUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
     try {
-        console.log("updateUser req", req.params, req.body, req.user.id)
 
         const {id} = req.params 
-        console.log("updateUser", id, req.body, req.user.id)
 
         if (id !== req.user.id){
             return res.status(401).json({message: 'Unauthorized.'})
@@ -57,16 +55,13 @@ const updateUser = async (req, res) => {
 }
 
 const updateProfilePicture = async (req, res) => {
-    console.log("upload", req.body)
     upload(req, res, async (err) => {
       if (err) {
-        console.log("err", err)
 
         return res.status(400).json({ message: err });
       }
       
       try {
-        console.log("try catch", req.body)
 
         const userId = req.params.id;
         const user = await User.findById(userId);
@@ -75,7 +70,6 @@ const updateProfilePicture = async (req, res) => {
           return res.status(404).json({ message: "User not found" });
         }
 
-        console.log("try catch end file", req.file)
 
   
         user.profilePic = `http://localhost:${process.env.PORT}/uploads/${req.file.filename}`;

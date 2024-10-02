@@ -2,7 +2,6 @@ import { useForm } from "react-hook-form"
 import { Link, useNavigate } from "react-router-dom";
 import { useSigninMutation } from "../../redux/api/authAPI";
 import Spinner from "../utils/Spinner";
-import Error from "../utils/Error";
 import { useEffect } from "react";
 import { authSelector, setAuth } from "../../redux/slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -27,7 +26,6 @@ const Signin = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const authState = useSelector(authSelector)
-    const state = btoa(JSON.stringify({ role: watch('role') }))
     const onSubmit = async(data: FormData) => {
 
         const result = await signinUser(data)

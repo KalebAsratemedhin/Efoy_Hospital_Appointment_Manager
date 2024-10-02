@@ -78,14 +78,12 @@ const evaluateApplication = async (req, res) => {
 
             const user = await User.findOneAndUpdate({_id: application.userId}, {role: 'doctor'}, 
                 { new: true })
-            console.log('user after eval', user)
         }
 
         if(status === 'rejected' || status === 'pending'){
             const doctor = await Doctor.findOneAndDelete({userId: application.userId})
             const user = await User.findOneAndUpdate({_id: application.userId}, {role: 'patient'}, 
                 { new: true })
-            console.log('user after eval', user)
             
         }
 

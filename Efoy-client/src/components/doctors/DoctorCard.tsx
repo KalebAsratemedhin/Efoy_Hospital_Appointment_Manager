@@ -1,6 +1,6 @@
 
 import { Link } from "react-router-dom";
-import { Doctor } from "../../types/Doctor";
+import { Doctor } from "../../types/User";
 import RatingDisplay from "../rating/RatingDisplay";
 import { useSelector } from "react-redux";
 import { authSelector } from "../../redux/slices/authSlice";

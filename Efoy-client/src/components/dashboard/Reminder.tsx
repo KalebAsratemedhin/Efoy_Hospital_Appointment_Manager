@@ -1,21 +1,12 @@
 
-import { FaCalendarAlt, FaClock } from 'react-icons/fa';
-import { useFindCurrentUserBookingsQuery, useFindRecentBookingQuery } from '../../redux/api/bookingAPI';
+import { FaCalendarAlt } from 'react-icons/fa';
+import { useFindRecentBookingQuery } from '../../redux/api/bookingAPI';
 import CountDown from './CountDown';
-import { Booking, BookingPopulated } from '../../types/Booking';
-import Error from '../utils/Error';
-import Spinner from '../utils/Spinner';
+import { Booking } from '../../types/Booking';
 
 const Reminder = () => {
-  const {isLoading, isError, isSuccess, error, data} = useFindRecentBookingQuery()
+  const {isSuccess, data} = useFindRecentBookingQuery()
   const eventDate = data ? findNext(data) : undefined
-  console.log('apps', data)
-
-
-  // if(isError)
-  //   return <Error error={error} />
-  // if(isLoading)
-  //   return <Spinner />
 
   
   if(isSuccess)

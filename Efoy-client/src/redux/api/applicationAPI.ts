@@ -16,8 +16,8 @@ export const applicationAPI = createApi({
                 
             })
         }),
-        updateApplication: builder.mutation<DoctorApplication, {id: string, update: DoctorApplicationUpdate} >({
-            query: ({id, update}) => ({
+        updateApplication: builder.mutation<DoctorApplication, {update: DoctorApplicationUpdate} >({
+            query: ({ update}) => ({
                 url: `/`,
                 method: 'Put',
                 body: update,
