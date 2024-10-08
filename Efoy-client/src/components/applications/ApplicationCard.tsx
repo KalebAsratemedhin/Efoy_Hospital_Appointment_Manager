@@ -19,16 +19,18 @@ const ApplicationCard = ({application}: {application: DoctorApplicationPopulated
 
     <div className="flex bg-white rounded-md shadow-md mb-4">
           <div className="flex flex-col ">
-            <div className="w-20 h-20 flex  justify-center items-center ">
+            <div className="w-20 h-20 p-1 flex  justify-center items-center ">
               {user?.profilePic ? (
-                <img src={user.profilePic} alt={user.fullName} className="rounded-full w-14 h-14 object-cover" />
+                <img src={user.profilePic} alt={user.fullName} className="rounded-full w-full h-full object-cover" />
               ) : (
-                <div className="w-32 h-32 rounded-full flex justify-center items-center bg-gray-300 text-2xl font-semibold text-gray-700">
+                <div className="w-full h-full rounded-full flex justify-center items-center bg-gray-300 text-2xl font-semibold text-gray-700">
                   {initials}
                 </div>
               )}
             </div>
           </div>
+
+      
           <div className="flex flex-col justify-center py-4">
             <p>{user.fullName}</p>
             <p className="text-gray-500">{user.email}</p>

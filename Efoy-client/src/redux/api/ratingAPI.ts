@@ -7,7 +7,16 @@ export const ratingAPI = createApi({
     reducerPath: 'ratingAPI',
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:5000/ratings',
-        credentials: "include"
+        credentials: "include",
+        prepareHeaders: (headers) => {
+            const token = localStorage.getItem('accessToken');
+            
+            if (token) {
+                headers.set('Authorization', `Bearer ${token}`);
+            }
+
+            return headers;
+        },
     }),
     endpoints: (builder) => ({
         createRating: builder.mutation<Rating, Rating >({

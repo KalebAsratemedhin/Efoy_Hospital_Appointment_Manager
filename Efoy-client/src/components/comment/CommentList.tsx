@@ -2,7 +2,7 @@ import Spinner from "../utils/Spinner";
 import Error from "../utils/Error";
 import { useFindAllCommentsQuery } from "../../redux/api/commentAPI";
 import CommentCard from "./CommentCard";
-import { useGetCurrentUserQuery } from "../../redux/api/authAPI";
+import { useGetCurrentUserQuery } from "../../redux/api/userAPI";
 
 const CommentList = ({doctorId}: {doctorId: string}) => {
   const {isLoading, isSuccess, isError, error, data, refetch} = useFindAllCommentsQuery(doctorId)

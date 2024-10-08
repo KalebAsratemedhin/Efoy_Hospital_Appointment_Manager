@@ -35,7 +35,7 @@ const Signin = () => {
 
     useEffect(() => {
         if(isSuccess){
-            console.log('just success', authState)
+            console.log('just success', authState, data)
             
 
 

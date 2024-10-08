@@ -1,13 +1,30 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Doctor, User, UserUpdate } from "../../types/User";
+import { AdminStats, Doctor, User, UserUpdate } from "../../types/User";
 
 export const userAPI = createApi({
     reducerPath: 'userAPI',
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:5000',
-        credentials: "include"
+        credentials: "include",
+        prepareHeaders: (headers) => {
+            const token = localStorage.getItem('accessToken');
+            
+            if (token) {
+                headers.set('Authorization', `Bearer ${token}`);
+            }
+
+            return headers;
+        },
     }),
+    tagTypes: ['User'],
     endpoints: (builder) => ({
+        getCurrentUser: builder.query<User, void>({
+            query: () => ({
+                url: '/user/current-user',
+                method: 'Get'
+            }),
+            providesTags: ['User']
+        }),
 
         findOneDoctor: builder.query<Doctor, string>({
             query: (id) => ({
@@ -29,7 +46,8 @@ export const userAPI = createApi({
                 method: 'Put',
                 body: update,
                 
-            })
+            }),
+            invalidatesTags: ['User']
         }),
 
         updateProfilePicture: builder.mutation<User, {id: string, update: any}>({
@@ -38,7 +56,9 @@ export const userAPI = createApi({
                 method: 'Put',
                 body: update,
                 
-            })
+            }),
+            invalidatesTags: ['User']
+
         }),
 
         searchDoctors: builder.query<Doctor[], string>({
@@ -48,16 +68,25 @@ export const userAPI = createApi({
             })
         }),
 
+        adminStats: builder.query<AdminStats, void>({
+            query: () => ({
+               url: '/user/admin-stats',
+               method: 'Get'
+            })
+        }),
+
 
     })
 })
 
 export const {
+    useGetCurrentUserQuery,
     useFindOneDoctorQuery,
     useFindAllDoctorsQuery,
     useSearchDoctorsQuery,
     useUpdateUserMutation,
-    useUpdateProfilePictureMutation
+    useUpdateProfilePictureMutation,
+    useAdminStatsQuery
 
 
 

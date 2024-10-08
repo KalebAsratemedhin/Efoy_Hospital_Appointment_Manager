@@ -37,7 +37,7 @@ const UpdateApplication = ({application}: {application: DoctorApplication}) => {
     <div className="mx-auto bg-white p-10">
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col justify-center items-center ">
           <h1 className="text-2xl text-gray-900 font-normal">Your application </h1>
-          <div className="space-y-2 md:col-span-2 lg:w-[500px]">
+          <div className="space-y-2 md:col-span-2 w-full lg:w-2/3 xl:w-1/2">
             <TextField
               label="Speciality"
               id="speciality"
@@ -91,7 +91,7 @@ const UpdateApplication = ({application}: {application: DoctorApplication}) => {
           </div>
           
 
-          <div className="space-y-2 md:col-span-2 lg:w-[500px]">
+          <div className="space-y-2 md:col-span-2 w-full lg:w-2/3 xl:w-1/2 ">
           {isError && <FormError error={error} />}
           {isLoading && <Spinner />}
           {isSuccess && <FormSuccess message={"Application has been updated."} />}

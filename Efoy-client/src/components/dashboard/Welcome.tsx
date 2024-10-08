@@ -1,4 +1,4 @@
-import { useGetCurrentUserQuery } from "../../redux/api/authAPI";
+import { useGetCurrentUserQuery } from "../../redux/api/userAPI";
 import Spinner from "../utils/Spinner";
 import Error from "../utils/Error";
 

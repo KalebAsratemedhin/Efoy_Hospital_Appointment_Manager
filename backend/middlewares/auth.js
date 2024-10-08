@@ -1,7 +1,10 @@
 const jwt = require('jsonwebtoken');
 
 const authenticateUser = (req, res, next) => {
-    const token = req.cookies.token;
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1]; 
+
+    console.log("auth middle ware", authHeader)
     
     if (!token) {
         return res.status(401).json({ message: 'Access denied. No token provided.' });
@@ -16,9 +19,11 @@ const authenticateUser = (req, res, next) => {
     }
 };
 
-
 const isAdmin = (req, res, next) => {
+    console.log('admin?')
     if (req.user.role !== 'admin') {
+        console.log('admin no')
+
         return res.status(403).json({ message: 'Access denied. Admins only.' });
     }
     next();

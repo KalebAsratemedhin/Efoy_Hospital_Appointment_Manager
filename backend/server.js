@@ -14,13 +14,14 @@ const connectDatabase = require('./config/db.js');
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: 'http://localhost:5000/auth/google/callback'
+  callbackURL: process.env.GOOGLE_CLIENT_CALLBACK_URL
 },
 async (req, accessToken, refreshToken, profile, done) => {
   
   try {
-
+ 
     let user = await User.findOne({ googleId: profile.id });
+    console.log('google id auth user existing', user)
 
     if (!user) {
         user = await User.create({
@@ -32,18 +33,20 @@ async (req, accessToken, refreshToken, profile, done) => {
 
 
     }
+    console.log('google id auth user done', user)
+
  
     return done(null, user);
    
   } catch (err) {
     done(err, null);
   }
-}));
+})); 
 
 const cors = require('cors');      
 
 const corsOpts = {
-    origin: 'http://localhost:3000',
+    origin: process.env.CLIENT_URL,
     credentials: true,
     methods: ['GET', 'POST', 'HEAD', 'PUT', 'PATCH', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],  

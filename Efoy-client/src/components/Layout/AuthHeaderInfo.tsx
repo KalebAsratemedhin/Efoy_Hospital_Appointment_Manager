@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom"
-import { useGetCurrentUserQuery } from "../../redux/api/authAPI";
+import { useGetCurrentUserQuery } from "../../redux/api/userAPI";
 import { IoNotifications } from "react-icons/io5";
 import { IoSettingsOutline } from "react-icons/io5";
 import Spinner from "../utils/Spinner";
@@ -20,7 +20,7 @@ const AuthHeaderInfo = () => {
         return <Spinner />
     
     if(isError && (error as CustomSerializedError).data.message === "Access denied. No token provided."){
-        dispatch(clearAuth())
+        // dispatch(clearAuth())
         return <Error error={error} />
     }
     

@@ -1,11 +1,12 @@
 import { useForm } from "react-hook-form";
-import { useGetCurrentUserQuery } from "../../redux/api/authAPI";
+import { useGetCurrentUserQuery } from "../../redux/api/userAPI";
 import { useEffect } from "react";
 import TextField from "../utils/TextField"; // Import the reusable TextField component
 import FormError from "../utils/FormError";
 import { useUpdateUserMutation } from "../../redux/api/userAPI";
 import FormSuccess from "../utils/FormSuccess";
 import ProfilePicture from "./ProfilePicture";
+import { UserUpdate } from "../../types/User";
 
 interface FormData {
   fullName: string;
@@ -22,7 +23,18 @@ const Profile = () => {
   const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
-    await updateUser({id: user?._id as string, update: data})
+    let update: UserUpdate = {fullName: data.fullName, phoneNumber: data.phoneNumber}
+    if(data.address)
+      update.address = data.address
+  
+    if (data.age)
+      update.age = data.age
+    
+    if(data.sex)
+      update.sex = data.sex
+
+
+    await updateUser({id: user?._id as string, update: update})
 
   };
 

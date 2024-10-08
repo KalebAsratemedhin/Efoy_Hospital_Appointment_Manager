@@ -1,6 +1,6 @@
 import { Outlet} from "react-router-dom"
 
-import { useGetCurrentUserQuery } from "../../redux/api/authAPI"
+import { useGetCurrentUserQuery } from "../../redux/api/userAPI"
 import Spinner from "../utils/Spinner"
 import Error from "../utils/Error"
 import { useDispatch } from "react-redux"
@@ -17,10 +17,10 @@ const AuthSetup = () => {
     
   if(isUserError){
     const error = userError as CustomSerializedError
-    if(error.data.message === "No token provided"){
-      dispatch(clearAuth())
+    // if(error.data.message === "No token provided"){
+    //   // dispatch(clearAuth())
 
-    }
+    // }
     return <Error error={error} />
 
   }

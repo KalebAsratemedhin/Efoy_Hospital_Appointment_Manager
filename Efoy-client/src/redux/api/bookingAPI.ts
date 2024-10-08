@@ -5,8 +5,18 @@ export const bookingAPI = createApi({
     reducerPath: 'bookingAPI',
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:5000/bookings',
-        credentials: "include"
+        credentials: "include",
+        prepareHeaders: (headers) => {
+            const token = localStorage.getItem('accessToken');
+            
+            if (token) {
+                headers.set('Authorization', `Bearer ${token}`);
+            }
+
+            return headers;
+        },
     }),
+    tagTypes: ['MyBookings', 'Booking'],
     endpoints: (builder) => ({
         createBooking: builder.mutation<BookingPopulated, Booking >({
             query: (credential) => ({
@@ -14,7 +24,8 @@ export const bookingAPI = createApi({
                 method: 'Post',
                 body: credential,
                 
-            })
+            }),
+            invalidatesTags: ['MyBookings']
         }),
         updateBooking: builder.mutation<BookingPopulated, {id: string, update: Booking} >({
             query: ({id, update}) => ({
@@ -22,7 +33,9 @@ export const bookingAPI = createApi({
                 method: 'Put',
                 body: update,
                 
-            })
+            }),
+            invalidatesTags: ['MyBookings', 'Booking']
+
         }),
         deleteBooking: builder.mutation<void, string >({
             query: (id) => ({
@@ -43,14 +56,16 @@ export const bookingAPI = createApi({
             query: (id) => ({
                 url: `/${id}`,
                 method: 'Get'
-            })
+            }),
+            providesTags: ['Booking']
         }),
 
         findCurrentUserBookings: builder.query<{bookings: BookingPopulated[], totalPages: number, currentPage: number}, {page: number, limit: number}>({
             query: ({ page = 1, limit = 10 }) => ({
                 url: `?page=${page}&limit=${limit}`,
                 method: 'Get'
-            })
+            }),
+            providesTags: ['MyBookings']
         }),
         findAvailableTimeSlots: builder.query<string[], {doctorId: string, date: string}>({
             query: ({doctorId, date}) => ({

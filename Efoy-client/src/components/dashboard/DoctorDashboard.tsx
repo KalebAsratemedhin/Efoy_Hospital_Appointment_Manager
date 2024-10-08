@@ -1,8 +1,8 @@
 import Reminder from "./Reminder";
 import MonthlyReport from "./MonthlyReport";
-import { useGetCurrentUserQuery } from "../../redux/api/authAPI";
+import { useGetCurrentUserQuery } from "../../redux/api/userAPI";
 import DoctorProfile from "../doctors/DoctorProfile";
-import { Doctor } from "../../types/Doctor";
+import { Doctor } from "../../types/User";
 import Spinner from "../utils/Spinner";
 import Error from "../utils/Error";
 
@@ -22,6 +22,7 @@ const DoctorDashboard = () => {
         <div className="flex flex-wrap gap-4 justify-between max-w-6xl mx-auto rounded-lg mb-8">
             <MonthlyReport />
             <Reminder />
+
         </div>
 
       <div className="max-w-6xl mx-auto  mb-8">
@@ -31,6 +32,7 @@ const DoctorDashboard = () => {
         <DoctorProfile doctor={user as Doctor} />
         
       </div>
+
 
     </div>
   );

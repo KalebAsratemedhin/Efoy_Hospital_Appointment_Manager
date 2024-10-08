@@ -39,7 +39,8 @@ const Signup = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      dispatch(setAuth({ id: signupData._id, role: signupData.role }));
+      console.log('signup data', signupData)
+      dispatch(setAuth(signupData));
       navigate('/dashboard');
     }
   }, [isSuccess]);

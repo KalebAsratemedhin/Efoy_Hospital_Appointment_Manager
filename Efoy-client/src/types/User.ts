@@ -53,3 +53,16 @@ export interface SignupCredential{
     phoneNumber: string;
 }
 
+
+export interface AuthResponse{
+    id: string;
+    role: string;
+    accessToken: string;
+}
+
+
+export interface AdminStats{
+    doctorsCount: number;
+    patientsCount: number;
+    appointmentsCount: number;
+}

@@ -1,5 +1,27 @@
 const User = require("../models/user")
-const upload = require("../middlewares/fileUpload")
+const upload = require("../middlewares/fileUpload");
+const Booking = require("../models/booking");
+const Doctor = require("../models/doctor")
+
+const getUser = async (req, res) => {
+    try {
+        const { id } = req.user;
+        const user = await User.findById(id);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        if (user.role === 'doctor') {
+            const doctor = await Doctor.findOne({ userId: user._id });
+            return res.status(200).json({ ...user.toObject(), doctorData: doctor });
+        }
+
+        res.status(200).json(user.toObject());
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error.' });
+    }
+};
 
 
 const findAllUsers = async (req, res) => {
@@ -34,6 +56,7 @@ const updateUser = async (req, res) => {
 
         const {id} = req.params 
 
+       
         if (id !== req.user.id){
             return res.status(401).json({message: 'Unauthorized.'})
         }
@@ -72,7 +95,7 @@ const updateProfilePicture = async (req, res) => {
 
 
   
-        user.profilePic = `http://localhost:${process.env.PORT}/uploads/${req.file.filename}`;
+        user.profilePic = `${process.env.BACKEND_URL}/uploads/${req.file.filename}`;
         await user.save();
   
         res.status(200).json({ message: "Profile picture updated", user });
@@ -82,12 +105,32 @@ const updateProfilePicture = async (req, res) => {
     });
   }
   
+const adminStats = async (req, res) => {
+    try {
+        console.log('ere')
+
+        const doctorsCount = await Doctor.countDocuments();
+        const patientsCount = await User.find({role: 'patient'}).countDocuments();
+        const appointmentsCount = await Booking.countDocuments();
+
+
+
+        return res.status(200).json({doctorsCount, patientsCount, appointmentsCount})
+
+    } catch (error) {
+        res.status(500).send({message: error.message})
+
+    }
+
+}
 
 
 
 module.exports = {
+    getUser,
     findAllUsers,
     findOneUser,
     updateUser,
-    updateProfilePicture
+    updateProfilePicture,
+    adminStats
 }

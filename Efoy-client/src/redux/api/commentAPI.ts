@@ -6,7 +6,16 @@ export const commentAPI = createApi({
     reducerPath: 'commentAPI',
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:5000/comments',
-        credentials: "include"
+        credentials: "include",
+        prepareHeaders: (headers) => {
+            const token = localStorage.getItem('accessToken');
+            
+            if (token) {
+                headers.set('Authorization', `Bearer ${token}`);
+            }
+
+            return headers;
+        },
     }),
     endpoints: (builder) => ({
         createComment: builder.mutation<CommentI, CommentI >({

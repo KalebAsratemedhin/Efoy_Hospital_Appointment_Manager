@@ -1,14 +1,23 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { SigninCredential, SignupCredential, User } from "../../types/User";
+import { AuthResponse, SigninCredential, SignupCredential, User } from "../../types/User";
 
 export const authAPI = createApi({
     reducerPath: 'authApi',
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:5000/auth',
-        credentials: "include"
+        credentials: "include",
+        prepareHeaders: (headers) => {
+            const token = localStorage.getItem('accessToken');
+            
+            if (token) {
+                headers.set('Authorization', `Bearer ${token}`);
+            }
+
+            return headers;
+        },
     }),
     endpoints: (builder) => ({
-        signup: builder.mutation<User, SignupCredential >({
+        signup: builder.mutation<AuthResponse, SignupCredential >({
             query: (credential) => ({
                 url: '/signup',
                 method: 'Post',
@@ -16,7 +25,7 @@ export const authAPI = createApi({
                 
             })
         }),
-        signin: builder.mutation<User, SigninCredential >({
+        signin: builder.mutation<AuthResponse, SigninCredential >({
             query: (credential) => ({
                 url: '/signin',
                 method: 'Post',
@@ -31,12 +40,7 @@ export const authAPI = createApi({
                 
             })
         }),
-        getCurrentUser: builder.query<User, void>({
-            query: () => ({
-                url: '/current-user',
-                method: 'Get'
-            })
-        }),
+        
         googleAuth: builder.query<void, void>({
             query: () => ({
                 url: '/google'
@@ -50,6 +54,5 @@ export const {
     useSigninMutation, 
     useSignupMutation,
     useSignoutMutation,
-    useGetCurrentUserQuery,
     useGoogleAuthQuery
 } = authAPI

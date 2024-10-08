@@ -8,6 +8,25 @@ import AdminDashboard from "../components/dashboard/AdminDashboard"
 
 const DashboardPage = () => {
   const authState = useSelector((state: RootState) => state.auth)
+  let dashboard;
+
+  switch (authState.role){
+    case "patient":
+      dashboard = <PatientDashboard /> 
+      break
+    case "doctor":
+      dashboard = <DoctorDashboard /> 
+      break
+
+    case "admin":
+      dashboard = <AdminDashboard /> 
+      break
+
+    default:
+      dashboard = <Error error={"Not accessible."} /> 
+
+
+  }
 
   
   if(!authState.id)
@@ -16,13 +35,7 @@ const DashboardPage = () => {
   return (
     <div className="w-full h-full">
        
-        {authState.role === "patient" &&  <PatientDashboard /> }
-        {authState.role === "doctor" && <DoctorDashboard /> }
-        {authState.role === "admin" && <AdminDashboard /> }
-
-        {authState.role !== "doctor" && authState.role !== "patient" && <Error error={"Not accessible."} /> }
-
-
+        {dashboard }
        
     </div>
   )

@@ -5,7 +5,6 @@ const passport = require('passport');
 
 const router = express.Router();
  
-router.get('/current-user', authenticateUser,  authController.getUser)
 
 router.post('/signup', authController.signup);
 
@@ -14,12 +13,15 @@ router.post('/signin', authController.login)
 router.post('/signout', authController.logout)
 
 router.get('/google', (req, res, next) => {
+  console.log('initiated')
     next();
   }, passport.authenticate('google', {
   scope: ['profile', 'email']  
 }));
 
 router.get('/google/callback', (req, res, next) => {
+  console.log('done' )
+
     next(); 
   }, passport.authenticate('google', { session: false }), authController.googleAuthSuccess);
 

@@ -20,9 +20,11 @@ const GoogleAuth = () => {
     useEffect(() => {
         const id = searchParams.get('id');
         const role = searchParams.get('role');
+        const accessToken = searchParams.get('token');
+
 
         if(id && role){
-            dispatch(setAuth({id, role}))
+            dispatch(setAuth({id, role, accessToken}))
             navigate('/dashboard')
         }
 

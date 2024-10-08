@@ -2,7 +2,7 @@ import { useFindDoctorSummaryQuery, useFindPatientSummaryQuery } from "../../red
 import BarChart from "./BarChart"
 import Spinner from "../utils/Spinner";
 import Error from "../utils/Error";
-import { useGetCurrentUserQuery } from "../../redux/api/authAPI";
+import { useGetCurrentUserQuery } from "../../redux/api/userAPI";
 import { useSelector } from "react-redux";
 import { authSelector } from "../../redux/slices/authSlice";
 
