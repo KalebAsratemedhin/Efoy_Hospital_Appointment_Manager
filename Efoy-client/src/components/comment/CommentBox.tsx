@@ -10,7 +10,7 @@ interface FormData{
 
 const CommentBox = ({doctorId}: {doctorId: string}) => { 
     const {formState:{errors}, register, handleSubmit } = useForm<FormData>()
-    const [commentDoc, {isLoading, isSuccess, isError, error, data}] = useCreateCommentMutation()
+    const [commentDoc, {isLoading, isSuccess, isError, error}] = useCreateCommentMutation()
     const {refetch} = useFindAllCommentsQuery(doctorId)
 
 

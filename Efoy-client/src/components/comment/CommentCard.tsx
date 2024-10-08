@@ -32,8 +32,7 @@ const CommentCard = ({ comment, refetch, isEditable }: { comment: CommentI; isEd
   const handleSave = async () => {
     console.log("gonna save")
     try {
-      const res = await updateComment({ id: comment?._id as string, update: {content: editedContent, doctorId: comment.doctorId as string} }).unwrap();
-      // console.log('res', res)
+      await updateComment({ id: comment?._id as string, update: {content: editedContent, doctorId: comment.doctorId as string} }).unwrap();
       setIsEditing(false);
       refetch();
 

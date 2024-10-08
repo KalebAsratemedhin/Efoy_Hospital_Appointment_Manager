@@ -6,7 +6,7 @@ import { useGetCurrentUserQuery } from "../../redux/api/userAPI";
 
 const CommentList = ({doctorId}: {doctorId: string}) => {
   const {isLoading, isSuccess, isError, error, data, refetch} = useFindAllCommentsQuery(doctorId)
-  const {isLoading: isUserLoading, isSuccess: isUserSuccess, isError: isUserError, error: userError, data: user} = useGetCurrentUserQuery()
+  const { data: user } = useGetCurrentUserQuery()
 
   if (isLoading ) return <Spinner />;
   if (isError ) return <Error error={error} />;

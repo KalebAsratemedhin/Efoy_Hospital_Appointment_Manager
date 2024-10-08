@@ -6,7 +6,7 @@ import FormSuccess from "../utils/FormSuccess";
 import Spinner from "../utils/Spinner";
 
 import Error from "../utils/Error";
-import { useCreateBookingMutation, useFindAvailableTimeSlotsQuery } from "../../redux/api/bookingAPI";
+import { useCreateBookingMutation } from "../../redux/api/bookingAPI";
 import TimeDate from "./TimeDate";
 
 interface FormData {

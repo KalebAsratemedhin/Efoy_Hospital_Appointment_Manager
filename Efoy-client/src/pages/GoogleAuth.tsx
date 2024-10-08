@@ -4,13 +4,6 @@ import { useDispatch } from "react-redux";
 import { setAuth } from "../redux/slices/authSlice";
 
 
-interface FormData{
-  speciality?: string;
-  orgID?: string;
-  experience?: string;
-  educationLevel?: string;
-}
-
 const GoogleAuth = () => {
   const [searchParams] = useSearchParams() 
   const navigate = useNavigate()

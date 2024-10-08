@@ -6,7 +6,7 @@ import { MdDeleteOutline } from "react-icons/md";
 const RatingStars = ({doctorId}: {doctorId: string}) => {
   
   const totalStars = 5
-  const {isLoading: isRatingLoading, isError: isRatingError, isSuccess: isRatingSuccess, error: ratingError, data: ratingData, refetch} = useFindCurrentUserRatingQuery(doctorId)
+  const {isError: isRatingError, isSuccess: isRatingSuccess, error: ratingError, data: ratingData, refetch} = useFindCurrentUserRatingQuery(doctorId)
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
   const [rateDoc] = useCreateRatingMutation()

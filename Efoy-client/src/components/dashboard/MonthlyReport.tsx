@@ -8,7 +8,7 @@ import { authSelector } from "../../redux/slices/authSlice";
 
 const MonthlyReport = () => {
   const authState = useSelector(authSelector)
-  const {isLoading: isUserLoading, isSuccess: isUserSuccess, isError: isUserError, error: userError, data: user, refetch} = useGetCurrentUserQuery()
+  const {isLoading: isUserLoading, isError: isUserError, error: userError, data: user} = useGetCurrentUserQuery()
 
   if(authState.role === "patient"){
     const {isLoading, isSuccess, isError, error, data} = useFindPatientSummaryQuery(user?._id as string)

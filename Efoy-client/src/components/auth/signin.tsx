@@ -18,7 +18,7 @@ interface FormData{
 }
 
 const Signin = () => {
-    const {formState: {errors}, watch, register, handleSubmit} = useForm<FormData>({
+    const {formState: {errors}, register, handleSubmit} = useForm<FormData>({
         defaultValues: {
             role: 'patient',
         },

@@ -1,9 +1,7 @@
 import { Link } from "react-router-dom"
-import { BookingResponse } from "../../types/BookingResponse";
 import { useDeleteBookingMutation } from "../../redux/api/bookingAPI";
 import Spinner from "../utils/Spinner";
 import Error from "../utils/Error";
-import { CustomSerializedError } from "../../types/CustomSerializedError";
 import { BookingPopulated } from "../../types/Booking";
 
 const BookingCardPatient = ({booking, refetch}: {booking: BookingPopulated, refetch: () => void}) => {
@@ -11,8 +9,6 @@ const BookingCardPatient = ({booking, refetch}: {booking: BookingPopulated, refe
 
   const initials = doctor.fullName.split(' ').map((name) => name[0].toUpperCase()).join('');  
   const [deleteBooking, {isLoading, isError, isSuccess, error}] = useDeleteBookingMutation()
-
-  const customError = error as CustomSerializedError
 
   const handleDelete = async () => {
     await deleteBooking(booking._id as string)

@@ -1,4 +1,4 @@
-import { Doctor } from "../../types/Doctor"
+import { Doctor } from "../../types/User"
 import RatingDisplay from "../rating/RatingDisplay";
 import { useSelector } from "react-redux";
 import { authSelector } from "../../redux/slices/authSlice";
@@ -8,7 +8,7 @@ import RatingStars from "../rating/RatingStars";
 
 const DoctorProfile = ({doctor} : {doctor: Doctor}) => {
 
-  const initials = doctor.fullName.split(' ').map((name) => name[0].toUpperCase()).join('');  
+  const initials = doctor.fullName.split(' ').map((name: string) => name[0].toUpperCase()).join('');  
   const authState = useSelector(authSelector)
 
   return (
@@ -24,13 +24,13 @@ const DoctorProfile = ({doctor} : {doctor: Doctor}) => {
             </div>
           )}
         </div>
-        <h2 className="text-2xl font-semibold text-gray-900">{doctor?.fullName}</h2>
-        <p className="text-lg text-gray-600 mt-2">{doctor?.speciality}</p>
-        <p className="text-gray-500 mt-1">{doctor?.experience}</p>
+        <h2 className="text-2xl font-semibold text-gray-900">{doctor.fullName}</h2>
+        <p className="text-lg text-gray-600 mt-2">{doctor.doctorData.speciality}</p>
+        <p className="text-gray-500 mt-1">{doctor.doctorData.experience}</p>
         <div className="mt-4">
         { authState.id !== doctor?._id ?
           <RatingStars doctorId={doctor?._id as string} /> :
-          <RatingDisplay value={doctor.rating as number} />
+          <RatingDisplay value={doctor.doctorData.rating as number} />
         }
         </div>
       </div>

@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import TextField from "../utils/TextField";
-import { useApplyMutation, useUpdateApplicationMutation } from "../../redux/api/applicationAPI";
+import { useApplyMutation } from "../../redux/api/applicationAPI";
 import FormError from "../utils/FormError";
 import FormSuccess from "../utils/FormSuccess";
 import Spinner from "../utils/Spinner";
@@ -14,7 +14,7 @@ interface FormData {
 
 const CreateApplication = () => {
     const { register, handleSubmit, formState: { errors }} = useForm<FormData>();
-    const [apply, {isLoading, isError, isSuccess, error, data}] = useApplyMutation()
+    const [apply, {isLoading, isError, isSuccess, error}] = useApplyMutation()
 
 
     const onSubmit = async (data: FormData) => {

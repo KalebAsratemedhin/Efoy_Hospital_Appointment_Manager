@@ -18,7 +18,6 @@ import ContactPage from "./pages/Contact"
 import AboutPage from "./pages/About"
 import GoogleAuth from "./pages/GoogleAuth"
 import AuthSetup from "./components/auth/AuthSetup"
-import ApplicationList from "./components/applications/ApplicationList"
 import Applications from "./pages/Applications"
 
 const AppRoutes = () => {

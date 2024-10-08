@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useFindAvailableTimeSlotsQuery } from "../../redux/api/bookingAPI";
 
 interface TimeDateProps {
@@ -10,9 +9,9 @@ interface TimeDateProps {
 
 }
 
-const TimeDate = ({register, errors, setValue, watch, doctorId}: TimeDateProps) => {
+const TimeDate = ({register, errors, watch, doctorId}: TimeDateProps) => {
     const selectedDate = watch('appointmentDate')
-    const { data: availableSlots, isSuccess: isSlotsFetchSuccess } = useFindAvailableTimeSlotsQuery({ doctorId: doctorId, date: selectedDate });
+    const { data: availableSlots } = useFindAvailableTimeSlotsQuery({ doctorId: doctorId, date: selectedDate });
 
 
     return (

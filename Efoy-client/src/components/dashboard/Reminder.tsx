@@ -33,7 +33,7 @@ export default Reminder;
 const findNext = (data: Booking) => {
   const now = new Date()
 
-  const date = new Date(data.appointmentDate.split('T')[0] + ' ' + data.time)
+  const date = new Date(data?.appointmentDate?.split('T')[0] + ' ' + data.time)
 
   if(date > now){
     return date

@@ -1,4 +1,4 @@
-import { Doctor } from '../../types/Doctor'
+import { Doctor } from '../../types/User'
 
 const Favorites = ({doctor}: {doctor: Doctor}) => {
   return (
@@ -9,8 +9,8 @@ const Favorites = ({doctor}: {doctor: Doctor}) => {
       <div>
 
         <h1>{doctor.fullName}</h1>
-        <p >{doctor.speciality}</p>
-        <p>{doctor.experience}</p>
+        <p >{doctor.doctorData.speciality}</p>
+        <p>{doctor.doctorData.experience}</p>
 
 
       </div>

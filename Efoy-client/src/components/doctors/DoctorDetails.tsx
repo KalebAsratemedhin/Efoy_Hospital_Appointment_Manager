@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import Spinner from "../utils/Spinner";
 import Error from "../utils/Error";
 import DoctorProfile from './DoctorProfile';
-import { Doctor } from '../../types/Doctor';
+import { Doctor } from '../../types/User';
 
 const DoctorDetails = () => {
   const { id } = useParams();

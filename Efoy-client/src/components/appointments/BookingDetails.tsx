@@ -18,7 +18,7 @@ interface FormData {
 const BookingDetails = () => {
   const {id} = useParams()
   const {isLoading, isSuccess, isError, error, data} = useFindOneBookingQuery(id as string)
-  const [updateBooking, {isLoading: isUpdateLoading, isSuccess: isUpdateSuccess, isError: isUpdateError, error: updateError, data: updateData} ]= useUpdateBookingMutation()
+  const [updateBooking, {isLoading: isUpdateLoading, isSuccess: isUpdateSuccess, isError: isUpdateError} ]= useUpdateBookingMutation()
   const authState = useSelector(authSelector)
   const doctor = data?.doctorId
   const patient = data?.patientId

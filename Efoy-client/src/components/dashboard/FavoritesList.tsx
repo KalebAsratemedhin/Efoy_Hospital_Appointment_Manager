@@ -2,7 +2,6 @@ import { useFindCurrentUserFavoritesQuery } from "../../redux/api/ratingAPI"
 import Spinner from "../utils/Spinner";
 import DoctorCard from "../doctors/DoctorCard";
 import Error from "../utils/Error";
-import { faV } from "@fortawesome/free-solid-svg-icons";
 
 const FavoritesList = () => {
     const {isLoading, isError, isSuccess, error, data} = useFindCurrentUserFavoritesQuery()
@@ -17,7 +16,7 @@ const FavoritesList = () => {
                 {!data.length && <p>No favorites yet.</p> }
                 {
                     data.map(fav => {
-                        return <DoctorCard key={fav._id} doctor={fav}/>
+                        return <DoctorCard key={fav._id} doctor={fav.doctorId}/>
                     })
 
                 }

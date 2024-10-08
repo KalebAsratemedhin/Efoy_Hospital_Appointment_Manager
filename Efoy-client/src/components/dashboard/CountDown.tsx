@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { FaCalendarAlt, FaClock } from 'react-icons/fa';
+import {  FaClock } from 'react-icons/fa';
 
 const CountDown = ({eventDate}: {eventDate: Date}) => {
     const now = new Date()

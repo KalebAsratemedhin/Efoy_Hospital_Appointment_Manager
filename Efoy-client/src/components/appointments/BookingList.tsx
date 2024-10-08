@@ -1,7 +1,6 @@
 import { useFindCurrentUserBookingsQuery } from "../../redux/api/bookingAPI"
 import Spinner from "../utils/Spinner";
 import Error from "../utils/Error";
-import { CustomSerializedError } from "../../types/CustomSerializedError";
 import BookingCardPatient from "./BookingCardPatient";
 import { authSelector } from "../../redux/slices/authSlice";
 import { useSelector } from "react-redux";

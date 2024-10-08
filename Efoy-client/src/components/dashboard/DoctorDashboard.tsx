@@ -7,7 +7,7 @@ import Spinner from "../utils/Spinner";
 import Error from "../utils/Error";
 
 const DoctorDashboard = () => {
-  const { isLoading: isUserLoading, isSuccess: isUserSuccess, isError: isUserError, error: userError, data: user, refetch } = useGetCurrentUserQuery();
+  const { isLoading: isUserLoading, isError: isUserError, error: userError, data: user } = useGetCurrentUserQuery();
 
   if (isUserLoading) return <Spinner />;
   if (isUserError) return <Error error={userError} />;

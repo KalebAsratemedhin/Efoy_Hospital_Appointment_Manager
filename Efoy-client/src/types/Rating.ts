@@ -1,4 +1,4 @@
-import { DoctorData } from "./User";
+import { Doctor } from "./User";
 
 export interface Rating{
     _id?: string;
@@ -12,6 +12,6 @@ export interface PopulatedRating {
     _id: string;
     raterId: string;
     value: number;
-    doctorId: DoctorData;
+    doctorId: Doctor;
 
 }

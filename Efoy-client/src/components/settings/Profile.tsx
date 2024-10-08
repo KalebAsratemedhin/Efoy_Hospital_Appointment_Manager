@@ -19,8 +19,8 @@ interface FormData {
 
 const Profile = () => {
   const { isSuccess, data: user } = useGetCurrentUserQuery();
-  const [updateUser, {isError: isUpdateError, error: updateError, isSuccess: isUpdateSuccess, isLoading: isUpdateLoading, data}] = useUpdateUserMutation()
-  const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm<FormData>();
+  const [updateUser, {isError: isUpdateError, error: updateError, isSuccess: isUpdateSuccess}] = useUpdateUserMutation()
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
     let update: UserUpdate = {fullName: data.fullName, phoneNumber: data.phoneNumber}

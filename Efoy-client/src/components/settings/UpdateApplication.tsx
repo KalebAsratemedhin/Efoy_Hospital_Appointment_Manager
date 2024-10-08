@@ -24,7 +24,7 @@ const UpdateApplication = ({application}: {application: DoctorApplication}) => {
         }
     });
 
-    const [updateApplication, {isLoading, isError, isSuccess, error, data}] = useUpdateApplicationMutation()
+    const [updateApplication, {isLoading, isError, isSuccess, error}] = useUpdateApplicationMutation()
 
 
     const onSubmit = async (data: FormData) => {

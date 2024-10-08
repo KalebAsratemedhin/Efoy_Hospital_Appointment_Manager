@@ -1,4 +1,4 @@
-import { useFindAllDoctorsQuery, useSearchDoctorsQuery } from "../../redux/api/userAPI"
+import { useSearchDoctorsQuery } from "../../redux/api/userAPI"
 import Spinner from "../utils/Spinner";
 import Error from "../utils/Error";
 
@@ -7,13 +7,7 @@ import DoctorCard from "./DoctorCard";
 const DoctorsSearch = ({searchTerm}: {searchTerm: string}) => {
     const {isLoading, isSuccess, isError, error, data} = useSearchDoctorsQuery(searchTerm)
 
-    // return (
-    //     <div>
-    //         <h1>Search results for {searchTerm}</h1>
-    //         <p>Hi</p>
-
-    //     </div>
-    // )
+  
 
     if(isLoading)
         return <Spinner />

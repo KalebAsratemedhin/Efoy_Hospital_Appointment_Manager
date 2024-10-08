@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { AuthResponse, SigninCredential, SignupCredential, User } from "../../types/User";
+import { AuthResponse, SigninCredential, SignupCredential } from "../../types/User";
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 

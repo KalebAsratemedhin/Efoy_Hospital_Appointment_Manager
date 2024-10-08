@@ -9,7 +9,7 @@ import FormSuccess from "../utils/FormSuccess";
 const ApplicationDetails = () => {
   const {id} = useParams()
   const {isLoading, isSuccess, isError, error, data} = useFindOneApplicationQuery(id!)
-  const [evaluate, {isLoading: isEvalLoading, isSuccess: isEvalSuccess, isError: isEvalError, error: evalError, data: evalData}] = useEvaluateApplicationMutation()
+  const [evaluate, {isLoading: isEvalLoading, isSuccess: isEvalSuccess, isError: isEvalError}] = useEvaluateApplicationMutation()
 
   const handleApprove = async () => {
     await evaluate({id: id!, update: {status: 'approved'}})
