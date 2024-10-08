@@ -1,5 +1,5 @@
 # Efoy Hospital Appointment Manager
-It is an appointment booking application for hospitals.
+It is an appointment booking application for hospitals. Now deployed at https://efoy-appointment-manager.onrender.com
 
 ## Home Page
 ![alt text](<screenshots/Screenshot from 2024-09-06 17-06-25.png>)
