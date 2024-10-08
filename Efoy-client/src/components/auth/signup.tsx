@@ -10,6 +10,9 @@ import { FcGoogle } from "react-icons/fc";
 import TextField from "../utils/TextField"; 
 import FormError from "../utils/FormError";
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+
 interface FormData {
   password: string;
   fullName: string;
@@ -54,7 +57,7 @@ const Signup = () => {
 
       <form noValidate onSubmit={handleSubmit(onSubmit)} className="p-10">
         <div className="py-5 w-full">
-          <Link to={'http://localhost:5000/auth/google'} className="border p-4 sm:px-20 w-full flex justify-center items-center gap-2 rounded-md text-gray-600 hover:shadow-sm">
+          <Link to={`${backendUrl}/auth/google`} className="border p-4 sm:px-20 w-full flex justify-center items-center gap-2 rounded-md text-gray-600 hover:shadow-sm">
             <FcGoogle className="w-8 h-8" /> Sign up with Google
           </Link>
         </div>

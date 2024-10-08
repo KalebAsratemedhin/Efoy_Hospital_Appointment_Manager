@@ -21,7 +21,6 @@ async (req, accessToken, refreshToken, profile, done) => {
   try {
  
     let user = await User.findOne({ googleId: profile.id });
-    console.log('google id auth user existing', user)
 
     if (!user) {
         user = await User.create({
@@ -33,7 +32,6 @@ async (req, accessToken, refreshToken, profile, done) => {
 
 
     }
-    console.log('google id auth user done', user)
 
  
     return done(null, user);

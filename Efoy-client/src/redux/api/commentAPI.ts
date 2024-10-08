@@ -1,11 +1,12 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { CommentI } from "../../types/Comment";
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 
 export const commentAPI = createApi({
     reducerPath: 'commentAPI',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:5000/comments',
+        baseUrl: `${backendUrl}/comments`,
         credentials: "include",
         prepareHeaders: (headers) => {
             const token = localStorage.getItem('accessToken');

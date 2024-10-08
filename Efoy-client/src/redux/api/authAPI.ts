@@ -1,10 +1,12 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { AuthResponse, SigninCredential, SignupCredential, User } from "../../types/User";
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 
 export const authAPI = createApi({
     reducerPath: 'authApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:5000/auth',
+        baseUrl: `${backendUrl}/auth`,
         credentials: "include",
         prepareHeaders: (headers) => {
             const token = localStorage.getItem('accessToken');

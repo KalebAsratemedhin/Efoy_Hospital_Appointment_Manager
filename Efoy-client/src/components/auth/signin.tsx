@@ -7,6 +7,8 @@ import { authSelector, setAuth } from "../../redux/slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { FcGoogle } from "react-icons/fc";
 import FormError from "../utils/FormError";
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 
 
 interface FormData{
@@ -56,7 +58,7 @@ const Signin = () => {
         
         <form noValidate onSubmit={handleSubmit(onSubmit)} className="  px-10 py-5">
             <div className="mt-4 py-3 w-full">
-                <Link to={`http://localhost:5000/auth/google`} className="border p-2 w-full flex justify-center items-center gap-2 rounded-md text-gray-600 hover:shadow-sm"> <FcGoogle className="w-8 h-8" /> Sign in with Google</Link>        
+                <Link to={`${backendUrl}/auth/google`} className="border p-2 w-full flex justify-center items-center gap-2 rounded-md text-gray-600 hover:shadow-sm"> <FcGoogle className="w-8 h-8" /> Sign in with Google</Link>        
             </div>  
             <div className="flex justify-between items-center my-8  w-full">
                 <p className="bg-gray-400 h-[1px] w-1/3"></p>

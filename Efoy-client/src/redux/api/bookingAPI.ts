@@ -1,10 +1,12 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Booking, BookingPopulated } from "../../types/Booking";
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 
 export const bookingAPI = createApi({
     reducerPath: 'bookingAPI',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:5000/bookings',
+        baseUrl: `${backendUrl}/bookings`,
         credentials: "include",
         prepareHeaders: (headers) => {
             const token = localStorage.getItem('accessToken');

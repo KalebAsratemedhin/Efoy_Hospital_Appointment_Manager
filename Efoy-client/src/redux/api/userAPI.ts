@@ -1,10 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { AdminStats, Doctor, User, UserUpdate } from "../../types/User";
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 export const userAPI = createApi({
     reducerPath: 'userAPI',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:5000',
+        baseUrl: `${backendUrl}`,
         credentials: "include",
         prepareHeaders: (headers) => {
             const token = localStorage.getItem('accessToken');

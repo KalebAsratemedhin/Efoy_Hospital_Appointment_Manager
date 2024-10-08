@@ -1,10 +1,12 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { DoctorApplication, DoctorApplicationCreate, DoctorApplicationPopulated, DoctorApplicationUpdate } from "../../types/DoctorApplication";
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 export const applicationAPI = createApi({
     reducerPath: 'applicationAPI',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:5000/doctor-applications',
+        baseUrl: `${backendUrl}/doctor-applications`,
         credentials: "include",
         prepareHeaders: (headers) => {
             const token = localStorage.getItem('accessToken');
