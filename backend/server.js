@@ -5,7 +5,6 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 const User = require('./models/user.js')
-const path = require('path'); 
 
 
 const cookieParser = require('cookie-parser')
@@ -71,8 +70,6 @@ app.use('/doctor', require('./routes/doctor.js'));
 app.use('/user', require('./routes/user.js'));
 app.use('/auth', require('./routes/auth.js'));
 app.use('/doctor-applications', require('./routes/doctorApplication.js'));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
 
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -1,5 +1,4 @@
 const User = require("../models/user")
-const upload = require("../middlewares/fileUpload");
 const Booking = require("../models/booking");
 const Doctor = require("../models/doctor")
 
@@ -78,13 +77,14 @@ const updateUser = async (req, res) => {
 }
 
 const updateProfilePicture = async (req, res) => {
-    upload(req, res, async (err) => {
-      if (err) {
 
-        return res.status(400).json({ message: err });
-      }
-      
       try {
+
+        const photoPath = req.file.path
+ 
+        if (!photoPath) {
+        return res.error('Photo is required', 404);
+        }
 
         const userId = req.params.id;
         const user = await User.findById(userId);
@@ -95,19 +95,17 @@ const updateProfilePicture = async (req, res) => {
 
 
   
-        user.profilePic = `${process.env.BACKEND_URL}/uploads/${req.file.filename}`;
+        user.profilePic = req.file.path;
         await user.save();
   
         res.status(200).json({ message: "Profile picture updated", user });
       } catch (error) {
         res.status(500).json({ message: error.message });
       }
-    });
   }
   
 const adminStats = async (req, res) => {
     try {
-        console.log('ere')
 
         const doctorsCount = await Doctor.countDocuments();
         const patientsCount = await User.find({role: 'patient'}).countDocuments();
