@@ -4,7 +4,9 @@ const Doctor = require("../models/doctor")
 
 const getUser = async (req, res) => {
     try {
+        
         const { id } = req.user;
+        console.log('curr user' ,req.user)
         const user = await User.findById(id);
 
         if (!user) {
