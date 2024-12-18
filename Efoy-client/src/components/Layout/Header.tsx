@@ -43,7 +43,7 @@ const Header = ({onSidebarToggle}: {onSidebarToggle: () => void}) => {
         </div>
         
         <div>
-          {authState.id}
+          
           {
             authState.id ?
              <AuthHeaderInfo /> :
