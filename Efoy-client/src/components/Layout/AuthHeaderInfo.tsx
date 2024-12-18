@@ -5,18 +5,22 @@ import { IoSettingsOutline } from "react-icons/io5";
 import Spinner from "../utils/Spinner";
 import Error from "../utils/Error";
 import { CustomSerializedError } from "../../types/CustomSerializedError";
+import { clearAuth } from "../../redux/slices/authSlice";
+import { useDispatch } from "react-redux";
 
 
 const AuthHeaderInfo = () => {
     const navigate = useNavigate()
     const {isLoading, isSuccess, isError, error, data} = useGetCurrentUserQuery()  
     const initials = data?.fullName.split(' ').map((name) => name[0].toUpperCase()).join('')
+    const dispatch = useDispatch()
     
 
     if(isLoading)
         return <Spinner />
     
     if(isError && (error as CustomSerializedError).data.message === "Access denied. No token provided."){
+        dispatch(clearAuth())
         return <Error error={error} />
     }
     

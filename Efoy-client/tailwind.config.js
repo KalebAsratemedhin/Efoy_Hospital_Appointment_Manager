@@ -6,8 +6,8 @@ export default {
   ],
   theme: {
     extend: {
-      fontFamily:{
-        
+      fontFamily: {
+        cursive: ['Dancing Script', 'cursive'],
       },
       colors: {
         'custom-background': '#ebf3fa',

@@ -23,11 +23,16 @@ const Header = ({onSidebarToggle}: {onSidebarToggle: () => void}) => {
 
     
   return (
-    <div className="bg-white shadow-sm w-full flex justify-between items-center min-h-16 px-4 py-2">
+    <div className="bg-white shadow-sm w-full flex justify-between items-center h-[72px] px-4 py-2">
         <CgMenuLeftAlt onClick={onSidebarToggle} className=" w-6 h-6 sm:hidden" />
-        <div>
-          {pathname === '/' && <h1 className="font-medium text-3xl ">Efoy </h1>
+        <div className="flex gap-2">
+          {pathname === '/' && 
+            <h1 className="text-5xl font-cursive text-gray-800 mb-6 my-4">
+              Efoy
+            </h1>
           }
+          
+          
 
           {title}
         </div>
@@ -38,12 +43,13 @@ const Header = ({onSidebarToggle}: {onSidebarToggle: () => void}) => {
         </div>
         
         <div>
+          {authState.id}
           {
             authState.id ?
              <AuthHeaderInfo /> :
             <div className="flex gap-2">
-              <Link className="bg-white text-purple-500 border border-purple-500 hover:bg-purple-500 hover:text-white px-3 py-1 rounded-full  " to='/signin'>signin</Link>
-              <Link className="bg-purple-500 border border-purple-500 hover:text-purple-500 hover:bg-white hover:border hover:border-bg-purple-500 text-white px-3 py-1 rounded-full" to='/signup'>signup</Link>
+              <Link className="bg-white text-purple-500 border border-purple-500 hover:bg-purple-500 hover:text-white px-8 py-2 rounded-full  " to='/signin'>signin</Link>
+              <Link className="bg-purple-500 border border-purple-500 hover:text-purple-500 hover:bg-white hover:border hover:border-bg-purple-500 text-white px-8 py-2 rounded-full" to='/signup'>signup</Link>
             
             </div>
           }

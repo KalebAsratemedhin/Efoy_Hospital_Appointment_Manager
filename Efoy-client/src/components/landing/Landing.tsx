@@ -11,6 +11,12 @@ const LandingPage = () => {
         <div className="text-center  py-24 bg-[url('/docs-cartoon.jpeg')] h-screen bg-cover ">
           <h1 className="text-purple-700 mb-4 text-5xl md:text-8xl font-bold px-24">Efoy Hospital Appointment Manager</h1>
           <h2 className=" text-white text-3xl md:text-5xl">Excellent Health care at your finger tips!</h2>
+
+          <div className="flex gap-4 justify-center mt-20">
+              <Link className="bg-white text-2xl text-purple-500 border-2 border-purple-500 hover:bg-purple-500 hover:text-white px-24 py-4 rounded-full  " to='/signin'>signin</Link>
+              <Link className="bg-purple-500 text-2xl border-2 border-purple-500 hover:text-purple-500 hover:bg-white hover:border hover:border-bg-purple-500 text-white px-24 py-4 rounded-full" to='/signup'>signup</Link>
+            
+            </div>
         </div>
 
         <div className="bg-white py-16 px-4 flex gap-6 h-screen">
