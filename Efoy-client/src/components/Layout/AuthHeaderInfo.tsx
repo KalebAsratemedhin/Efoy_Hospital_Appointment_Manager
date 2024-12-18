@@ -28,7 +28,6 @@ const AuthHeaderInfo = () => {
         <div className="flex gap-3  justify-end items-center">
             <IoSettingsOutline onClick={() => navigate('/settings') } className="w-7 h-7 text-secondary hover:text-primary sm:block hidden" />
             <IoNotifications onClick={() => navigate('/notifications') } className="w-7 h-7 text-secondary hover:text-primary sm:block hidden"  />
-        
             {
             data.profilePic ? 
                 <img className="w-8 h-8 rounded-full flex justify-center items-center text-lg " src={data.profilePic} alt="profile" referrerPolicy="no-referrer" /> 
