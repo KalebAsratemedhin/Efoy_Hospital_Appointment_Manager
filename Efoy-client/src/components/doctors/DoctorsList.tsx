@@ -15,9 +15,11 @@ const DoctorsList = () => {
     if(isLoading)
         return <Spinner />
     
-    if(isError)
-        return <Error error={error} />
 
+    if(isError){
+        console.log('error', error)
+        return <Error error={error} />
+    }
     if(isSuccess){
         const doctors = data.doctors
         const totalPages = data.totalPages

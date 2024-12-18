@@ -1,4 +1,5 @@
 import DoctorsList from "../doctors/DoctorsList";
+import {Link} from 'react-router-dom';
 
 const LandingPage = () => {
   return (
@@ -35,9 +36,9 @@ const LandingPage = () => {
           <p className="text-xl text-gray-700 mb-6">
             Book, reschedule, or cancel appointments with ease.
           </p>
-          <button className="px-8 py-4 bg-primary text-white text-xl rounded-md font-semibold">
+          <Link to='/signup' className="px-8 py-4 bg-primary text-white text-xl rounded-md font-semibold">
             Get Started
-          </button>
+          </Link>
           
         </div>
         
@@ -86,9 +87,9 @@ const LandingPage = () => {
           <h3 className="text-4xl font-bold mb-6">
             Ready to Manage Your Appointments?
           </h3>
-          <button className="px-8 py-4 bg-white text-primary text-xl rounded-md font-semibold">
+          <Link to='/signup' className="px-8 py-4 bg-white text-primary text-xl rounded-md font-semibold">
             Sign Up Now
-          </button>
+          </Link>
         </div>
       </section>
       <section className="py-10 px-4">
