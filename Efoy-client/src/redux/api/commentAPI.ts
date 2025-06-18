@@ -1,12 +1,12 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { CommentI } from "../../types/Comment";
+import { CommentI, CommentPopulated } from "../../types/Comment";
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 
 export const commentAPI = createApi({
     reducerPath: 'commentAPI',
     baseQuery: fetchBaseQuery({
-        baseUrl: `${backendUrl}/comments`,
+        baseUrl: `${backendUrl}/comment`,
         credentials: "include",
         prepareHeaders: (headers) => {
             const token = localStorage.getItem('accessToken');
@@ -19,7 +19,7 @@ export const commentAPI = createApi({
         },
     }),
     endpoints: (builder) => ({
-        createComment: builder.mutation<CommentI, CommentI >({
+        createComment: builder.mutation<CommentI, {doctorId: string, content: string} >({
             query: (credential) => ({
                 url: '/',
                 method: 'Post',
@@ -27,7 +27,7 @@ export const commentAPI = createApi({
                 
             })
         }),
-        updateComment: builder.mutation<CommentI, {id: string, update: CommentI} >({
+        updateComment: builder.mutation<CommentI, {id: string, update: {content: string}} >({
             query: ({id, update}) => ({
                 url: `/${id}`,
                 method: 'Put',
@@ -35,7 +35,7 @@ export const commentAPI = createApi({
                 
             })
         }),
-        deleteComment: builder.mutation<void, string >({
+        deleteComment: builder.mutation<CommentI, string >({
             query: (id) => ({
                 url: `/${id}`,
                 method: 'Delete'
@@ -56,7 +56,7 @@ export const commentAPI = createApi({
                 method: 'Get'
             })
         }),
-        findAllComments: builder.query<CommentI[], string>({
+        findAllComments: builder.query<CommentPopulated[], string>({
             query: (doctorId) => ({
                 url: `/${doctorId}`,
                 method: 'Get'

@@ -1,125 +1,167 @@
 import DoctorsList from "../doctors/DoctorsList";
 import {Link} from 'react-router-dom';
-import { RiGitRepositoryPrivateLine } from "react-icons/ri";
-import { GiNotebook } from "react-icons/gi";
-import { MdNotificationsActive } from "react-icons/md";
-
+import { FaHeartbeat, FaStethoscope, FaAmbulance } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 const LandingPage = () => {
   return (
-    <div className=" h-full">
-        <div className="text-center  py-24 bg-[url('/docs-cartoon.jpeg')] h-screen bg-cover ">
-          <h1 className="text-purple-700 mb-4 text-5xl md:text-8xl font-bold px-24">Efoy Hospital Appointment Manager</h1>
-          <h2 className=" text-white text-3xl md:text-5xl">Excellent Health care at your finger tips!</h2>
+    <div className="min-h-screen bg-gradient-to-b from-cyan-50 to-white">
 
-          <div className="flex gap-4 justify-center mt-20">
-              <Link className="bg-white text-2xl text-purple-500 border-2 border-purple-500 hover:bg-purple-500 hover:text-white px-24 py-4 rounded-full  " to='/signin'>signin</Link>
-              <Link className="bg-purple-500 text-2xl border-2 border-purple-500 hover:text-purple-500 hover:bg-white hover:border hover:border-bg-purple-500 text-white px-24 py-4 rounded-full" to='/signup'>signup</Link>
-            
+      {/* Hero Section */}
+      <div className="relative pt-24 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-cyan-100 via-white to-cyan-50"></div>
+        <div className="absolute inset-0 bg-[url('/pattern.png')] opacity-10"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <motion.div 
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="space-y-8"
+            >
+              <h1 className="text-5xl md:text-6xl font-bold text-gray-900 leading-tight">
+                Your Health, <span className="text-cyan-600">Our Priority</span>
+              </h1>
+              <p className="text-xl text-gray-600">
+                Experience seamless healthcare management with Efoy. Book appointments, connect with top doctors, and manage your health journey effortlessly.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link to="/signup" className="bg-cyan-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-cyan-700 transition-all transform hover:scale-105">
+                  Get Started
+                </Link>
+                <Link to="/doctors" className="border-2 border-cyan-600 text-cyan-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-cyan-50 transition-all transform hover:scale-105">
+                  Find Doctors
+                </Link>
+              </div>
+            </motion.div>
+            <motion.div 
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="relative"
+            >
+              <div className="absolute -inset-4 bg-cyan-200 rounded-2xl transform rotate-3"></div>
+              <img src="/docs-cartoon.jpeg" alt="Healthcare" className="relative rounded-2xl shadow-xl" />
+            </motion.div>
+          </div>
+        </div>
+      </div>
+
+      {/* Stats Section */}
+      <div className="bg-white py-16 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/pattern.png')] opacity-5"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <motion.div 
+              whileHover={{ scale: 1.05 }}
+              className="text-center p-6 rounded-xl bg-gradient-to-br from-cyan-50 to-white shadow-sm"
+            >
+              <div className="text-4xl font-bold text-cyan-600 mb-2">500+</div>
+              <div className="text-gray-600">Expert Doctors</div>
+            </motion.div>
+            <motion.div 
+              whileHover={{ scale: 1.05 }}
+              className="text-center p-6 rounded-xl bg-gradient-to-br from-cyan-50 to-white shadow-sm"
+            >
+              <div className="text-4xl font-bold text-cyan-600 mb-2">10k+</div>
+              <div className="text-gray-600">Happy Patients</div>
+            </motion.div>
+            <motion.div 
+              whileHover={{ scale: 1.05 }}
+              className="text-center p-6 rounded-xl bg-gradient-to-br from-cyan-50 to-white shadow-sm"
+            >
+              <div className="text-4xl font-bold text-cyan-600 mb-2">24/7</div>
+              <div className="text-gray-600">Support</div>
+            </motion.div>
+            <motion.div 
+              whileHover={{ scale: 1.05 }}
+              className="text-center p-6 rounded-xl bg-gradient-to-br from-cyan-50 to-white shadow-sm"
+            >
+              <div className="text-4xl font-bold text-cyan-600 mb-2">15+</div>
+              <div className="text-gray-600">Specialties</div>
+            </motion.div>
+          </div>
+        </div>
+      </div>
+
+      {/* Services Section */}
+      <div className="py-24 bg-gradient-to-b from-white to-cyan-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Services</h2>
+            <p className="text-xl text-gray-600">Comprehensive healthcare solutions for you and your family</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            <motion.div 
+              whileHover={{ y: -10 }}
+              className="bg-white p-8 rounded-xl shadow-sm hover:shadow-xl transition-all"
+            >
+              <div className="w-12 h-12 bg-cyan-100 rounded-lg flex items-center justify-center mb-6">
+                <FaHeartbeat className="w-6 h-6 text-cyan-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-4">Expert Doctors</h3>
+              <p className="text-gray-600">Connect with qualified healthcare professionals across various specialties.</p>
+            </motion.div>
+            <motion.div 
+              whileHover={{ y: -10 }}
+              className="bg-white p-8 rounded-xl shadow-sm hover:shadow-xl transition-all"
+            >
+              <div className="w-12 h-12 bg-cyan-100 rounded-lg flex items-center justify-center mb-6">
+                <FaStethoscope className="w-6 h-6 text-cyan-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-4">Easy Scheduling</h3>
+              <p className="text-gray-600">Book, reschedule, or cancel appointments with just a few clicks.</p>
+            </motion.div>
+            <motion.div 
+              whileHover={{ y: -10 }}
+              className="bg-white p-8 rounded-xl shadow-sm hover:shadow-xl transition-all"
+            >
+              <div className="w-12 h-12 bg-cyan-100 rounded-lg flex items-center justify-center mb-6">
+                <FaAmbulance className="w-6 h-6 text-cyan-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-4">Emergency Care</h3>
+              <p className="text-gray-600">24/7 emergency medical services at your fingertips.</p>
+            </motion.div>
+          </div>
+        </div>
+      </div>
+
+      {/* Featured Doctors Section */}
+      <div className="py-24 bg-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/pattern.png')] opacity-5"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Featured Doctors</h2>
+            <p className="text-xl text-gray-600">Meet our expert healthcare professionals</p>
+          </div>
+          <div className="overflow-x-auto">
+            <DoctorsList />
+          </div>
+        </div>
+      </div>
+
+      {/* CTA Section */}
+      <div className="bg-gradient-to-r from-cyan-600 to-cyan-700 py-24 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/pattern.png')] opacity-10"></div>
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <h2 className="text-3xl font-bold text-white mb-8">Ready to Take Control of Your Health?</h2>
+            <p className="text-xl text-cyan-100 mb-12">Join thousands of patients who trust Efoy for their healthcare needs.</p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to="/signup" className="bg-white text-cyan-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-cyan-50 transition-all transform hover:scale-105">
+                Get Started Now
+              </Link>
+              <Link to="/contact" className="border-2 border-white text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-cyan-700 transition-all transform hover:scale-105">
+                Contact Us
+              </Link>
             </div>
+          </motion.div>
         </div>
-
-        <div className="bg-white py-16 px-4 flex gap-6 h-screen">
-          <div className="w-1/2  overflow-hidden ">
-            <img src="/doc-1.jpg" alt="doctor"  />
-
-          </div>
-          <div className="w-2/3 pt-12">
-            <h2 className="text-secondary text-4xl font-bold mb-3 "> <span className="underline underline-offset-8">What we of</span>fer</h2>
-            <p className="text-gray-600">
-              At Efoy we provide excellent health care by tackling challenges in hospital appointment booking.
-              We thrive to connect you with doctors of your choice anywhere and anytime. If you use Efoy, you save your
-              time and resources to get top level health care. Leave your appointments to us and focus on your health.
-            </p>
-            <p className="text-gray-600 mt-5">
-              Booking hospital appointments has never been this easier! We have integrated google calendar for you to easily
-              manage your time and appointments.
-            </p>
-          </div>
-
-        </div>
-      
-        <div className="text-center py-16 h-[400px] pt-24">
-          <h2 className="text-4xl font-bold text-primary mb-4">
-            Manage Your Hospital Appointments Seamlessly
-          </h2>
-          <p className="text-xl text-gray-700 mb-6">
-            Book, reschedule, or cancel appointments with ease.
-          </p>
-          <Link to='/signup' className="px-8 py-4 bg-primary text-white hover:text-primary hover:bg-white hover:border hover:border-primary text-xl rounded-md font-semibold">
-            Get Started
-          </Link>
-          
-        </div>
-        
-
-      <section className="bg-white py-20 bg-[url('/doc-tools.jpeg')]  bg-cover bg-center">
-        <div className="container mx-auto text-center">
-          <h3 className="text-5xl font-extrabold text-gray-90000 mb-12">
-            Why Choose Us?
-          </h3>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-16">
-            We provide top-notch services to make your healthcare journey seamless, secure, and efficient. Here’s why we stand out:
-          </p>
-          <div className="flex flex-wrap gap-8  justify-center ">
-              <div className="bg-white p-8 rounded-lg shadow-lg h-72 w-72 hover:shadow-2xl transition-shadow duration-300">
-                <div className="mx-auto flex items-center justify-center mb-4 w-24 h-24 bg-purple-100 rounded-full">
-                  <GiNotebook className="w-12 h-12 text-purple-500 "  />
-                </div>
-                <h4 className="text-2xl font-bold text-purple-700 mb-3">
-                  Easy Booking
-                </h4>
-                <p className="text-gray-600">
-                  Book your appointments effortlessly, anytime, from anywhere.
-                </p>
-              </div>
-              <div className="bg-white p-8 h-72 w-72 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300">
-                <div className="mx-auto flex items-center justify-center mb-4 w-24 h-24 bg-purple-100 rounded-full">
-                  <MdNotificationsActive className="w-12 h-12 text-purple-500 "  />
-                </div>
-                <h4 className="text-2xl font-bold text-purple-700 mb-3">
-                  Notifications
-                </h4>
-                <p className="text-gray-600">
-                  Stay updated with timely reminders for your appointments.
-                </p>
-              </div>  
-              <div className="bg-white p-8 rounded-lg h-72 w-72 shadow-lg hover:shadow-2xl transition-shadow duration-300">
-                <div className="mx-auto flex items-center justify-center mb-4 w-24 h-24 bg-purple-100 rounded-full">
-                  <RiGitRepositoryPrivateLine className="w-12 h-12 text-purple-500 " />
-                </div>
-                <h4 className="text-2xl font-bold text-purple-700 mb-3">
-                  Secure & Private
-                </h4>
-                <p className="text-gray-600">
-                  Rest assured, your personal data is always safe with us.
-                </p>
-              </div>
-
-          </div>
-        </div>
-      </section>
-      <section className="py-10 px-4">
-        <div className="overflow-y-auto">
-          <DoctorsList />
-        </div>
-
-      </section>
-
-
-        <section className="bg-primary text-white py-20 h-[400px]">
-        <div className="container mx-auto text-center pt-12">
-          <h3 className="text-4xl font-bold mb-12">
-            Ready to Manage Your Appointments?
-          </h3>
-          <Link to='/signup' className="px-8 py-4 bg-white text-primary hover:text-white hover:bg-primary hover:border hover:border-white   text-xl rounded-md font-semibold">
-            Sign Up Now
-          </Link>
-        </div>
-      </section>
-
-
-
+      </div>
     </div>
   );
 };

@@ -1,48 +1,38 @@
-import { useNavigate } from "react-router-dom"
-import { useGetCurrentUserQuery } from "../../redux/api/userAPI";
-import { IoNotifications } from "react-icons/io5";
-import { IoSettingsOutline } from "react-icons/io5";
-import Spinner from "../utils/Spinner";
-import Error from "../utils/Error";
-import { CustomSerializedError } from "../../types/CustomSerializedError";
-import { clearAuth } from "../../redux/slices/authSlice";
-import { useDispatch } from "react-redux";
-
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { FaUserCircle } from "react-icons/fa";
 
 const AuthHeaderInfo = () => {
-    const navigate = useNavigate()
-    const {isLoading, isSuccess, isError, error, data} = useGetCurrentUserQuery()  
-    const initials = data?.fullName.split(' ').map((name) => name[0].toUpperCase()).join('')
-    const dispatch = useDispatch()
-    
 
-    if(isLoading)
-        return <Spinner />
-    
-    if(isError && (error as CustomSerializedError).data.message === "Access denied. No token provided."){
-        dispatch(clearAuth())
-        return <Error error={error} />
-    }
-    
-
-    if(isSuccess)
 
   return (
-    <div>
-        <div className="flex gap-3  justify-end items-center">
-            <IoSettingsOutline onClick={() => navigate('/settings') } className="w-7 h-7 text-secondary hover:text-primary sm:block hidden" />
-            <IoNotifications onClick={() => navigate('/notifications') } className="w-7 h-7 text-secondary hover:text-primary sm:block hidden"  />
-            {
-            data.profilePic ? 
-                <img className="w-8 h-8 rounded-full flex justify-center items-center text-lg " src={data.profilePic} alt="profile" referrerPolicy="no-referrer" /> 
-                : 
-                <div className="w-12 h-12 rounded-full flex justify-center items-center bg-gray-300 text-lg ">{initials}</div> 
-            }
-
-
-            
+    <motion.div 
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.3 }}
+      className="flex items-center space-x-4"
+    >
+      <Link to="/appointments" className="text-cyan-600 hover:text-cyan-700 px-4 py-2 rounded-md text-sm font-medium transition-colors">
+        Appointments
+      </Link>
+      <div className="relative group">
+        <button className="flex items-center space-x-2 text-cyan-600 hover:text-cyan-700 transition-colors">
+          <FaUserCircle className="w-6 h-6" />
+          <span className="text-sm font-medium">User</span>
+        </button>
+        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden group-hover:block">
+          <Link to="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-cyan-50 hover:text-cyan-600 transition-colors">
+            Profile
+          </Link>
+          <Link to="/settings" className="block px-4 py-2 text-sm text-gray-700 hover:bg-cyan-50 hover:text-cyan-600 transition-colors">
+            Settings
+          </Link>
+          <Link to="/logout" className="block px-4 py-2 text-sm text-gray-700 hover:bg-cyan-50 hover:text-cyan-600 transition-colors">
+            Logout
+          </Link>
         </div>
-    </div>
+      </div>
+    </motion.div>
   )
 }
 

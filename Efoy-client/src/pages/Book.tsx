@@ -1,11 +1,10 @@
-import Booking from "../components/appointments/BookingPage"
+import ErrorBoundary from '../components/appointments/ErrorBoundary';
+import BookingPage from '../components/appointments/BookingPage';
 
-const Book = () => {
-  return (
-    <div className="p-5">
-        <Booking />
-    </div>
-  )
-}
+const Book = () => (
+  <ErrorBoundary>
+    <BookingPage />
+  </ErrorBoundary>
+);
 
-export default Book
+export default Book;

@@ -1,4 +1,4 @@
-import { useFindOneDoctorQuery } from '../../redux/api/userAPI';
+import { useGetDoctorByIdQuery } from '../../redux/api/doctorAPI';
 import { useParams } from 'react-router-dom';
 import Spinner from "../utils/Spinner";
 import Error from "../utils/Error";
@@ -7,7 +7,7 @@ import { Doctor } from '../../types/User';
 
 const DoctorDetails = () => {
   const { id } = useParams();
-  const { isLoading, isError, isSuccess, error, data } = useFindOneDoctorQuery(id as string);
+  const { isLoading, isError, isSuccess, error, data } = useGetDoctorByIdQuery(id as string);
   const doctor = data;
 
   if (isLoading) return <Spinner />;

@@ -21,7 +21,7 @@ const RatingStars = ({doctorId}: {doctorId: string}) => {
  
 
   useEffect(() => {
-    if(isRatingSuccess){
+    if(isRatingSuccess && ratingData){
       refetch()
       setRating(ratingData?.value)
 
@@ -33,7 +33,7 @@ const RatingStars = ({doctorId}: {doctorId: string}) => {
 
     if(rating && ratingData){
      
-      await updateRating({id: ratingData?._id as string, update: {value: rate}})
+      await updateRating({id: ratingData?.id as string, update: {value: rate}})
 
     } else if(!rating) {
       await rateDoc({value: rate, doctorId: doctorId})
@@ -44,7 +44,7 @@ const RatingStars = ({doctorId}: {doctorId: string}) => {
 
   const handleDelete = async () => {
     setRating(0)
-    await deleteRating(ratingData?._id as string)
+    await deleteRating(ratingData?.id as string)
 
   }
 

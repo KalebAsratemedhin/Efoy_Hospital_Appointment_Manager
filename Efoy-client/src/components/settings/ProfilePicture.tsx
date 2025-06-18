@@ -23,11 +23,10 @@ const ProfilePicture = ({ user }: { user: User }) => {
   };
 
   const handleSave = async () => {
-    const formData = new FormData();
-    formData.append("profilePic", pic as Blob);
-
-    await updateProfilePicture({ id: user?._id as string, update: formData });
-    setPicChanged(false)
+    if (pic && user?.id) {
+      await updateProfilePicture({ id: user.id, file: pic });
+      setPicChanged(false)
+    }
   }
 
   return (

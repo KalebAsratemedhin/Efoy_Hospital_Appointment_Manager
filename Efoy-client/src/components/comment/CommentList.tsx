@@ -1,31 +1,47 @@
+import { useFindAllCommentsQuery } from "../../redux/api/commentAPI";
+import { useGetCurrentUserQuery } from "../../redux/api/userAPI";
+import { CommentPopulated } from "../../types/Comment";
+import CommentCard from "./CommentCard";
 import Spinner from "../utils/Spinner";
 import Error from "../utils/Error";
-import { useFindAllCommentsQuery } from "../../redux/api/commentAPI";
-import CommentCard from "./CommentCard";
-import { useGetCurrentUserQuery } from "../../redux/api/userAPI";
 
-const CommentList = ({doctorId}: {doctorId: string}) => {
-  const {isLoading, isSuccess, isError, error, data, refetch} = useFindAllCommentsQuery(doctorId)
-  const { data: user } = useGetCurrentUserQuery()
+const CommentList = ({ doctorId }: { doctorId: string }) => {
+  const { data: comments, isLoading, isError, error, refetch } = useFindAllCommentsQuery(doctorId);
+  const { data: user } = useGetCurrentUserQuery();
 
-  if (isLoading ) return <Spinner />;
-  if (isError ) return <Error error={error} />;
+  if (isLoading) return <Spinner />;
+  if (isError) return <Error error={error} />;
 
-  if (isSuccess)
+  if (!comments || comments.length === 0) {
     return (
-      <div className="flex gap-2 flex-wrap   flex-col justify-center items-center">
-        
-        { 
-          data.map((comment) => {
-            return <CommentCard key={comment._id} isEditable={user?._id === comment.commenterId?._id} comment={comment} refetch={refetch} />
-          })
-        }
-        {
-          data.length === 0 && <p>No comments yet.</p>
-        }
-          
+      <div className="text-center py-8">
+        <p className="text-gray-500">No comments yet. Be the first to comment!</p>
       </div>
-    )
-}
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      {comments.map((comment: CommentPopulated) => {
+        // Convert CommentPopulated to CommentI for the CommentCard component
+        const commentForCard = {
+          id: comment.id,
+          commenterId: comment.commenterId.id, // Convert User to string
+          content: comment.content,
+          doctorId: comment.doctorId,
+          created_at: comment.created_at,
+          updated_at: comment.updated_at
+        };
+        
+        return <CommentCard 
+          key={comment.id} 
+          isEditable={user?.id === comment.commenterId.id} 
+          comment={commentForCard} 
+          refetch={refetch} 
+        />
+      })}
+    </div>
+  );
+};
 
 export default CommentList

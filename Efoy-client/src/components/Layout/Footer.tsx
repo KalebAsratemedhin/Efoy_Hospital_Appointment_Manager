@@ -1,49 +1,41 @@
 import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTwitter, faTelegram, faInstagram } from '@fortawesome/free-brands-svg-icons';
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { motion } from "framer-motion";
 
 const Footer = () => {
     return (
-        <div className="bg-gray-900 py-10 px-6 sm:px-20 flex flex-col md:flex-row gap-2 justify-between text-gray-300">
-            <div className="flex justify-center items-center md:w-1/3 gap-4">
-                <h1 className="text-5xl font-cursive text-white mb-6 my-4">
-                    Efoy
-                </h1>
-                <p className="text-center text-base">&copy; 2024 Efoy. All rights reserved.</p>
-            </div>
-            <div className="flex-grow flex justify-around flex-row">
-                <div className="mt-8 sm:mt-0 flex flex-col md:items-start">
-                    <h2 className="text-lg font-semibold mb-4 text-gray-100">
-                        <span className="border-b-2 border-primary pb-2">Social</span> Media
-                    </h2>
-                    <Link className="text-gray-400 hover:text-gray-200 hover:border-b-2 hover:border-purple-900 flex items-center gap-2" to="/gmail">
-                        <FontAwesomeIcon icon={faEnvelope} /> Email
-                    </Link>
-                    <Link className="text-gray-400 hover:text-gray-200 hover:border-b-2 hover:border-purple-900 flex items-center gap-2" to="/signup">
-                        <FontAwesomeIcon icon={faTwitter} /> Twitter
-                    </Link>
-                    <Link className="text-gray-400 hover:text-gray-200 hover:border-b-2 hover:border-purple-900 flex items-center gap-2" to="/signup">
-                        <FontAwesomeIcon icon={faTelegram} /> Telegram
-                    </Link>
-                    <Link className="text-gray-400 hover:text-gray-200 hover:border-b-2 hover:border-purple-900 flex items-center gap-2" to="/signup">
-                        <FontAwesomeIcon icon={faInstagram} /> Instagram
-                    </Link>
+        <footer className="bg-gradient-to-b from-gray-900 to-gray-800 text-white py-12 ">
+            <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="grid md:grid-cols-2 gap-8">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                    >
+                        <h3 className="text-2xl font-bold text-cyan-400 mb-4">Efoy</h3>
+                        <p className="text-gray-400">Your trusted healthcare partner</p>
+                    </motion.div>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.1 }}
+                    >
+                        <h4 className="text-lg font-semibold text-cyan-400 mb-4">Quick Links</h4>
+                        <ul className="space-y-2">
+                            <li><Link to="/" className="text-gray-400 hover:text-cyan-400 transition-colors">Home</Link></li>
+                            <li><Link to="/doctors" className="text-gray-400 hover:text-cyan-400 transition-colors">Doctors</Link></li>
+                        </ul>
+                    </motion.div>
                 </div>
-
-                <div className="mt-8 sm:mt-0 flex flex-col md:items-start">
-                    <h2 className="text-lg font-semibold mb-4 text-gray-100">
-                        <span className="border-b-2 border-primary pb-2">Important</span> Links
-                    </h2>
-                    <Link className="text-gray-400 hover:text-gray-200 hover:border-b-2 hover:border-purple-900" to="/about">
-                        About
-                    </Link>
-                    <Link className="text-gray-400 hover:text-gray-200 hover:border-b-2 hover:border-purple-900" to="/contact">
-                        Contact Us
-                    </Link>
-                </div>
+                <motion.div 
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 0.4 }}
+                    className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400"
+                >
+                    <p>&copy; 2024 Efoy. All rights reserved.</p>
+                </motion.div>
             </div>
-        </div>
+        </footer>
     );
 };
 

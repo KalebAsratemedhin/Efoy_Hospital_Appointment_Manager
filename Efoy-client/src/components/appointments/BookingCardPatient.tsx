@@ -3,6 +3,10 @@ import { useDeleteBookingMutation } from "../../redux/api/bookingAPI";
 import Spinner from "../utils/Spinner";
 import Error from "../utils/Error";
 import { BookingPopulated } from "../../types/Booking";
+import { motion } from "framer-motion";
+import { FaUserMd, FaCalendarAlt, FaClock, FaStethoscope, FaTrash, FaEye, FaStar } from "react-icons/fa";
+import RatingStars from "../rating/RatingStars";
+import { useEffect } from "react";
 
 const BookingCardPatient = ({booking, refetch}: {booking: BookingPopulated, refetch: () => void}) => {
   const doctor = booking.doctorId
@@ -11,49 +15,156 @@ const BookingCardPatient = ({booking, refetch}: {booking: BookingPopulated, refe
   const [deleteBooking, {isLoading, isError, isSuccess, error}] = useDeleteBookingMutation()
 
   const handleDelete = async () => {
-    await deleteBooking(booking._id as string)
-
+    await deleteBooking(booking.id as string)
   }
-  if (isLoading ) return <Spinner />;
-  if (isError ) return <Error error={error} />;
-  if(isSuccess)
-    refetch()
- 
+  useEffect(() => {
+    console.log('booking in card', booking)
+  }, [booking])
+
+  if (isLoading) return <Spinner />;
+  if (isError) return <Error error={error} />;
+  if(isSuccess) refetch()
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'approved': return 'bg-green-100 text-green-800';
+      case 'rejected': return 'bg-red-100 text-red-800';
+      case 'serviced': return 'bg-blue-100 text-blue-800';
+      case 'finished': return 'bg-green-100 text-green-800';
+      default: return 'bg-yellow-100 text-yellow-800';
+    }
+  }
 
   return (
-    <div className="bg-white rounded-md p-4 flex gap-4 w-[600px] shadow-sm hover:shadow-md">
-        <div className="w-20   flex justify-center items-center">
-          {
-           doctor.profilePic ? 
-           <img className="rounded-full w-20 h-20"    src={doctor.profilePic} alt="profile" /> :
-           <div className="w-24 h-24 rounded-full flex justify-center items-center bg-gray-300 text-lg ">
-              {initials}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -2 }}
+      className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-lg transition-all duration-300"
+    >
+      <div className="flex gap-6">
+        {/* Doctor Avatar */}
+        <div className="flex-shrink-0">
+          <div className="relative">
+            {doctor.profilePic ? (
+              <img 
+                className="w-16 h-16 rounded-full object-cover border-2 border-gray-100" 
+                src={doctor.profilePic} 
+                alt={doctor.fullName} 
+              />
+            ) : (
+              <div className="w-16 h-16 rounded-full flex justify-center items-center bg-gradient-to-br from-blue-500 to-indigo-600 text-white font-semibold text-lg border-2 border-gray-100">
+                {initials}
+              </div>
+            )}
+            <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-2 border-white flex items-center justify-center">
+              <FaStar className="text-white text-xs" />
             </div>
-          }
-           
-        </div>
-        <div className="flex flex-col pt-2 flex-grow ">
-          <p className="text-xl">{doctor.fullName}</p>
-          
-          <div className="flex items-center gap-2 text-gray-500">
-            <p>{booking.doctorData.speciality}</p>
-            <p className="bg-gray-700 w-1 h-1 rounded-full"></p>
-            <p>{booking.doctorData.experience}</p>
           </div>
-          <div className="flex flex-col  text-gray-500">
-            <p>Date: {new Date(booking.appointmentDate.split('T')[0] + ' ' + booking.time).toLocaleString()}</p>
-            <p>Reason: {booking.reason}</p>
+        </div>
+
+        {/* Content */}
+        <div className="flex-grow">
+          {/* Header */}
+          <div className="flex items-start justify-between mb-4">
+            <div>
+              <h3 className="text-lg font-bold text-gray-900 mb-1">
+                Dr. {doctor.fullName}
+              </h3>
+              <div className="flex items-center gap-3 text-sm text-gray-600">
+                <div className="flex items-center gap-1">
+                  <FaStethoscope className="text-blue-500" />
+                  <span>{booking.doctorData.speciality}</span>
+                </div>
+                <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                <span>{booking.doctorData.experience} years exp.</span>
+              </div>
+            </div>
+            
+            {/* Status Badge */}
+            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(booking.status || '')}`}>
+              {(booking.status || '').charAt(0).toUpperCase() + (booking.status || '').slice(1)}
+            </span>
           </div>
 
+          {/* Appointment Details */}
+          <div className="space-y-3 mb-4">
+            <div className="flex items-center gap-3 text-gray-600">
+              <div className="p-2 bg-blue-50 rounded-lg">
+                <FaCalendarAlt className="text-blue-500 text-sm" />
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 uppercase tracking-wide">Appointment Date</p>
+                <p className="text-sm font-medium text-gray-700">
+                  {new Date(booking.appointmentDate).toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </p>
+              </div>
+            </div>
 
+            <div className="flex items-center gap-3 text-gray-600">
+              <div className="p-2 bg-green-50 rounded-lg">
+                <FaClock className="text-green-500 text-sm" />
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 uppercase tracking-wide">Time</p>
+                <p className="text-sm font-medium text-gray-700">{booking.time}</p>
+              </div>
+            </div>
+
+            {booking.reason && (
+              <div className="flex items-start gap-3 text-gray-600">
+                <div className="p-2 bg-purple-50 rounded-lg mt-1">
+                  <FaUserMd className="text-purple-500 text-sm" />
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500 uppercase tracking-wide">Reason</p>
+                  <p className="text-sm font-medium text-gray-700 line-clamp-2">{booking.reason}</p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Actions */}
+          <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
+            <Link 
+              to={`/appointments/${booking.id}`}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+            >
+              <FaEye className="text-xs" />
+              View Details
+            </Link>
+            
+            {booking.status !== "finished" && (
+              <button 
+                onClick={handleDelete}
+                className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors text-sm font-medium"
+              >
+                <FaTrash className="text-xs" />
+                Cancel
+              </button>
+            )}
+          </div>
+
+          {/* Rating Section for Finished Bookings */}
+          {booking.status === "finished" && (
+            <div className="mt-4 pt-4 border-t border-gray-100">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
+                  <FaStar className="text-yellow-500" />
+                  <span className="text-sm font-medium text-gray-700">Rate your experience:</span>
+                </div>
+                <RatingStars doctorId={booking.doctorId.id} />
+              </div>
+            </div>
+          )}
         </div>
-        <div className="flex items-center mt-4 gap-2 p-2">
-          <button onClick={handleDelete} className="text-secondary hover:text-primary" >Delete</button>
-          <Link className="text-secondary hover:text-primary" to={`/appointments/${booking._id}`}>More</Link>
-
-        </div>
-
-    </div>
+      </div>
+    </motion.div>
   )
 }
 

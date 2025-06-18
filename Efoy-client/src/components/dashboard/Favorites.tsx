@@ -8,9 +8,9 @@ const Favorites = ({doctor}: {doctor: Doctor}) => {
       </div>
       <div>
 
-        <h1>{doctor.fullName}</h1>
-        <p >{doctor.doctorData.speciality}</p>
-        <p>{doctor.doctorData.experience}</p>
+        <h1>{doctor.userId.fullName}</h1>
+        <p>{doctor.speciality}</p>
+        <p>{doctor.experience}</p>
 
 
       </div>

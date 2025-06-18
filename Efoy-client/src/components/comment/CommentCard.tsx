@@ -1,27 +1,37 @@
 
 
-import { CommentI } from "../../types/Comment";
-import { MdDeleteOutline } from "react-icons/md";
-import { CiEdit } from "react-icons/ci";
 import { useState } from "react";
 import { useDeleteCommentMutation, useUpdateCommentMutation } from "../../redux/api/commentAPI";
-import Error from "../utils/Error";
+import { CommentI } from "../../types/Comment";
+import { FaEdit, FaTrash } from "react-icons/fa";
 
 const CommentCard = ({ comment, refetch, isEditable }: { comment: CommentI; isEditable: boolean; refetch: () => void }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(comment.content);
-  const [deleteComment, {isError, error}] = useDeleteCommentMutation();
-  const [updateComment, {isError: isUpdateError, error: updateError}] = useUpdateCommentMutation();
+  const [deleteComment] = useDeleteCommentMutation();
+  const [updateComment] = useUpdateCommentMutation();
 
-  const commenter = comment.commenterId;
-  const initials = commenter?.fullName.split(' ').map((name) => name[0].toUpperCase()).join('');
+  // Since commenterId is a string, we'll use a placeholder for now
+  const commenter = { fullName: "User", profilePic: null, email: "user@example.com" };
+
+  const initials = commenter?.fullName.split(' ').map((name: string) => name[0].toUpperCase()).join('');
 
   const handleDelete = async () => {
     try {
-      await deleteComment(comment?._id as string).unwrap();
+      await deleteComment(comment?.id as string).unwrap();
       refetch();
     } catch (error) {
-      console.error("Failed to delete the comment:", error);
+      console.error("Failed to delete comment:", error);
+    }
+  };
+
+  const handleUpdate = async () => {
+    try {
+      await updateComment({ id: comment?.id as string, update: {content: editedContent} }).unwrap();
+      setIsEditing(false);
+      refetch();
+    } catch (error) {
+      console.error("Failed to update comment:", error);
     }
   };
 
@@ -29,27 +39,11 @@ const CommentCard = ({ comment, refetch, isEditable }: { comment: CommentI; isEd
     setIsEditing(true);
   };
 
-  const handleSave = async () => {
-    console.log("gonna save")
-    try {
-      await updateComment({ id: comment?._id as string, update: {content: editedContent, doctorId: comment.doctorId as string} }).unwrap();
-      setIsEditing(false);
-      refetch();
-
-
-    } catch (error) {
-      console.error("Failed to update the comment:", error);
-    }
-  };
-
   const handleCancel = () => {
     setIsEditing(false);
     setEditedContent(comment.content); // Reset the edited content if cancel is clicked
   };
 
-
-  if (isError || isUpdateError)
-    return <Error error={error || updateError} />
 
   return (
     <div className="bg-white border rounded-md flex flex-wrap w-full">
@@ -80,13 +74,13 @@ const CommentCard = ({ comment, refetch, isEditable }: { comment: CommentI; isEd
         <div className="w-14 flex gap-2 p-2">
           {isEditing ? (
             <>
-              <button onClick={handleSave} className="text-green-500">Save</button>
+              <button onClick={handleUpdate} className="text-green-500">Save</button>
               <button onClick={handleCancel} className="text-red-500">Cancel</button>
             </>
           ) : (
             <>
-              <MdDeleteOutline onClick={handleDelete} className="cursor-pointer" />
-              <CiEdit onClick={handleEdit} className="cursor-pointer" />
+              <FaTrash onClick={handleDelete} className="cursor-pointer" />
+              <FaEdit onClick={handleEdit} className="cursor-pointer" />
             </>
           )}
         </div>

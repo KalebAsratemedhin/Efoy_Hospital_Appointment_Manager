@@ -1,11 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { AdminStats, Doctor, User, UserUpdate } from "../../types/User";
+import { AdminStats, Doctor, User, UserUpdate, PaginatedResponse } from "../../types/User";
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 export const userAPI = createApi({
     reducerPath: 'userAPI',
     baseQuery: fetchBaseQuery({
-        baseUrl: `${backendUrl}`,
+        baseUrl: `${backendUrl}/user`,
         credentials: "include",
         prepareHeaders: (headers) => {
             const token = localStorage.getItem('accessToken');
@@ -21,7 +21,7 @@ export const userAPI = createApi({
     endpoints: (builder) => ({
         getCurrentUser: builder.query<User, void>({
             query: () => ({
-                url: '/user/current-user',
+                url: '/current-user',
                 method: 'Get'
             }),
             providesTags: ['User']
@@ -34,7 +34,7 @@ export const userAPI = createApi({
             })
         }),
 
-        findAllDoctors: builder.query<{doctors: Doctor[], totalPages: number, currentPage: number}, {page: number, limit: number}>({
+        findAllDoctors: builder.query<PaginatedResponse<Doctor>, {page: number, limit: number}>({
             query: ({ page = 1, limit = 10 }) => ({
                 url: `/doctor?page=${page}&limit=${limit}`,
                 method: 'Get'
@@ -43,7 +43,7 @@ export const userAPI = createApi({
 
         updateUser: builder.mutation<User, {id: string, update: UserUpdate}>({
             query: ({id, update}) => ({
-                url: `/user/${id}`,
+                url: `/${id}`,
                 method: 'Put',
                 body: update,
                 
@@ -51,15 +51,18 @@ export const userAPI = createApi({
             invalidatesTags: ['User']
         }),
 
-        updateProfilePicture: builder.mutation<User, {id: string, update: any}>({
-            query: ({id, update}) => ({
-                url: `/user/profile-pic/${id}`,
-                method: 'Put',
-                body: update,
+        updateProfilePicture: builder.mutation<User, {id: string, file: File}>({
+            query: ({id, file}) => {
+                const formData = new FormData();
+                formData.append('file', file);
                 
-            }),
+                return {
+                    url: `/profile-pic/${id}`,
+                    method: 'Put',
+                    body: formData,
+                }
+            },
             invalidatesTags: ['User']
-
         }),
 
         searchDoctors: builder.query<Doctor[], string>({
@@ -71,11 +74,27 @@ export const userAPI = createApi({
 
         adminStats: builder.query<AdminStats, void>({
             query: () => ({
-               url: '/user/admin-stats',
+               url: '/admin-stats',
                method: 'Get'
             })
         }),
 
+        // Added missing endpoints
+        getAllUsers: builder.query<PaginatedResponse<User>, {page: number, limit: number}>({
+            query: ({ page = 1, limit = 10 }) => ({
+                url: `?page=${page}&limit=${limit}`,
+                method: 'Get'
+            }),
+            providesTags: ['User']
+        }),
+
+        deleteUser: builder.mutation<void, string>({
+            query: (id) => ({
+                url: `/${id}`,
+                method: 'Delete'
+            }),
+            invalidatesTags: ['User']
+        }),
 
     })
 })
@@ -87,8 +106,7 @@ export const {
     useSearchDoctorsQuery,
     useUpdateUserMutation,
     useUpdateProfilePictureMutation,
-    useAdminStatsQuery
-
-
-
+    useAdminStatsQuery,
+    useGetAllUsersQuery,
+    useDeleteUserMutation
 } = userAPI

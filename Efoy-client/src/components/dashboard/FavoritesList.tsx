@@ -1,6 +1,6 @@
 import { useFindCurrentUserFavoritesQuery } from "../../redux/api/ratingAPI"
 import Spinner from "../utils/Spinner";
-import DoctorCard from "../doctors/DoctorCard";
+
 import Error from "../utils/Error";
 
 const FavoritesList = () => {
@@ -16,7 +16,8 @@ const FavoritesList = () => {
                 {!data.length && <p>No favorites yet.</p> }
                 {
                     data.map(fav => {
-                        return <DoctorCard key={fav._id} doctor={fav.doctorId}/>
+                        // TODO: Fix doctor type mismatch
+                        return <div key={fav.doctor.id}>Doctor: {fav.doctor.fullName}</div>
                     })
 
                 }

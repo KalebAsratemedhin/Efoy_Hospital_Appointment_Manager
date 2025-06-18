@@ -11,14 +11,15 @@ import DashboardPage from "./pages/Dashboard"
 import NotFound from "./components/utils/NotFound"
 import Settings from "./pages/Settings"
 import Doctors from "./pages/Doctors"
-import BookingPage from "./pages/Book"
+import Book from "./pages/Book"
 import Appointments from "./pages/Appointments"
 import DoctorDetails from "./components/doctors/DoctorDetails"
 import ContactPage from "./pages/Contact"
 import AboutPage from "./pages/About"
 import GoogleAuth from "./pages/GoogleAuth"
 import AuthSetup from "./components/auth/AuthSetup"
-import Applications from "./pages/Applications"
+import CalendarPage from "./pages/Calendar"
+import AdminCreateDoctor from "./components/dashboard/AdminCreateDoctor";
 
 const AppRoutes = () => {
     const dispatch = useDispatch()
@@ -52,14 +53,11 @@ const AppRoutes = () => {
                     <Route path="/doctors" element={<Doctors />} />
                     <Route path="/doctors/:id" element={<DoctorDetails />} />
 
-                    <Route path="/book/:id" element={<BookingPage />} />
+                    <Route path="/book/:id" element={<Book />} />
                     <Route path="/appointments" element={<Appointments />} />
                     <Route path="/appointments/:id" element={<Appointments />} />
-                    <Route path="/applications" element={<Applications />} />
-                    <Route path="/applications/:id" element={<Applications />} />
-
-
-
+                    <Route path="/calendar" element={<CalendarPage />} />
+                    <Route path="/admin/doctors/create" element={<AdminCreateDoctor />} />
                 </Route>
 
 

@@ -1,59 +1,161 @@
 import { Link } from "react-router-dom"
 import { BookingPopulated } from "../../types/Booking";
-import { useUpdateBookingMutation } from "../../redux/api/bookingAPI";
+import { useMarkBookingFinishedMutation } from "../../redux/api/bookingAPI";
 import Spinner from "../utils/Spinner";
 import Error from "../utils/Error";
+import { motion } from "framer-motion";
+import { FaUser, FaCalendarAlt, FaClock, FaEnvelope, FaCheckCircle, FaEye, FaPhone } from "react-icons/fa";
+
 const BookingCardDoctor = ({booking, refetch}: {booking: BookingPopulated, refetch: () => void}) => {
   const patient = booking.patientId
 
   const initials = patient?.fullName.split(' ').map((name: string) => name[0].toUpperCase()).join('');  
-  const [updateBooking, {isLoading: isUpdateLoading, isSuccess: isUpdateSuccess, isError: isUpdateError, error: updateError} ]= useUpdateBookingMutation()
+  const [markFinished, {isLoading: isUpdateLoading, isSuccess: isUpdateSuccess, isError: isUpdateError, error: updateError} ]= useMarkBookingFinishedMutation()
 
   const handleStatus = async () => {
-    await updateBooking({id: booking._id as string, update: {status: "serviced"}})
-
+    if (booking.id) {
+      await markFinished(booking.id)
+    }
   }
-  if (isUpdateLoading ) return <Spinner />;
-  if (isUpdateError ) return <Error error={updateError} />;
-  if(isUpdateSuccess)
-    refetch()
- 
+
+  if (isUpdateLoading) return <Spinner />;
+  if (isUpdateError) return <Error error={updateError} />;
+  if(isUpdateSuccess) refetch()
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'approved': return 'bg-green-100 text-green-800';
+      case 'rejected': return 'bg-red-100 text-red-800';
+      case 'serviced': return 'bg-blue-100 text-blue-800';
+      case 'finished': return 'bg-green-100 text-green-800';
+      default: return 'bg-yellow-100 text-yellow-800';
+    }
+  }
 
   return (
-    <div className="bg-white rounded-md p-4 flex gap-4 w-[600px] shadow-sm hover:shadow-md">
-        <div className="w-20 flex justify-center items-center">
-          {
-           patient?.profilePic ? 
-           <img className="w-12 h-12" src={patient.profilePic} alt="profile" /> :
-           <div className="w-24 h-24 rounded-full flex justify-center items-center bg-gray-300 text-lg ">
-              {initials}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -2 }}
+      className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-lg transition-all duration-300"
+    >
+      <div className="flex gap-6">
+        {/* Patient Avatar */}
+        <div className="flex-shrink-0">
+          <div className="relative">
+            {patient?.profilePic ? (
+              <img 
+                className="w-16 h-16 rounded-full object-cover border-2 border-gray-100" 
+                src={patient.profilePic} 
+                alt={patient.fullName} 
+              />
+            ) : (
+              <div className="w-16 h-16 rounded-full flex justify-center items-center bg-gradient-to-br from-green-500 to-emerald-600 text-white font-semibold text-lg border-2 border-gray-100">
+                {initials}
+              </div>
+            )}
+            <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-2 border-white flex items-center justify-center">
+              <FaUser className="text-white text-xs" />
             </div>
-          }
-           
-        </div>
-        <div className="flex flex-col pt-2 flex-grow ">
-          <p className="text-xl">{patient?.fullName}</p>
-          
-          <div className="flex items-center gap-2 text-gray-500">
-            <p>{patient?.email}</p>
-            <p className="bg-gray-700 w-1 h-1 rounded-full"></p>
           </div>
-          <div className="flex flex-col  text-gray-500">
-            <p>Date: {new Date(booking.appointmentDate.split('T')[0] + ' ' + booking.time).toLocaleString()}</p>
-            <p>Reason: {booking.reason}</p>
+        </div>
+
+        {/* Content */}
+        <div className="flex-grow">
+          {/* Header */}
+          <div className="flex items-start justify-between mb-4">
+            <div>
+              <h3 className="text-lg font-bold text-gray-900 mb-1">
+                {patient?.fullName}
+              </h3>
+              <div className="flex items-center gap-3 text-sm text-gray-600">
+                <div className="flex items-center gap-1">
+                  <FaEnvelope className="text-green-500" />
+                  <span>{patient?.email}</span>
+                </div>
+                {patient?.phoneNumber && (
+                  <>
+                    <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                    <div className="flex items-center gap-1">
+                      <FaPhone className="text-green-500" />
+                      <span>{patient.phoneNumber}</span>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+            
+            {/* Status Badge */}
+            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(booking.status || '')}`}>
+              {(booking.status || '').charAt(0).toUpperCase() + (booking.status || '').slice(1)}
+            </span>
           </div>
 
+          {/* Appointment Details */}
+          <div className="space-y-3 mb-4">
+            <div className="flex items-center gap-3 text-gray-600">
+              <div className="p-2 bg-blue-50 rounded-lg">
+                <FaCalendarAlt className="text-blue-500 text-sm" />
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 uppercase tracking-wide">Appointment Date</p>
+                <p className="text-sm font-medium text-gray-700">
+                  {new Date(booking.appointmentDate).toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </p>
+              </div>
+            </div>
 
+            <div className="flex items-center gap-3 text-gray-600">
+              <div className="p-2 bg-green-50 rounded-lg">
+                <FaClock className="text-green-500 text-sm" />
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 uppercase tracking-wide">Time</p>
+                <p className="text-sm font-medium text-gray-700">{booking.time}</p>
+              </div>
+            </div>
+
+            {booking.reason && (
+              <div className="flex items-start gap-3 text-gray-600">
+                <div className="p-2 bg-purple-50 rounded-lg mt-1">
+                  <FaUser className="text-purple-500 text-sm" />
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500 uppercase tracking-wide">Reason</p>
+                  <p className="text-sm font-medium text-gray-700 line-clamp-2">{booking.reason}</p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Actions */}
+          <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
+            <Link 
+              to={`/appointments/${booking.id}`}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+            >
+              <FaEye className="text-xs" />
+              View Details
+            </Link>
+            
+            {booking.status === "pending" && (
+              <button 
+                onClick={handleStatus}
+                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
+              >
+                <FaCheckCircle className="text-xs" />
+                Mark as Finished
+              </button>
+            )}
+          </div>
         </div>
-        <div className="flex items-center mt-4 gap-2 p-2">
-            {booking.status === "pending" && 
-                <button onClick={handleStatus} className="text-secondary hover:text-primary" >Serviced</button>
-            }
-          <Link className="text-secondary hover:text-primary" to={`/appointments/${booking._id}`}>More</Link>
-
-        </div>
-
-    </div>
+      </div>
+    </motion.div>
   )
 }
 

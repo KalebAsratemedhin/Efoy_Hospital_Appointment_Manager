@@ -5,82 +5,107 @@ import { authSelector } from "../../redux/slices/authSlice";
 import CommentList from "../comment/CommentList";
 import CommentBox from "../comment/CommentBox";
 import RatingStars from "../rating/RatingStars";
+import { motion } from "framer-motion";
+import { FaUserMd, FaGraduationCap, FaPhone, FaEnvelope, FaStar, FaBriefcase } from "react-icons/fa";
 
 const DoctorProfile = ({doctor} : {doctor: Doctor}) => {
-
-  const initials = doctor.fullName.split(' ').map((name: string) => name[0].toUpperCase()).join('');  
-  const authState = useSelector(authSelector)
+  const initials = doctor.userId.fullName.split(' ').map((name) => name[0].toUpperCase()).join('');  
+  const authState = useSelector(authSelector);
 
   return (
-    <div className=" min-h-screen">
-    <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <div className="bg-white rounded-lg shadow-lg p-6 flex flex-col items-center ">
-        <div className="w-32 h-32 mb-4">
-          {doctor?.profilePic ? (
-            <img src={doctor.profilePic} alt={doctor.fullName} className="rounded-full w-full h-full object-cover" />
-          ) : (
-            <div className="w-32 h-32 rounded-full flex justify-center items-center bg-gray-300 text-2xl font-semibold text-gray-700">
-              {initials}
-            </div>
-          )}
-        </div>
-        <h2 className="text-2xl font-semibold text-gray-900">{doctor.fullName}</h2>
-        <p className="text-lg text-gray-600 mt-2">{doctor.doctorData.speciality}</p>
-        <p className="text-gray-500 mt-1">{doctor.doctorData.experience}</p>
-        <div className="mt-4">
-        { authState.id !== doctor?._id ?
-          <RatingStars doctorId={doctor?._id as string} /> :
-          <RatingDisplay value={doctor.doctorData.rating as number} />
-        }
-        </div>
-      </div>
-      <div className="bg-white rounded-lg shadow-lg p-6 mb-8 lg:col-span-2 h-full">
-          <h3 className="text-xl font-bold text-gray-800 mb-4">Doctor Information</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <p className="text-lg">
-              <span className="font-medium text-gray-800">Email:</span>
-              <span className="ml-2 text-gray-600">{doctor.email}</span>
-            </p>
-            <p className="text-lg">
-              <span className="font-medium text-gray-800">Experience:</span>
-              <span className="ml-2 text-gray-600">{doctor?.doctorData?.experience}</span>
-            </p>
-            <p className="text-lg">
-              <span className="font-medium text-gray-800">Education Level:</span>
-              <span className="ml-2 text-gray-600">{doctor?.doctorData?.educationLevel}</span>
-            </p>
-            <p className="text-lg">
-              <span className="font-medium text-gray-800">Phone Number:</span>
-              <span className="ml-2 text-gray-600">{doctor.phoneNumber}</span>
-            </p>
-            <p className="text-lg">
-              <span className="font-medium text-gray-800">Rating:</span>
-              <span className="ml-2 text-gray-600">{doctor?.doctorData?.rating}</span>
-            </p>
-          </div>
-        </div>
-
-      <div className="lg:col-span-3 ">
-        <div className="bg-white rounded-lg w-full shadow-lg p-6">
-          <h3 className="text-xl font-bold text-gray-800 mb-4">Comments</h3>
-          <div className="flex gap-10 justify-between">
-            <div className="bg-gray-50 w-1/2 flex-grow rounded-lg p-4 h-[400px] overflow-y-auto">
-              <CommentList doctorId={doctor._id as string} />
-            </div>
-            { 
-              authState.id !== doctor._id &&
-              <div className="bg-gray-50 w-1/2 rounded-lg p-4">
-              <CommentBox doctorId={doctor._id as string} />
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="min-h-screen"
+    >
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Profile Card */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="bg-white rounded-xl shadow-lg p-8 flex flex-col items-center hover:shadow-xl transition-shadow duration-300"
+        >
+          <div className="relative mb-6">
+            {doctor.userId?.profilePic ? (
+              <img 
+                src={doctor.userId.profilePic} 
+                alt={doctor.userId.fullName} 
+                className="w-40 h-40 rounded-full object-cover border-4 border-purple-100"
+              />
+            ) : (
+              <div className="w-40 h-40 rounded-full flex justify-center items-center bg-purple-100 text-4xl font-semibold text-purple-600 border-4 border-purple-200">
+                {initials}
               </div>
-            }
+            )}
+            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-purple-600 text-white px-4 py-1 rounded-full text-sm font-medium">
+              {doctor.speciality}
+            </div>
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
-   
-  )
-}
 
-export default DoctorProfile
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">{doctor.userId.fullName}</h2>
+          <p className="text-purple-600 font-medium mb-4">{doctor.speciality}</p>
+          
+          <div className="flex items-center gap-2 text-gray-600 mb-4">
+            <FaBriefcase className="text-purple-500" />
+            <span>{doctor.experience} years experience</span>
+          </div>
+
+          <div className="w-full space-y-4 mt-4">
+            <div className="flex items-center gap-2 text-gray-600">
+              <FaEnvelope className="text-purple-500" />
+              <span className="text-sm">{doctor.userId.email}</span>
+            </div>
+            <div className="flex items-center gap-2 text-gray-600">
+              <FaPhone className="text-purple-500" />
+              <span className="text-sm">{doctor.userId.phoneNumber}</span>
+            </div>
+            <div className="flex items-center gap-2 text-gray-600">
+              <FaGraduationCap className="text-purple-500" />
+              <span className="text-sm">{doctor.educationLevel}</span>
+            </div>
+          </div>
+
+          <div className="mt-6 w-full">
+            {authState.id !== doctor?.id ? (
+              <RatingStars doctorId={doctor?.id as string} />
+            ) : (
+              <div className="flex items-center justify-center gap-2">
+                <FaStar className="text-yellow-400 text-xl" />
+                <RatingDisplay value={doctor.rating as number} />
+              </div>
+            )}
+          </div>
+        </motion.div>
+
+        {/* Comments Section */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="lg:col-span-2 space-y-6"
+        >
+          <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+            <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+              <FaUserMd className="text-purple-600" />
+              Patient Reviews
+            </h3>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="bg-gray-50 rounded-lg p-4 h-[400px] overflow-y-auto">
+                <CommentList doctorId={doctor.id as string} />
+              </div>
+              {authState.id !== doctor.id && (
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <CommentBox doctorId={doctor.id as string} />
+                </div>
+              )}
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </motion.div>
+  );
+};
+
+export default DoctorProfile;
 

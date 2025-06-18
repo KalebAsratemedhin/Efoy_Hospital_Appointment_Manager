@@ -31,10 +31,10 @@ const Profile = () => {
       update.age = data.age
     
     if(data.sex)
-      update.sex = data.sex
+      update.sex = data.sex as 'male' | 'female' | 'other'
 
 
-    await updateUser({id: user?._id as string, update: update})
+    await updateUser({id: user?.id as string, update: update})
 
   };
 
