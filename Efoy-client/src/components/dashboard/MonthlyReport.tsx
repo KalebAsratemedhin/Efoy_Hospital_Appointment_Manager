@@ -1,5 +1,5 @@
 import { useFindDoctorSummaryQuery, useFindPatientSummaryQuery } from "../../redux/api/bookingAPI"
-import BarChart from "./BarChart"
+import LineChart from "./LineChart"
 import Spinner from "../utils/Spinner";
 import Error from "../utils/Error";
 import { useGetCurrentUserQuery } from "../../redux/api/userAPI";
@@ -17,10 +17,9 @@ const MonthlyReport = () => {
     if (isError || isUserError ) return <Error error={error || userError} />;
 
     if (isSuccess && data)
-
     return (
-      <div className="bg-white w-full h-72 sm:h-auto md:w-6/12 p-6 rounded-md shadow-md">
-          <BarChart label={'Appointments'} chartData={data} chartTitle="Visit History" />
+      <div className="w-full">
+        <LineChart label={'Appointments'} data={data} title="Visit History" />
       </div>
     )
 
@@ -31,15 +30,10 @@ const MonthlyReport = () => {
     if (isError || isUserError ) return <Error error={error || userError} />;
 
     if (isSuccess && data)
-
     return (
-      <div className="bg-white w-full h-72 sm:h-auto md:w-6/12 p-6 rounded-md shadow-md ">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-2">Monthly Patients Report</h2>
-          <div className=" ">
-            <BarChart label={'Patients'} chartData={data} chartTitle="Visit History" />
-          </div>
+      <div className="w-full">
+        <LineChart label={'Patients'} data={data} title="Monthly Patients Report" />
       </div>
-     
     )
   }
 }

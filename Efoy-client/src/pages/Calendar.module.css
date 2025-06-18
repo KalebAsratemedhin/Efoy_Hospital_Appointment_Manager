@@ -1,0 +1,61 @@
+.calendarContainer {
+  background: linear-gradient(135deg, #f8fafc 0%, #f3e8ff 100%);
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.rbc-calendar {
+  background: transparent;
+  border-radius: 1rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.rbc-toolbar {
+  background: none;
+  border: none;
+  margin-bottom: 1.5rem;
+  color: #7b10b0;
+  font-weight: 600;
+}
+
+.rbc-event {
+  background: #7b10b0;
+  color: #fff;
+  border-radius: 9999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.95rem;
+  box-shadow: 0 2px 8px rgba(123, 16, 176, 0.08);
+  border: none;
+  transition: background 0.2s;
+}
+
+.rbc-event:hover {
+  background: #a855f7;
+}
+
+.rbc-selected {
+  background: #a855f7 !important;
+}
+
+.rbc-today {
+  background: #f3e8ff !important;
+}
+
+.rbc-off-range-bg {
+  background: #f1f5f9;
+}
+
+.rbc-header {
+  color: #7b10b0;
+  font-weight: 700;
+  font-size: 1rem;
+  background: none;
+  border: none;
+}
+
+.rbc-date-cell.rbc-now {
+  background: #ede9fe;
+  border-radius: 50%;
+} 
