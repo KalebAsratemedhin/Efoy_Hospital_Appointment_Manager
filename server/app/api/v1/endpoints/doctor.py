@@ -1,0 +1,24 @@
+from fastapi import APIRouter, Depends, Query
+from typing import Optional
+from app.schemas.doctor import DoctorCreate, DoctorUpdate, DoctorOut
+from app.services.doctor_service import DoctorService
+from app.core.security import get_current_user
+from app.db.models.user import User
+
+router = APIRouter()
+
+@router.get('/', response_model=Optional[dict])
+async def find_all_doctors(
+    page: int = Query(1, ge=1),
+    limit: int = Query(10, ge=1),
+    search: Optional[str] = None
+):
+    return await DoctorService.find_all_doctors(page, limit, search)
+
+@router.get('/{id}', response_model=Optional[dict])
+async def find_one_doctor(id: str):
+    return await DoctorService.find_one_doctor(id)
+
+@router.put('/{id}', response_model=Optional[dict])
+async def update_doctor(id: str, update: DoctorUpdate, current_user: User = Depends(get_current_user)):
+    return await DoctorService.update_doctor(id, update, current_user) 

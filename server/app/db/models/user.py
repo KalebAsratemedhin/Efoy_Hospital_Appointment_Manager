@@ -21,7 +21,7 @@ class User(Document):
         name = "users"
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "fullName": "John Doe",
                 "email": "john@example.com",

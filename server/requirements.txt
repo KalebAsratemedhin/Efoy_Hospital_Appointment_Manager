@@ -8,3 +8,4 @@ cloudinary
 pydantic[email]
 python-jose
 pydantic-settings
+passlib[bcrypt]
