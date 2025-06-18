@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+beanie
+motor
+python-dotenv
+python-multipart
+cloudinary
+pydantic[email]
+python-jose
+pydantic-settings
