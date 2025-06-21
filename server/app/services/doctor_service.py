@@ -4,7 +4,7 @@ from app.db.models.user import User
 from app.schemas.doctor import DoctorCreate, DoctorUpdate
 from beanie import PydanticObjectId
 from fastapi import HTTPException
-from typing import List, Optional
+from typing import List, Optional, Dict
 from beanie.operators import And, Or
 from app.utils.serialization import serialize_mongo_doc, serialize_mongo_docs
 
@@ -65,9 +65,40 @@ class DoctorService:
         if not doc:
             raise HTTPException(status_code=404, detail="Doctor profile not found.")
 
-        update_data = update.dict(exclude_unset=True)
+        update_data = update.model_dump(exclude_unset=True)
         for field, value in update_data.items():
             setattr(doc, field, value)
 
         await doc.save()
         return serialize_mongo_doc(doc)
+
+    @staticmethod
+    async def update_working_hours(id: str, working_hours: Dict[str, Dict[str, str]], current_user: User) -> dict:
+        if str(current_user.id) != id:
+            raise HTTPException(status_code=401, detail="Unauthorized.")
+        
+        doctor = await Doctor.find_one(Doctor.userId.id == PydanticObjectId(id))
+        if not doctor:
+            raise HTTPException(status_code=404, detail="Doctor profile not found.")
+        
+        # Validate working hours format
+        days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+        for day, hours in working_hours.items():
+            if day not in days:
+                raise HTTPException(status_code=400, detail=f"Invalid day: {day}")
+            if "start" not in hours or "end" not in hours:
+                raise HTTPException(status_code=400, detail=f"Missing start or end time for {day}")
+            if not re.match(r'^([01]\d|2[0-3]):([0-5]\d)$', hours["start"]):
+                raise HTTPException(status_code=400, detail=f"Invalid start time format for {day}. Use HH:MM.")
+            if not re.match(r'^([01]\d|2[0-3]):([0-5]\d)$', hours["end"]):
+                raise HTTPException(status_code=400, detail=f"Invalid end time format for {day}. Use HH:MM.")
+            if hours["start"] >= hours["end"]:
+                raise HTTPException(status_code=400, detail=f"Start time must be before end time for {day}")
+        
+        # Update only the provided days, preserve existing settings for other days
+        current_working_hours = doctor.workingHours.copy()
+        current_working_hours.update(working_hours)
+        doctor.workingHours = current_working_hours
+        
+        await doctor.save()
+        return serialize_mongo_doc(doctor)

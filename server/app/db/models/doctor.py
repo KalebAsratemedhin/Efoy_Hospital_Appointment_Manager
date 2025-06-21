@@ -1,7 +1,7 @@
 from app.db.models.base import BaseDocument
 from beanie import Link
 from pydantic import Field
-from typing import Optional
+from typing import Optional, Dict
 from datetime import datetime
 from app.db.models.user import User
 
@@ -12,6 +12,17 @@ class Doctor(BaseDocument):
     speciality: str
     experience: str
     educationLevel: str
+    workingHours: Dict[str, Dict[str, str]] = Field(
+        default={
+            "monday": {"start": "08:00", "end": "17:00"},
+            "tuesday": {"start": "08:00", "end": "17:00"},
+            "wednesday": {"start": "08:00", "end": "17:00"},
+            "thursday": {"start": "08:00", "end": "17:00"},
+            "friday": {"start": "08:00", "end": "17:00"},
+            "saturday": {"start": "08:00", "end": "17:00"},
+            "sunday": {"start": "08:00", "end": "17:00"}
+        }
+    )
 
     class Settings:
         name = "doctors" 

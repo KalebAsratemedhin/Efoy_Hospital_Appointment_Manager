@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, Query
-from typing import Optional
+from typing import Optional, Dict
 from app.schemas.doctor import DoctorCreate, DoctorUpdate, DoctorOut
 from app.services.doctor_service import DoctorService
 from app.core.security import get_current_user
@@ -21,4 +21,8 @@ async def find_one_doctor(id: str):
 
 @router.put('/{id}', response_model=Optional[dict])
 async def update_doctor(id: str, update: DoctorUpdate, current_user: User = Depends(get_current_user)):
-    return await DoctorService.update_doctor(id, update, current_user) 
+    return await DoctorService.update_doctor(id, update, current_user)
+
+@router.put('/{id}/working-hours', response_model=Optional[dict])
+async def update_working_hours(id: str, working_hours: Dict[str, Dict[str, str]], current_user: User = Depends(get_current_user)):
+    return await DoctorService.update_working_hours(id, working_hours, current_user) 

@@ -4,7 +4,7 @@ from app.db.models.user import User
 from app.schemas.doctor_application import DoctorApplicationCreate, DoctorApplicationUpdate
 from beanie import PydanticObjectId
 from fastapi import HTTPException
-from typing import List, Optional
+from typing import List, Optional, Literal
 from app.utils.serialization import serialize_mongo_doc, serialize_mongo_docs
 
 class DoctorApplicationService:
@@ -21,47 +21,42 @@ class DoctorApplicationService:
             educationLevel=data.educationLevel
         )
         await application.insert()
-        return {"message": "Application submitted successfully"}
+        return serialize_mongo_doc(application)
 
     @staticmethod
-    async def update_application(data: DoctorApplicationUpdate, current_user: User):
-        application = await DoctorApplication.find_one(DoctorApplication.userId.id == current_user.id)
+    async def update_application(id: str, data: DoctorApplicationUpdate, current_user: User):
+        application = await DoctorApplication.get(PydanticObjectId(id))
         if not application:
-            raise HTTPException(status_code=404, detail='Application not found.')
-        update_data = data.dict(exclude_unset=True)
+            raise HTTPException(status_code=404, detail="Application not found")
+        
+        if str(application.userId.ref.id) != str(current_user.id):
+            raise HTTPException(status_code=403, detail="You can only update your own application")
+        
+        if application.status != 'pending':
+            raise HTTPException(status_code=400, detail="Cannot update approved or rejected application")
+        
+        update_data = data.model_dump(exclude_unset=True)
         for field, value in update_data.items():
             setattr(application, field, value)
+        
         await application.save()
         return {"message": "Application updated successfully", "application": serialize_mongo_doc(application)}
 
     @staticmethod
-    async def evaluate_application(applicationId: str, status: str):
-        application = await DoctorApplication.get(PydanticObjectId(applicationId))
+    async def update_application_status(id: str, status: Literal['approved', 'rejected'], current_user: User):
+        if current_user.role != 'admin':
+            raise HTTPException(status_code=403, detail="Only admins can update application status")
+        
+        application = await DoctorApplication.get(PydanticObjectId(id))
         if not application:
-            raise HTTPException(status_code=404, detail='Application not found.')
+            raise HTTPException(status_code=404, detail="Application not found")
+        
+        if application.status != 'pending':
+            raise HTTPException(status_code=400, detail="Application has already been processed")
+        
         application.status = status
         await application.save()
-        if status == 'approved':
-            duplicate = await Doctor.find_one(Doctor.userId.id == application.userId.ref.id)
-            if not duplicate:
-                doctor = Doctor(
-                    userId=application.userId,
-                    speciality=application.speciality,
-                    experience=application.experience,
-                    educationLevel=application.educationLevel,
-                    orgID=application.orgID
-                )
-                await doctor.insert()
-            user = await User.get(application.userId.ref.id)
-            user.role = 'doctor'
-            await user.save()
-        elif status in ['rejected', 'pending']:
-            doctor = await Doctor.find_one(Doctor.userId.id == application.userId.ref.id)
-            if doctor:
-                await doctor.delete()
-            user = await User.get(application.userId.ref.id)
-            user.role = 'patient'
-            await user.save()
+        
         return {"message": f"Application {status} successfully", "application": serialize_mongo_doc(application)}
 
     @staticmethod
@@ -73,7 +68,10 @@ class DoctorApplicationService:
         return {"message": "Application deleted successfully"}
 
     @staticmethod
-    async def get_all_applications():
+    async def get_all_applications(current_user: User):
+        if current_user.role != 'admin':
+            raise HTTPException(status_code=403, detail="Only admins can view all applications")
+        
         applications = await DoctorApplication.find_all().to_list()
         return serialize_mongo_docs(applications)
 
@@ -83,6 +81,12 @@ class DoctorApplicationService:
         return serialize_mongo_doc(application)
 
     @staticmethod
-    async def get_one_application(applicationId: str):
-        application = await DoctorApplication.get(PydanticObjectId(applicationId))
+    async def get_application_by_id(id: str, current_user: User):
+        application = await DoctorApplication.get(PydanticObjectId(id))
+        if not application:
+            raise HTTPException(status_code=404, detail="Application not found")
+        
+        if str(application.userId.ref.id) != str(current_user.id) and current_user.role != 'admin':
+            raise HTTPException(status_code=403, detail="Not authorized to view this application")
+        
         return serialize_mongo_doc(application) 

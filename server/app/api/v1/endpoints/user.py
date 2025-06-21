@@ -29,19 +29,24 @@ async def find_all_users(current_user: User = Depends(get_current_user)):
 
 @router.get('/{id}', response_model=UserOut)
 async def find_one_user(id: str, current_user: User = Depends(get_current_user)):
-    user = await User.get(PydanticObjectId(id))
+    if str(current_user.id) != id and current_user.role != 'admin':
+        raise HTTPException(status_code=403, detail="Not authorized to view this user")
+    
+    user = await User.get(id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return serialize_mongo_doc(user)
 
 @router.put('/{id}', response_model=UserOut)
 async def update_user(id: str, user_update: UserUpdate, current_user: User = Depends(get_current_user)):
-    if str(current_user.id) != id:
-        raise HTTPException(status_code=401, detail="Unauthorized.")
-    user = await User.get(PydanticObjectId(id))
+    if str(current_user.id) != id and current_user.role != 'admin':
+        raise HTTPException(status_code=403, detail="Not authorized to update this user")
+    
+    user = await User.get(id)
     if not user:
-        raise HTTPException(status_code=404, detail="User not found.")
-    user.update(user_update.dict(exclude_unset=True))
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    user.update(user_update.model_dump(exclude_unset=True))
     await user.save()
     return serialize_mongo_doc(user)
 
@@ -53,4 +58,11 @@ async def update_profile_picture(id: str, file: UploadFile = File(...), current_
     result = cloudinary.uploader.upload(file.file)
     user.profilePic = result['secure_url']
     await user.save()
-    return serialize_mongo_doc(user) 
+    return serialize_mongo_doc(user)
+
+@router.delete('/{id}', status_code=status.HTTP_204_NO_CONTENT)
+async def delete_user(id: str, current_user: User = Depends(admin_required)):
+    user = await User.get(id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    await user.delete() 

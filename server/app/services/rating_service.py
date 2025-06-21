@@ -70,7 +70,7 @@ class RatingService:
         if str(rating.raterId.ref.id) != str(current_user.id):
             raise HTTPException(status_code=403, detail="You can only update your own ratings")
         
-        update_data = data.dict(exclude_unset=True)
+        update_data = data.model_dump(exclude_unset=True)
         for field, value in update_data.items():
             setattr(rating, field, value)
         await rating.save()
