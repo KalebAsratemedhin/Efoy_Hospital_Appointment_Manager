@@ -1,10 +1,11 @@
-from beanie import Document, Link
+from app.db.models.base import BaseDocument
+from beanie import Link
 from pydantic import Field
 from typing import Optional, Literal
 from datetime import datetime
 from app.db.models.user import User
 
-class DoctorApplication(Document):
+class DoctorApplication(BaseDocument):
     userId: Link[User]
     orgID: str
     speciality: str

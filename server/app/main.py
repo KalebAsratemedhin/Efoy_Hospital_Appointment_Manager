@@ -3,6 +3,7 @@ from app.api.v1.endpoints import user, booking, auth, doctor, doctor_application
 from app.db.session import initiate_database
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import get_settings
+from fastapi.openapi.utils import get_openapi
 
 settings = get_settings()
 
@@ -26,4 +27,28 @@ app.include_router(auth.router, prefix="/api/v1/auth", tags=["Auth"])
 app.include_router(doctor.router, prefix="/api/v1/doctor", tags=["Doctor"])
 app.include_router(doctor_application.router, prefix="/api/v1/doctor-application", tags=["DoctorApplication"])
 app.include_router(comment.router, prefix="/api/v1/comment", tags=["Comment"])
-app.include_router(rating.router, prefix="/api/v1/rating", tags=["Rating"]) 
+app.include_router(rating.router, prefix="/api/v1/rating", tags=["Rating"])
+
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+    openapi_schema = get_openapi(
+        title=app.title,
+        version="1.0.0",
+        description="Efoy Hospital Appointment Manager API",
+        routes=app.routes,
+    )
+    openapi_schema["components"]["securitySchemes"] = {
+        "BearerAuth": {
+            "type": "http",
+            "scheme": "bearer",
+            "bearerFormat": "JWT"
+        }
+    }
+    for path in openapi_schema["paths"].values():
+        for method in path.values():
+            method.setdefault("security", []).append({"BearerAuth": []})
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+app.openapi = custom_openapi 

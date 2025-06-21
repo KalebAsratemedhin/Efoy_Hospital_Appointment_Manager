@@ -1,9 +1,9 @@
-from beanie import Document
+from app.db.models.base import BaseDocument
 from pydantic import EmailStr, Field
 from typing import Optional, Literal
 from datetime import datetime
 
-class User(Document):
+class User(BaseDocument):
     fullName: str
     email: EmailStr
     role: Literal['patient', 'doctor', 'admin'] = 'patient'
@@ -14,8 +14,6 @@ class User(Document):
     age: Optional[int] = Field(default=None, ge=0)
     profilePic: Optional[str] = None
     googleId: Optional[str] = None
-    created_at: Optional[datetime] = None
-    updated_at: Optional[datetime] = None
 
     class Settings:
         name = "users"

@@ -16,13 +16,22 @@ async def find_all_user_bookings(current_user: User = Depends(get_current_user))
 async def find_recent_booking(current_user: User = Depends(get_current_user)):
     return await BookingService.find_recent_booking(current_user)
 
-@router.get('/{id}', response_model=BookingOut)
-async def find_one_booking(id: str, current_user: User = Depends(get_current_user)):
-    return await BookingService.find_one_booking(id)
+@router.get('/doctor/{doctorId}', response_model=List[int])
+async def doctor_summary(doctorId: str, current_user: User = Depends(get_current_user)):
+    return await BookingService.doctor_summary(doctorId)
+
+@router.get('/patient/{patientId}', response_model=List[int])
+async def patient_summary(patientId: str, current_user: User = Depends(get_current_user)):
+    return await BookingService.patient_summary(patientId) 
 
 @router.get('/{doctorId}/{date}', response_model=List[str])
 async def find_available_time_slots(doctorId: str, date: date, current_user: User = Depends(get_current_user)):
     return await BookingService.find_available_time_slots(doctorId, date)
+
+@router.get('/{id}', response_model=BookingOut)
+async def find_one_booking(id: str, current_user: User = Depends(get_current_user)):
+    return await BookingService.find_one_booking(id)
+
 
 @router.post('/', response_model=BookingOut, status_code=status.HTTP_201_CREATED)
 async def create_booking(booking_in: BookingCreate, current_user: User = Depends(get_current_user)):
@@ -36,11 +45,3 @@ async def update_booking(id: str, booking_update: BookingUpdate, current_user: U
 async def delete_booking(id: str, current_user: User = Depends(get_current_user)):
     await BookingService.delete_booking(id)
     return
-
-@router.get('/doctor/{doctorId}', response_model=List[int])
-async def doctor_summary(doctorId: str, current_user: User = Depends(get_current_user)):
-    return await BookingService.doctor_summary(doctorId)
-
-@router.get('/patient/{patientId}', response_model=List[int])
-async def patient_summary(patientId: str, current_user: User = Depends(get_current_user)):
-    return await BookingService.patient_summary(patientId) 

@@ -4,6 +4,7 @@ from app.schemas.comment import CommentCreate, CommentUpdate
 from beanie import PydanticObjectId
 from fastapi import HTTPException
 from typing import List, Optional
+from app.utils.serialization import serialize_mongo_doc, serialize_mongo_docs
 
 class CommentService:
     @staticmethod
@@ -16,7 +17,7 @@ class CommentService:
             content=data.content
         )
         await comment.insert()
-        return comment
+        return serialize_mongo_doc(comment)
 
     @staticmethod
     async def delete_comment(id: str):
@@ -24,7 +25,7 @@ class CommentService:
         if not comment:
             raise HTTPException(status_code=404, detail="The comment is not found.")
         await comment.delete()
-        return comment
+        return serialize_mongo_doc(comment)
 
     @staticmethod
     async def update_comment(id: str, data: CommentUpdate):
@@ -35,11 +36,14 @@ class CommentService:
         for field, value in update_data.items():
             setattr(comment, field, value)
         await comment.save()
-        return comment
+        return serialize_mongo_doc(comment)
 
     @staticmethod
     async def get_comments(doctorId: str):
         if not doctorId:
             raise HTTPException(status_code=400, detail="No Id provided.")
-        comments = await Comment.find(Comment.doctorId.id == doctorId).to_list()
-        return comments 
+        comments = await Comment.find(
+            Comment.doctorId.id == PydanticObjectId(doctorId),
+            fetch_links=False
+        ).to_list()
+        return serialize_mongo_docs(comments)

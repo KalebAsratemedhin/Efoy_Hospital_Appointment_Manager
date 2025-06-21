@@ -5,6 +5,7 @@ from app.schemas.doctor_application import DoctorApplicationCreate, DoctorApplic
 from beanie import PydanticObjectId
 from fastapi import HTTPException
 from typing import List, Optional
+from app.utils.serialization import serialize_mongo_doc, serialize_mongo_docs
 
 class DoctorApplicationService:
     @staticmethod
@@ -31,7 +32,7 @@ class DoctorApplicationService:
         for field, value in update_data.items():
             setattr(application, field, value)
         await application.save()
-        return {"message": "Application updated successfully", "application": application}
+        return {"message": "Application updated successfully", "application": serialize_mongo_doc(application)}
 
     @staticmethod
     async def evaluate_application(applicationId: str, status: str):
@@ -41,7 +42,7 @@ class DoctorApplicationService:
         application.status = status
         await application.save()
         if status == 'approved':
-            duplicate = await Doctor.find_one(Doctor.userId.id == application.userId.id)
+            duplicate = await Doctor.find_one(Doctor.userId.id == application.userId.ref.id)
             if not duplicate:
                 doctor = Doctor(
                     userId=application.userId,
@@ -51,17 +52,17 @@ class DoctorApplicationService:
                     orgID=application.orgID
                 )
                 await doctor.insert()
-            user = await User.get(application.userId.id)
+            user = await User.get(application.userId.ref.id)
             user.role = 'doctor'
             await user.save()
         elif status in ['rejected', 'pending']:
-            doctor = await Doctor.find_one(Doctor.userId.id == application.userId.id)
+            doctor = await Doctor.find_one(Doctor.userId.id == application.userId.ref.id)
             if doctor:
                 await doctor.delete()
-            user = await User.get(application.userId.id)
+            user = await User.get(application.userId.ref.id)
             user.role = 'patient'
             await user.save()
-        return {"message": f"Application {status} successfully", "application": application}
+        return {"message": f"Application {status} successfully", "application": serialize_mongo_doc(application)}
 
     @staticmethod
     async def delete_application(current_user: User):
@@ -74,14 +75,14 @@ class DoctorApplicationService:
     @staticmethod
     async def get_all_applications():
         applications = await DoctorApplication.find_all().to_list()
-        return applications
+        return serialize_mongo_docs(applications)
 
     @staticmethod
     async def get_my_application(current_user: User):
         application = await DoctorApplication.find_one(DoctorApplication.userId.id == current_user.id)
-        return application
+        return serialize_mongo_doc(application)
 
     @staticmethod
     async def get_one_application(applicationId: str):
         application = await DoctorApplication.get(PydanticObjectId(applicationId))
-        return application 
+        return serialize_mongo_doc(application) 

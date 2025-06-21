@@ -19,10 +19,14 @@ async def delete_rating(id: str, current_user: User = Depends(get_current_user))
 async def update_rating(id: str, data: RatingUpdate, current_user: User = Depends(get_current_user)):
     return await RatingService.update_rating(id, data, current_user)
 
+@router.get('/favorites', status_code=status.HTTP_200_OK)
+async def get_favorites(current_user: User = Depends(get_current_user)):
+    return await RatingService.get_favorites(current_user) 
+
 @router.get('/{doctorId}', response_model=Optional[RatingOut])
 async def get_rating(doctorId: str, current_user: User = Depends(get_current_user)):
     return await RatingService.get_rating(doctorId, current_user)
 
-@router.get('/favorites', status_code=status.HTTP_200_OK)
-async def get_favorites(current_user: User = Depends(get_current_user)):
-    return await RatingService.get_favorites(current_user) 
+@router.get('/doctor/{doctorId}/all', response_model=List[RatingOut])
+async def get_doctor_ratings(doctorId: str):
+    return await RatingService.get_doctor_ratings(doctorId)
