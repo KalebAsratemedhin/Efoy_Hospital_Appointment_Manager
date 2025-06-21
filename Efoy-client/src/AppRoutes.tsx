@@ -19,6 +19,7 @@ import AboutPage from "./pages/About"
 import GoogleAuth from "./pages/GoogleAuth"
 import AuthSetup from "./components/auth/AuthSetup"
 import Applications from "./pages/Applications"
+import CalendarPage from "./pages/Calendar"
 
 const AppRoutes = () => {
     const dispatch = useDispatch()
@@ -55,6 +56,7 @@ const AppRoutes = () => {
                     <Route path="/book/:id" element={<BookingPage />} />
                     <Route path="/appointments" element={<Appointments />} />
                     <Route path="/appointments/:id" element={<Appointments />} />
+                    <Route path="/calendar" element={<CalendarPage />} />
                     <Route path="/applications" element={<Applications />} />
                     <Route path="/applications/:id" element={<Applications />} />
 

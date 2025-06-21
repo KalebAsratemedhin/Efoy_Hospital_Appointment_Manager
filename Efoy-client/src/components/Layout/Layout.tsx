@@ -5,36 +5,26 @@ import Sidebar from "./Sidebar"
 import { useState } from "react"
 
 const Layout = () => {
-  const {pathname} = useLocation()
-  const [isOpen, setIsOpen] = useState(false)
-
+  const { pathname } = useLocation()
+  const [isOpen, setIsOpen] = useState(true)
 
   const handleSidebarToggle = () => {
     setIsOpen(!isOpen)
-
   }
-    
-
 
   return (
-    <div className="h-full flex  "  >
+    <div className="h-screen flex">
+      {pathname !== '/' && isOpen && <div className="h-screen ">
+        <Sidebar isOpen={isOpen} onSidebarToggle={handleSidebarToggle} />
+      </div>}
 
-
-        {pathname !== "/" && 
-          <div className="relative">
-            <Sidebar isOpen={isOpen} onSidebarToggle={handleSidebarToggle}  />
-
-          </div>       
-        }
-    
-        <div className="flex flex-col w-full overflow-y-auto bg-gray-100">
-          <Header onSidebarToggle={handleSidebarToggle} />
-          <div className="flex-grow  ">
-            <Outlet />
-          </div>
-          <Footer /> 
-
+      <div className="flex flex-col flex-grow overflow-auto">
+        <Header onSidebarToggle={handleSidebarToggle} />
+        <div className="flex-grow">
+          <Outlet />
         </div>
+        <Footer />
+      </div>
     </div>
   )
 }
