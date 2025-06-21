@@ -30,14 +30,23 @@ class BookingService:
         return start_time <= time <= end_time
 
     @staticmethod
-    async def find_all_user_bookings(current_user: User) -> List[dict]:
+    async def find_all_user_bookings(current_user: User, page: int = 1, limit: int = 10) -> dict:
+        skip = (page - 1) * limit
+        
         if current_user.role == "patient":
-            bookings = await Booking.find(Booking.patientId.id == current_user.id).to_list()
+            bookings = await Booking.find(Booking.patientId.id == current_user.id).skip(skip).limit(limit).to_list()
+            total_bookings = await Booking.find(Booking.patientId.id == current_user.id).count()
         elif current_user.role == "doctor":
-            bookings = await Booking.find(Booking.doctorId.id == current_user.id).to_list()
+            bookings = await Booking.find(Booking.doctorId.id == current_user.id).skip(skip).limit(limit).to_list()
+            total_bookings = await Booking.find(Booking.doctorId.id == current_user.id).count()
         else:
             raise HTTPException(status_code=403, detail="No such role")
-        return serialize_mongo_docs(bookings)
+        
+        return {
+            'bookings': serialize_mongo_docs(bookings),
+            'totalPages': (total_bookings + limit - 1) // limit,
+            'currentPage': page
+        }
 
     @staticmethod
     async def find_recent_booking(current_user: User) -> dict:

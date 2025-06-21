@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, field_validator
-from typing import Optional
+from typing import Optional, List
 from datetime import date, datetime
 import re
 
@@ -52,5 +52,12 @@ class BookingOut(BaseModel):
     status: str
     created_at: Optional[datetime]
     updated_at: Optional[datetime]
+
+    model_config = {"from_attributes": True}
+
+class BookingPaginatedResponse(BaseModel):
+    bookings: List[BookingOut]
+    totalPages: int
+    currentPage: int
 
     model_config = {"from_attributes": True} 

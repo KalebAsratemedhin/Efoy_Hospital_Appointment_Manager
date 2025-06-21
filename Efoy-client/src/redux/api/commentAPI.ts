@@ -6,7 +6,7 @@ const backendUrl = import.meta.env.VITE_BACKEND_URL;
 export const commentAPI = createApi({
     reducerPath: 'commentAPI',
     baseQuery: fetchBaseQuery({
-        baseUrl: `${backendUrl}/comments`,
+        baseUrl: `${backendUrl}/api/v1/comment`,
         credentials: "include",
         prepareHeaders: (headers) => {
             const token = localStorage.getItem('accessToken');

@@ -1,6 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from typing import List
-from app.schemas.booking import BookingCreate, BookingUpdate, BookingOut
+from app.schemas.booking import BookingCreate, BookingUpdate, BookingOut, BookingPaginatedResponse
 from app.db.models.user import User
 from app.core.security import get_current_user
 from datetime import date
@@ -8,9 +8,13 @@ from app.services.booking_service import BookingService
 
 router = APIRouter()
 
-@router.get('/', response_model=List[BookingOut])
-async def find_all_user_bookings(current_user: User = Depends(get_current_user)):
-    return await BookingService.find_all_user_bookings(current_user)
+@router.get('/', response_model=BookingPaginatedResponse)
+async def find_all_user_bookings(
+    current_user: User = Depends(get_current_user),
+    page: int = Query(1, ge=1),
+    limit: int = Query(10, ge=1)
+):
+    return await BookingService.find_all_user_bookings(current_user, page, limit)
 
 @router.get('/recent', response_model=BookingOut)
 async def find_recent_booking(current_user: User = Depends(get_current_user)):

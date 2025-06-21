@@ -12,12 +12,12 @@ async def create_comment(data: CommentCreate, current_user: User = Depends(get_c
     return await CommentService.create_comment(data, current_user)
 
 @router.delete('/{id}', response_model=CommentOut)
-async def delete_comment(id: str):
-    return await CommentService.delete_comment(id)
+async def delete_comment(id: str, current_user: User = Depends(get_current_user)):
+    return await CommentService.delete_comment(id, current_user)
 
 @router.put('/{id}', response_model=CommentOut)
-async def update_comment(id: str, data: CommentUpdate):
-    return await CommentService.update_comment(id, data)
+async def update_comment(id: str, data: CommentUpdate, current_user: User = Depends(get_current_user)):
+    return await CommentService.update_comment(id, data, current_user)
 
 @router.get('/{doctorId}', response_model=List[CommentOut])
 async def get_comments(doctorId: str):

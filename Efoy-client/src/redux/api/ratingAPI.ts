@@ -7,7 +7,7 @@ const backendUrl = import.meta.env.VITE_BACKEND_URL;
 export const ratingAPI = createApi({
     reducerPath: 'ratingAPI',
     baseQuery: fetchBaseQuery({
-        baseUrl: `${backendUrl}/ratings`,
+        baseUrl: `${backendUrl}/api/v1/rating`,
         credentials: "include",
         prepareHeaders: (headers) => {
             const token = localStorage.getItem('accessToken');

@@ -6,7 +6,7 @@ const backendUrl = import.meta.env.VITE_BACKEND_URL;
 export const applicationAPI = createApi({
     reducerPath: 'applicationAPI',
     baseQuery: fetchBaseQuery({
-        baseUrl: `${backendUrl}/doctor-applications`,
+        baseUrl: `${backendUrl}/api/v1/doctor-application`,
         credentials: "include",
         prepareHeaders: (headers) => {
             const token = localStorage.getItem('accessToken');

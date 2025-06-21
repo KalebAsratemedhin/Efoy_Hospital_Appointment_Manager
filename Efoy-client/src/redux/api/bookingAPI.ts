@@ -6,7 +6,7 @@ const backendUrl = import.meta.env.VITE_BACKEND_URL;
 export const bookingAPI = createApi({
     reducerPath: 'bookingAPI',
     baseQuery: fetchBaseQuery({
-        baseUrl: `${backendUrl}/bookings`,
+        baseUrl: `${backendUrl}/api/v1/booking`,
         credentials: "include",
         prepareHeaders: (headers) => {
             const token = localStorage.getItem('accessToken');
