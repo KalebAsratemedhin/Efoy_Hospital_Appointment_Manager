@@ -9,7 +9,7 @@ import { SignupCredential } from "../../types/User";
 import { FcGoogle } from "react-icons/fc";
 import FormError from "../utils/FormError";
 import { motion } from "framer-motion";
-import { FaUser, FaEnvelope, FaLock, FaPhone } from "react-icons/fa";
+import { FaUser, FaEnvelope, FaLock, FaPhone, FaUserMd } from "react-icons/fa";
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -17,21 +17,22 @@ interface FormData {
   password: string;
   fullName: string;
   email: string;
-  phoneNumber: string;
-  speciality?: string;
-  orgID?: string;
-  experience?: string;
-  educationLevel?: string;
+  phoneNumber?: string;  // Made optional to match backend
+  role: 'patient' | 'doctor' | 'admin';  // Added role selection
 }
 
 const Signup = () => {
-  const { formState: { errors, isValid }, register, handleSubmit } = useForm<FormData>({
+  const { formState: { errors, isValid }, register, handleSubmit, watch } = useForm<FormData>({
+    defaultValues: {
+      role: 'patient',  // Default role
+    },
     mode: 'onChange'
   });
 
   const [signupUser, { isError, isLoading, isSuccess, error, data: signupData }] = useSignupMutation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const selectedRole = watch('role');
 
   const onSubmit = async (data: FormData) => {
     if (isValid) {
@@ -99,7 +100,11 @@ const Signup = () => {
                   id="fullName" 
                   type="text" 
                   {...register('fullName', {
-                    required: "Full name is required"
+                    required: "Full name is required",
+                    minLength: {
+                      value: 2,
+                      message: "Full name must be at least 2 characters"
+                    }
                   })} 
                 />
               </div>
@@ -168,7 +173,7 @@ const Signup = () => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="phoneNumber">
-                Phone Number
+                Phone Number (Optional)
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -178,15 +183,43 @@ const Signup = () => {
                   className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" 
                   id="phoneNumber" 
                   type="tel" 
-                  {...register('phoneNumber', {
-                    required: "Phone number is required"
-                  })} 
+                  {...register('phoneNumber')} 
                 />
               </div>
-              {errors.phoneNumber && (
-                <p className="mt-1 text-sm text-red-600">{errors.phoneNumber.message}</p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="role">
+                Account Type
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <FaUserMd className="h-5 w-5 text-gray-400" />
+                </div>
+                <select 
+                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500" 
+                  id="role" 
+                  {...register('role', {
+                    required: "Account type is required"
+                  })} 
+                >
+                  <option value="patient">Patient</option>
+                  <option value="doctor">Doctor</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
+              {errors.role && (
+                <p className="mt-1 text-sm text-red-600">{errors.role.message}</p>
               )}
             </div>
+
+            {selectedRole === 'doctor' && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <p className="text-sm text-blue-800">
+                  <strong>Note:</strong> After creating your account as a doctor, you'll need to submit an application with your medical credentials and experience details.
+                </p>
+              </div>
+            )}
           </div>
 
           <motion.button 

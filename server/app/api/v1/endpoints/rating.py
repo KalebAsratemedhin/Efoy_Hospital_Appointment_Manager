@@ -11,11 +11,11 @@ router = APIRouter()
 async def create_rating(data: RatingCreate, current_user: User = Depends(get_current_user)):
     return await RatingService.create_rating(data, current_user)
 
-@router.delete('/{id}', status_code=status.HTTP_202_ACCEPTED)
+@router.delete('/{id}', status_code=status.HTTP_204_NO_CONTENT)
 async def delete_rating(id: str, current_user: User = Depends(get_current_user)):
     return await RatingService.delete_rating(id, current_user)
 
-@router.put('/{id}', status_code=status.HTTP_202_ACCEPTED)
+@router.put('/{id}', status_code=status.HTTP_200_OK)
 async def update_rating(id: str, data: RatingUpdate, current_user: User = Depends(get_current_user)):
     return await RatingService.update_rating(id, data, current_user)
 

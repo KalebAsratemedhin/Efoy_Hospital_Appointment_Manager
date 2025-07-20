@@ -34,7 +34,7 @@ const Profile = () => {
       update.sex = data.sex
 
 
-    await updateUser({id: user?._id as string, update: update})
+    await updateUser({id: user?.id as string, update: update})
 
   };
 

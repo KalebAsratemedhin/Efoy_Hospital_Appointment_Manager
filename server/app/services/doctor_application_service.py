@@ -5,7 +5,6 @@ from app.schemas.doctor_application import DoctorApplicationCreate, DoctorApplic
 from beanie import PydanticObjectId
 from fastapi import HTTPException
 from typing import List, Optional, Literal
-from app.utils.serialization import serialize_mongo_doc, serialize_mongo_docs
 
 class DoctorApplicationService:
     @staticmethod
@@ -21,7 +20,7 @@ class DoctorApplicationService:
             educationLevel=data.educationLevel
         )
         await application.insert()
-        return serialize_mongo_doc(application)
+        return application.model_dump()
 
     @staticmethod
     async def update_application(id: str, data: DoctorApplicationUpdate, current_user: User):
@@ -40,7 +39,7 @@ class DoctorApplicationService:
             setattr(application, field, value)
         
         await application.save()
-        return {"message": "Application updated successfully", "application": serialize_mongo_doc(application)}
+        return {"message": "Application updated successfully", "application": application.model_dump()}
 
     @staticmethod
     async def update_application_status(id: str, status: Literal['approved', 'rejected'], current_user: User):
@@ -57,7 +56,7 @@ class DoctorApplicationService:
         application.status = status
         await application.save()
         
-        return {"message": f"Application {status} successfully", "application": serialize_mongo_doc(application)}
+        return {"message": f"Application {status} successfully", "application": application.model_dump()}
 
     @staticmethod
     async def delete_application(current_user: User):
@@ -73,12 +72,12 @@ class DoctorApplicationService:
             raise HTTPException(status_code=403, detail="Only admins can view all applications")
         
         applications = await DoctorApplication.find_all().to_list()
-        return serialize_mongo_docs(applications)
+        return [a.model_dump() for a in applications]
 
     @staticmethod
     async def get_my_application(current_user: User):
         application = await DoctorApplication.find_one(DoctorApplication.userId.id == current_user.id)
-        return serialize_mongo_doc(application)
+        return application.model_dump()
 
     @staticmethod
     async def get_application_by_id(id: str, current_user: User):
@@ -89,4 +88,4 @@ class DoctorApplicationService:
         if str(application.userId.ref.id) != str(current_user.id) and current_user.role != 'admin':
             raise HTTPException(status_code=403, detail="Not authorized to view this application")
         
-        return serialize_mongo_doc(application) 
+        return application.model_dump() 

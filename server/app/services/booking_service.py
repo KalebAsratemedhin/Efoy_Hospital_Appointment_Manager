@@ -1,14 +1,17 @@
 from app.db.models.booking import Booking
 from app.db.models.user import User
 from app.db.models.doctor import Doctor
-from app.schemas.booking import BookingCreate, BookingUpdate
+from app.schemas.booking import BookingCreate, BookingUpdate, BookingOut
 from beanie import PydanticObjectId
 from datetime import date, datetime, timedelta
 from fastapi import HTTPException, status
 from typing import List
 from beanie.operators import And
 import re
-from app.utils.serialization import serialize_mongo_doc, serialize_mongo_docs
+from motor.motor_asyncio import AsyncIOMotorClient
+from app.core.config import get_settings
+
+settings = get_settings()
 
 class BookingService:
     @staticmethod
@@ -43,7 +46,7 @@ class BookingService:
             raise HTTPException(status_code=403, detail="No such role")
         
         return {
-            'bookings': serialize_mongo_docs(bookings),
+            'bookings': [BookingOut.model_validate(await Booking.get(b.id, fetch_links=True)) for b in bookings],
             'totalPages': (total_bookings + limit - 1) // limit,
             'currentPage': page
         }
@@ -56,14 +59,15 @@ class BookingService:
             booking = await Booking.find(Booking.doctorId.id == current_user.id).sort([("appointmentDate", 1), ("time", 1)]).first_or_none()
         if not booking:
             raise HTTPException(status_code=404, detail="No recent booking found")
-        return serialize_mongo_doc(booking)
+        booking_full = await Booking.get(booking.id, fetch_links=True)
+        return BookingOut.model_validate(booking_full)
 
     @staticmethod
     async def find_one_booking(id: str) -> dict:
-        booking = await Booking.get(PydanticObjectId(id))
+        booking = await Booking.get(PydanticObjectId(id), fetch_links=True)
         if not booking:
             raise HTTPException(status_code=404, detail="Booking not found")
-        return serialize_mongo_doc(booking)
+        return BookingOut.model_validate(booking)
 
     @staticmethod
     async def find_available_time_slots(doctorId: str, date_: date) -> List[str]:
@@ -95,49 +99,70 @@ class BookingService:
         return [slot for slot in all_slots if slot not in booked_slots]
 
     @staticmethod
+    async def create_booking_with_transaction(booking_in: BookingCreate, current_user: User) -> dict:
+        """Create booking with database transaction for data integrity"""
+        client = AsyncIOMotorClient(settings.MONGO_URI)
+        database = client.get_default_database()
+        
+        async with await client.start_session() as session:
+            async with session.start_transaction():
+                try:
+                    # Validate date
+                    if booking_in.appointmentDate < date.today():
+                        raise HTTPException(status_code=400, detail="Appointment date cannot be in the past.")
+                    
+                    # Validate time format (HH:MM)
+                    if not re.match(r"^([01]\d|2[0-3]):([0-5]\d)$", booking_in.time):
+                        raise HTTPException(status_code=400, detail="Invalid time format. Use HH:MM.")
+                    
+                    # Get doctor and check working hours
+                    doctor = await Doctor.find_one(Doctor.userId.id == PydanticObjectId(booking_in.doctorId))
+                    if not doctor:
+                        raise HTTPException(status_code=404, detail="Doctor not found")
+                    
+                    day_name = BookingService._get_day_name(booking_in.appointmentDate)
+                    if not BookingService._is_within_working_hours(doctor.workingHours, day_name, booking_in.time):
+                        working_hours = doctor.workingHours.get(day_name, {"start": "08:00", "end": "17:00"})
+                        raise HTTPException(
+                            status_code=400, 
+                            detail=f"Appointment time is outside doctor's working hours for {day_name} ({working_hours['start']} - {working_hours['end']})"
+                        )
+                    
+                    # Check for existing booking with transaction
+                    existing = await Booking.find(
+                        And(
+                            Booking.doctorId.id == PydanticObjectId(booking_in.doctorId),
+                            Booking.appointmentDate == booking_in.appointmentDate,
+                            Booking.time == booking_in.time
+                        )
+                    ).to_list()
+                    if existing:
+                        raise HTTPException(status_code=402, detail="Time slot is unavailable.")
+                    
+                    # Create booking
+                    booking = Booking(
+                        patientId=current_user,
+                        doctorId=PydanticObjectId(booking_in.doctorId),
+                        appointmentDate=booking_in.appointmentDate,
+                        time=booking_in.time,
+                        reason=booking_in.reason,
+                        status="pending"
+                    )
+                    await booking.insert()
+                    
+                    await session.commit_transaction()
+                    return BookingOut.model_validate(booking)
+                    
+                except Exception as e:
+                    await session.abort_transaction()
+                    raise e
+                finally:
+                    client.close()
+
+    @staticmethod
     async def create_booking(booking_in: BookingCreate, current_user: User) -> dict:
-        # Validate date
-        if booking_in.appointmentDate < date.today():
-            raise HTTPException(status_code=400, detail="Appointment date cannot be in the past.")
-        
-        # Validate time format (HH:MM)
-        if not re.match(r"^([01]\d|2[0-3]):([0-5]\d)$", booking_in.time):
-            raise HTTPException(status_code=400, detail="Invalid time format. Use HH:MM.")
-        
-        # Get doctor and check working hours
-        doctor = await Doctor.find_one(Doctor.userId.id == PydanticObjectId(booking_in.doctorId))
-        if not doctor:
-            raise HTTPException(status_code=404, detail="Doctor not found")
-        
-        day_name = BookingService._get_day_name(booking_in.appointmentDate)
-        if not BookingService._is_within_working_hours(doctor.workingHours, day_name, booking_in.time):
-            working_hours = doctor.workingHours.get(day_name, {"start": "08:00", "end": "17:00"})
-            raise HTTPException(
-                status_code=400, 
-                detail=f"Appointment time is outside doctor's working hours for {day_name} ({working_hours['start']} - {working_hours['end']})"
-            )
-        
-        # Check for existing booking
-        existing = await Booking.find(
-            And(
-                Booking.doctorId.id == PydanticObjectId(booking_in.doctorId),
-                Booking.appointmentDate == booking_in.appointmentDate,
-                Booking.time == booking_in.time
-            )
-        ).to_list()
-        if existing:
-            raise HTTPException(status_code=402, detail="Time slot is unavailable.")
-        
-        booking = Booking(
-            patientId=current_user,
-            doctorId=PydanticObjectId(booking_in.doctorId),
-            appointmentDate=booking_in.appointmentDate,
-            time=booking_in.time,
-            reason=booking_in.reason,
-            status="pending"
-        )
-        await booking.insert()
-        return serialize_mongo_doc(booking)
+        # Use transaction for better data integrity
+        return await BookingService.create_booking_with_transaction(booking_in, current_user)
 
     @staticmethod
     async def update_booking(id: str, booking_update: BookingUpdate) -> dict:
@@ -191,7 +216,7 @@ class BookingService:
             setattr(booking, field, value)
         
         await booking.save()
-        return serialize_mongo_doc(booking)
+        return BookingOut.model_validate(booking)
 
     @staticmethod
     async def delete_booking(id: str) -> None:

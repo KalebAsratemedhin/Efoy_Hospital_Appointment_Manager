@@ -17,6 +17,13 @@ class User(BaseDocument):
 
     class Settings:
         name = "users"
+        indexes = [
+            "email",  # Unique index for login
+            "role",   # For role-based queries
+            "googleId",  # For OAuth
+            "phoneNumber",  # For phone-based queries
+            "created_at",  # For time-based queries
+        ]
 
     class Config:
         json_schema_extra = {

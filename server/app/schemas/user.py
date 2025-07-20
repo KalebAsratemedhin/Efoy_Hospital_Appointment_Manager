@@ -1,5 +1,7 @@
 from pydantic import BaseModel, EmailStr, Field
 from typing import Optional, Literal
+from datetime import datetime
+from beanie import PydanticObjectId
 
 class UserBase(BaseModel):
     fullName: str
@@ -25,4 +27,9 @@ class UserUpdate(BaseModel):
 
 class UserOut(UserBase):
     id: str
-    model_config = {"from_attributes": True} 
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+    model_config = {
+        "from_attributes": True,
+        "json_encoders": {PydanticObjectId: str}
+    } 

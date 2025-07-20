@@ -2,6 +2,9 @@ from pydantic import BaseModel, Field, field_validator
 from typing import Optional, List
 from datetime import date, datetime
 import re
+from app.schemas.common import PaginatedResponse
+from app.schemas.user import UserOut
+from app.schemas.doctor import DoctorOut
 
 class BookingCreate(BaseModel):
     doctorId: str
@@ -44,20 +47,16 @@ class BookingUpdate(BaseModel):
 
 class BookingOut(BaseModel):
     id: str
-    patientId: str
-    doctorId: str
+    patientId: UserOut
+    doctorId: UserOut
     appointmentDate: date
     time: str
     reason: str
     status: str
     created_at: Optional[datetime]
     updated_at: Optional[datetime]
-
     model_config = {"from_attributes": True}
 
-class BookingPaginatedResponse(BaseModel):
-    bookings: List[BookingOut]
-    totalPages: int
-    currentPage: int
-
-    model_config = {"from_attributes": True} 
+class BookingPaginatedResponse(PaginatedResponse[BookingOut]):
+    """Standardized paginated response for bookings"""
+    pass 

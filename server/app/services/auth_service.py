@@ -14,7 +14,7 @@ class AuthService:
     @staticmethod
     async def signup(data: AuthSignup) -> AuthResponse:
         # Check for duplicate
-        existing = await User.find_one(User.email == data.email)
+        existing = await User.find_one({"email": data.email})
         if existing:
             raise HTTPException(status_code=409, detail="Duplicate account found.")
         hashed_password = pwd_context.hash(data.password)
@@ -32,7 +32,7 @@ class AuthService:
 
     @staticmethod
     async def login(data: AuthLogin) -> AuthResponse:
-        user = await User.find_one(User.email == data.email)
+        user = await User.find_one({"email": data.email})
         if not user or not user.password or not pwd_context.verify(data.password, user.password):
             raise HTTPException(status_code=400, detail="Invalid email or password.")
         payload = {"id": str(user.id), "role": user.role}

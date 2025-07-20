@@ -30,5 +30,4 @@ class CommentOut(BaseModel):
     content: str
     created_at: Optional[datetime]
     updated_at: Optional[datetime]
-
     model_config = {"from_attributes": True} 

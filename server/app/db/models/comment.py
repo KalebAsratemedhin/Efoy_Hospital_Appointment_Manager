@@ -11,4 +11,10 @@ class Comment(BaseDocument):
     content: str = Field(..., min_length=1)
 
     class Settings:
-        name = "comments" 
+        name = "comments"
+        indexes = [
+            "commenterId", # For user comment queries
+            "doctorId",    # For doctor comment queries
+            "created_at",  # For time-based queries
+            [("doctorId", 1), ("created_at", -1)],  # Compound index for doctor comments sorted by date
+        ] 

@@ -6,7 +6,6 @@ from beanie import PydanticObjectId
 from fastapi import HTTPException
 from typing import List, Optional
 from beanie.operators import And
-from app.utils.serialization import serialize_mongo_doc, serialize_mongo_docs
 
 class RatingService:
     @staticmethod
@@ -33,7 +32,7 @@ class RatingService:
             existing_rating.value = data.value
             await existing_rating.save()
             await RatingService.update_total_rating(data.doctorId)
-            return serialize_mongo_doc(existing_rating)
+            return existing_rating.model_dump()
         
         # Create new rating
         rating = Rating(
@@ -43,7 +42,7 @@ class RatingService:
         )
         await rating.insert()
         await RatingService.update_total_rating(data.doctorId)
-        return serialize_mongo_doc(rating)
+        return rating.model_dump()
 
     @staticmethod
     async def delete_rating(id: str, current_user: User):
@@ -77,7 +76,7 @@ class RatingService:
         
         doctorId = str(rating.doctorId.ref.id)
         await RatingService.update_total_rating(doctorId)
-        return serialize_mongo_doc(rating)
+        return rating.model_dump()
 
     @staticmethod
     async def get_rating(doctorId: str, current_user: User):
@@ -88,7 +87,7 @@ class RatingService:
             ),
             fetch_links=False
         )
-        return serialize_mongo_doc(rating) if rating else None
+        return rating.model_dump() if rating else None
 
     @staticmethod
     async def get_doctor_ratings(doctorId: str):
@@ -97,7 +96,7 @@ class RatingService:
             Rating.doctorId.id == PydanticObjectId(doctorId),
             fetch_links=False
         ).to_list()
-        return serialize_mongo_docs(ratings)
+        return [r.model_dump() for r in ratings]
 
     @staticmethod
     async def get_favorites(current_user: User):
@@ -110,7 +109,7 @@ class RatingService:
         for doc_id in doctor_ids:
             user = await User.get(PydanticObjectId(doc_id))
             doc = await Doctor.find_one(Doctor.userId.id == PydanticObjectId(doc_id))
-            result.append({**serialize_mongo_doc(user), 'doctorData': serialize_mongo_doc(doc) if doc else None})
+            result.append({**user.model_dump(), 'doctorData': doc.model_dump() if doc else None})
         return result
 
     @staticmethod
@@ -139,4 +138,4 @@ class RatingService:
             doctor.rating = round(avg, 2)  # Round to 2 decimal places
             await doctor.save()
         
-        return serialize_mongo_doc(doctor) if doctor else None 
+        return doctor.model_dump() if doctor else None 

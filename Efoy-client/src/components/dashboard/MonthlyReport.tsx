@@ -11,7 +11,7 @@ const MonthlyReport = () => {
   const {isLoading: isUserLoading, isError: isUserError, error: userError, data: user} = useGetCurrentUserQuery()
 
   if(authState.role === "patient"){
-    const {isLoading, isSuccess, isError, error, data} = useFindPatientSummaryQuery(user?._id as string)
+    const {isLoading, isSuccess, isError, error, data} = useFindPatientSummaryQuery(user?.id as string)
     
     if (isLoading || isUserLoading ) return <Spinner />;
     if (isError || isUserError ) return <Error error={error || userError} />;

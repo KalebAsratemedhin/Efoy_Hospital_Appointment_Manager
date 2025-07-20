@@ -19,7 +19,7 @@ async def update_application(update: DoctorApplicationUpdate, current_user: User
 async def evaluate_application(id: str, update: dict = Body(...), current_user: User = Depends(admin_required)):
     return await DoctorApplicationService.update_application_status(id, update['status'], current_user)
 
-@router.delete('/{id}', status_code=status.HTTP_200_OK)
+@router.delete('/{id}', status_code=status.HTTP_204_NO_CONTENT)
 async def delete_application(id: str, current_user: User = Depends(get_current_user)):
     return await DoctorApplicationService.delete_application(current_user)
 

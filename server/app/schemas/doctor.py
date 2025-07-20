@@ -1,7 +1,9 @@
 from pydantic import BaseModel, Field, field_validator
-from typing import Optional, Dict
+from typing import Optional, Dict, List
 from datetime import datetime
 import re
+from app.schemas.common import PaginatedResponse
+from app.schemas.user import UserOut
 
 class DoctorCreate(BaseModel):
     orgID: str
@@ -70,14 +72,28 @@ class DoctorUpdate(BaseModel):
 
 class DoctorOut(BaseModel):
     id: str
-    userId: str
-    rating: float
+    userId: UserOut
+    rating: float = 0.0
     orgID: str
     speciality: str
     experience: str
     educationLevel: str
     workingHours: Dict[str, Dict[str, str]]
-    created_at: Optional[datetime]
-    updated_at: Optional[datetime]
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+    model_config = {"from_attributes": True}
 
-    model_config = {"from_attributes": True} 
+class DoctorPaginatedResponse(PaginatedResponse[DoctorOut]):
+    """Standardized paginated response for doctors"""
+    pass
+
+class DoctorSearchResponse(BaseModel):
+    """Response for doctor search with pagination"""
+    doctors: List[DoctorOut]
+    total: int
+    page: int
+    limit: int
+    total_pages: int
+    has_next: bool
+    has_prev: bool
+    search_query: Optional[str] = None 

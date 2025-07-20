@@ -1,13 +1,12 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Rating } from "../../types/Rating";
-import { PopulatedRating } from "../../types/Rating";
+import { Rating, PopulatedRating, FavoriteDoctor } from "../../types/Rating";
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 
 export const ratingAPI = createApi({
     reducerPath: 'ratingAPI',
     baseQuery: fetchBaseQuery({
-        baseUrl: `${backendUrl}/ratings`,
+        baseUrl: `${backendUrl}/rating`,
         credentials: "include",
         prepareHeaders: (headers) => {
             const token = localStorage.getItem('accessToken');
@@ -28,7 +27,7 @@ export const ratingAPI = createApi({
                 
             })
         }),
-        updateRating: builder.mutation<Rating, {id: string, update: Rating} >({
+        updateRating: builder.mutation<Rating, {id: string, update: Partial<Rating>} >({
             query: ({id, update}) => ({
                 url: `/${id}`,
                 method: 'Put',
@@ -44,15 +43,22 @@ export const ratingAPI = createApi({
             })
         }),
 
-        findCurrentUserRating: builder.query<Rating, string>({
-            query: (id) => ({
-                url: `/${id}`,
+        findCurrentUserRating: builder.query<Rating | null, string>({
+            query: (doctorId) => ({
+                url: `/${doctorId}`,
                 method: 'Get'
             })
         }),
-        findCurrentUserFavorites: builder.query<PopulatedRating[], void>({
+        findCurrentUserFavorites: builder.query<FavoriteDoctor[], void>({
             query: () => ({
                 url: `/favorites`,
+                method: 'Get'
+            })
+        }),
+        // Added missing endpoint
+        getDoctorRatings: builder.query<PopulatedRating[], string>({
+            query: (doctorId) => ({
+                url: `/doctor/${doctorId}/all`,
                 method: 'Get'
             })
         })
@@ -65,6 +71,6 @@ export const {
     useUpdateRatingMutation,
     useDeleteRatingMutation,
     useFindCurrentUserRatingQuery,
-    useFindCurrentUserFavoritesQuery
-
+    useFindCurrentUserFavoritesQuery,
+    useGetDoctorRatingsQuery
 } = ratingAPI

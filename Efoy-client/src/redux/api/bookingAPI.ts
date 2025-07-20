@@ -1,12 +1,12 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Booking, BookingPopulated } from "../../types/Booking";
+import { Booking, BookingPopulated, BookingPaginatedResponse } from "../../types/Booking";
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 
 export const bookingAPI = createApi({
     reducerPath: 'bookingAPI',
     baseQuery: fetchBaseQuery({
-        baseUrl: `${backendUrl}/bookings`,
+        baseUrl: `${backendUrl}/booking`,
         credentials: "include",
         prepareHeaders: (headers) => {
             const token = localStorage.getItem('accessToken');
@@ -29,7 +29,7 @@ export const bookingAPI = createApi({
             }),
             invalidatesTags: ['MyBookings']
         }),
-        updateBooking: builder.mutation<BookingPopulated, {id: string, update: Booking} >({
+        updateBooking: builder.mutation<BookingPopulated, {id: string, update: Partial<Booking>} >({
             query: ({id, update}) => ({
                 url: `/${id}`,
                 method: 'Put',
@@ -47,7 +47,7 @@ export const bookingAPI = createApi({
             })
         }),
 
-        findRecentBooking: builder.query<Booking, void>({
+        findRecentBooking: builder.query<BookingPopulated, void>({
             query: () => ({
                 url: `/recent`,
                 method: 'Get'
@@ -62,7 +62,7 @@ export const bookingAPI = createApi({
             providesTags: ['Booking']
         }),
 
-        findCurrentUserBookings: builder.query<{bookings: BookingPopulated[], totalPages: number, currentPage: number}, {page: number, limit: number}>({
+        findCurrentUserBookings: builder.query<BookingPaginatedResponse, {page: number, limit: number}>({
             query: ({ page = 1, limit = 10 }) => ({
                 url: `?page=${page}&limit=${limit}`,
                 method: 'Get'

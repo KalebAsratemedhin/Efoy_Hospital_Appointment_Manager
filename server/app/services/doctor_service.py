@@ -1,12 +1,11 @@
 import re
 from app.db.models.doctor import Doctor
 from app.db.models.user import User
-from app.schemas.doctor import DoctorCreate, DoctorUpdate
+from app.schemas.doctor import DoctorCreate, DoctorUpdate, DoctorOut
 from beanie import PydanticObjectId
 from fastapi import HTTPException
 from typing import List, Optional, Dict
 from beanie.operators import And, Or
-from app.utils.serialization import serialize_mongo_doc, serialize_mongo_docs
 
 class DoctorService:
     @staticmethod
@@ -28,11 +27,9 @@ class DoctorService:
             ).to_list()
 
         for doctor in doctors:
-            doc_data = await Doctor.find_one(Doctor.userId.id == PydanticObjectId(str(doctor.id)))
-            result.append({
-                **serialize_mongo_doc(doctor),
-                'doctorData': serialize_mongo_doc(doc_data) if doc_data else None
-            })
+            doc_data = await Doctor.find_one(Doctor.userId.id == PydanticObjectId(str(doctor.id)), fetch_links=True)
+            if doc_data:
+                result.append(DoctorOut.model_validate(doc_data))
 
         if not search:
             total_doctors = await User.find(User.role == 'doctor').count()
@@ -50,11 +47,10 @@ class DoctorService:
         if not user:
             raise HTTPException(status_code=404, detail="Doctor not found")
 
-        doctor = await Doctor.find_one(Doctor.userId.id == PydanticObjectId(id))
-        return {
-            **serialize_mongo_doc(user),
-            'doctorData': serialize_mongo_doc(doctor) if doctor else None
-        }
+        doctor = await Doctor.find_one(Doctor.userId.id == PydanticObjectId(id), fetch_links=True)
+        if not doctor:
+            raise HTTPException(status_code=404, detail="Doctor profile not found.")
+        return DoctorOut.model_validate(doctor)
 
     @staticmethod
     async def update_doctor(id: str, update: DoctorUpdate, current_user: User) -> dict:
@@ -70,7 +66,7 @@ class DoctorService:
             setattr(doc, field, value)
 
         await doc.save()
-        return serialize_mongo_doc(doc)
+        return DoctorOut.model_validate(doc)
 
     @staticmethod
     async def update_working_hours(id: str, working_hours: Dict[str, Dict[str, str]], current_user: User) -> dict:
@@ -101,4 +97,4 @@ class DoctorService:
         doctor.workingHours = current_working_hours
         
         await doctor.save()
-        return serialize_mongo_doc(doctor)
+        return DoctorOut.model_validate(doctor)

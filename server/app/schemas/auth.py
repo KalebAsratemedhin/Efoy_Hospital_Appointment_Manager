@@ -6,7 +6,7 @@ class AuthSignup(BaseModel):
     email: EmailStr
     password: str = Field(..., min_length=6)
     phoneNumber: Optional[str]
-    role: str = Field(..., pattern='^(patient|doctor|admin)$')
+    role: str = Field(default="patient", pattern='^(patient|doctor|admin)$')
 
 class AuthLogin(BaseModel):
     email: EmailStr
@@ -16,5 +16,4 @@ class AuthResponse(BaseModel):
     accessToken: str
     id: str
     role: str
-
     model_config = {"from_attributes": True} 

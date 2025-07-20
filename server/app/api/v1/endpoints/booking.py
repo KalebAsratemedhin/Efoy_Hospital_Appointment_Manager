@@ -8,13 +8,14 @@ from app.services.booking_service import BookingService
 
 router = APIRouter()
 
-@router.get('/', response_model=BookingPaginatedResponse)
+@router.get('/', response_model=List[BookingOut])
 async def find_all_user_bookings(
     current_user: User = Depends(get_current_user),
     page: int = Query(1, ge=1),
     limit: int = Query(10, ge=1)
 ):
-    return await BookingService.find_all_user_bookings(current_user, page, limit)
+    result = await BookingService.find_all_user_bookings(current_user, page, limit)
+    return result['bookings']
 
 @router.get('/recent', response_model=BookingOut)
 async def find_recent_booking(current_user: User = Depends(get_current_user)):
@@ -35,7 +36,6 @@ async def find_available_time_slots(doctorId: str, date: date, current_user: Use
 @router.get('/{id}', response_model=BookingOut)
 async def find_one_booking(id: str, current_user: User = Depends(get_current_user)):
     return await BookingService.find_one_booking(id)
-
 
 @router.post('/', response_model=BookingOut, status_code=status.HTTP_201_CREATED)
 async def create_booking(booking_in: BookingCreate, current_user: User = Depends(get_current_user)):

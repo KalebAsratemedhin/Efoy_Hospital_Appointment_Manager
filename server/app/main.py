@@ -4,10 +4,18 @@ from app.db.session import initiate_database
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import get_settings
 from fastapi.openapi.utils import get_openapi
+from app.core.rate_limiter import rate_limit_middleware
+from app.core.exceptions import setup_exception_handlers
 
 settings = get_settings()
 
 app = FastAPI(title="Efoy Hospital Appointment Manager API")
+
+# Setup exception handlers
+setup_exception_handlers(app)
+
+# Add rate limiting middleware
+app.middleware("http")(rate_limit_middleware)
 
 app.add_middleware(
     CORSMiddleware,

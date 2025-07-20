@@ -30,5 +30,4 @@ class RatingOut(BaseModel):
     value: float
     created_at: Optional[datetime]
     updated_at: Optional[datetime]
-
     model_config = {"from_attributes": True} 

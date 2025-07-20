@@ -15,4 +15,12 @@ class DoctorApplication(BaseDocument):
     appliedAt: Optional[datetime] = Field(default_factory=datetime.utcnow)
 
     class Settings:
-        name = "doctor_applications" 
+        name = "doctor_applications"
+        indexes = [
+            "userId",     # For user application queries
+            "status",     # For status-based queries
+            "speciality", # For specialty-based queries
+            "appliedAt",  # For time-based queries
+            "created_at", # For time-based queries
+            [("status", 1), ("appliedAt", -1)],  # Compound index for status + time queries
+        ] 

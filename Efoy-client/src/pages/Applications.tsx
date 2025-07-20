@@ -21,6 +21,8 @@ const Applications = () => {
   if (isLoading) return <Spinner />;
   if (isError) return <Error error={error} />;
 
+  console.log(data)
+
   const filteredApplications = data?.filter((application: DoctorApplicationPopulated) => {
     const matchesSearch = application.userId.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          application.speciality.toLowerCase().includes(searchTerm.toLowerCase());

@@ -11,4 +11,12 @@ class Rating(BaseDocument):
     value: float = Field(..., ge=0, le=5)
 
     class Settings:
-        name = "ratings" 
+        name = "ratings"
+        indexes = [
+            "raterId",    # For user rating queries
+            "doctorId",   # For doctor rating queries
+            "value",      # For rating value queries
+            "created_at", # For time-based queries
+            [("doctorId", 1), ("raterId", 1)],  # Compound index for unique user-doctor ratings
+            [("doctorId", 1), ("value", 1)],    # Compound index for doctor rating analysis
+        ] 

@@ -14,4 +14,13 @@ class Booking(BaseDocument):
     status: str = Field(default="pending")
 
     class Settings:
-        name = "bookings" 
+        name = "bookings"
+        indexes = [
+            "patientId",  # For patient booking queries
+            "doctorId",   # For doctor booking queries
+            "appointmentDate",  # For date-based queries
+            "status",     # For status-based queries
+            "created_at", # For time-based queries
+            [("doctorId", 1), ("appointmentDate", 1), ("time", 1)],  # Compound index for availability checks
+            [("patientId", 1), ("appointmentDate", 1)],  # Compound index for patient date queries
+        ] 

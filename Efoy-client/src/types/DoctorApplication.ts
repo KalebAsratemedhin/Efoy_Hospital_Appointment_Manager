@@ -1,26 +1,22 @@
 import { User } from "./User";
 
 export interface Application{
-    _id?: string;
+    id?: string;  // Changed from _id to id
     speciality: string;
     experience: string;
     educationLevel: string;
     orgID: string;
-    status?: string;
+    status?: 'pending' | 'approved' | 'rejected';  // Added literal types
     appliedAt?: string; 
-
 }
 
 export interface DoctorApplication extends Application{
     userId: string;
-
 }
 
 export interface DoctorApplicationPopulated extends Application{
-    userId: User;
-    
+    userId: User;  // Changed to User type
 }
-
 
 export interface DoctorApplicationCreate{
     speciality: string;
@@ -34,5 +30,6 @@ export interface DoctorApplicationUpdate{
     experience?: string;
     educationLevel?: string;
     orgID?: string;
+    status?: 'pending' | 'approved' | 'rejected';  // Added status field
 }
 

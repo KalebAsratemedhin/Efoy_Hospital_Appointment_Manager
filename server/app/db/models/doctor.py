@@ -25,4 +25,12 @@ class Doctor(BaseDocument):
     )
 
     class Settings:
-        name = "doctors" 
+        name = "doctors"
+        indexes = [
+            "userId",     # For user-doctor relationship queries
+            "speciality", # For specialty-based searches
+            "rating",     # For rating-based sorting
+            "orgID",      # For organization-based queries
+            "created_at", # For time-based queries
+            [("speciality", 1), ("rating", -1)],  # Compound index for specialty + rating queries
+        ] 

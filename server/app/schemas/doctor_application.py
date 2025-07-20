@@ -38,5 +38,4 @@ class DoctorApplicationOut(BaseModel):
     educationLevel: str
     status: Literal['pending', 'approved', 'rejected']
     appliedAt: Optional[datetime]
-
     model_config = {"from_attributes": True} 
