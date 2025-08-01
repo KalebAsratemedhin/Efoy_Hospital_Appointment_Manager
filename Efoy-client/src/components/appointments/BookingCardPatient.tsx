@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom"
 import { useDeleteBookingMutation } from "../../redux/api/bookingAPI";
+import { useFindCurrentUserRatingQuery } from "../../redux/api/ratingAPI";
 import Spinner from "../utils/Spinner";
 import Error from "../utils/Error";
 import { BookingPopulated } from "../../types/Booking";
@@ -13,6 +14,11 @@ const BookingCardPatient = ({booking, refetch}: {booking: BookingPopulated, refe
 
   const initials = doctor.fullName.split(' ').map((name) => name[0].toUpperCase()).join('');  
   const [deleteBooking, {isLoading, isError, isSuccess, error}] = useDeleteBookingMutation()
+  
+  // Check if user has already rated this doctor
+  const { data: existingRating } = useFindCurrentUserRatingQuery(doctor.id, {
+    skip: booking.status !== "finished"
+  });
 
   const handleDelete = async () => {
     await deleteBooking(booking.id as string)
@@ -47,7 +53,7 @@ const BookingCardPatient = ({booking, refetch}: {booking: BookingPopulated, refe
         <div className="flex-shrink-0">
           <div className="relative">
             {doctor.profilePic ? (
-              <img 
+              <img
                 className="w-16 h-16 rounded-full object-cover border-2 border-gray-100" 
                 src={doctor.profilePic} 
                 alt={doctor.fullName} 
@@ -150,8 +156,8 @@ const BookingCardPatient = ({booking, refetch}: {booking: BookingPopulated, refe
             )}
           </div>
 
-          {/* Rating Section for Finished Bookings */}
-          {booking.status === "finished" && (
+          {/* Rating Section for Finished Bookings - Only show if not already rated */}
+          {booking.status === "finished" && !existingRating && (
             <div className="mt-4 pt-4 border-t border-gray-100">
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-2">
@@ -159,6 +165,18 @@ const BookingCardPatient = ({booking, refetch}: {booking: BookingPopulated, refe
                   <span className="text-sm font-medium text-gray-700">Rate your experience:</span>
                 </div>
                 <RatingStars doctorId={booking.doctorId.id} />
+              </div>
+            </div>
+          )}
+
+          {/* Show rating confirmation if already rated */}
+          {booking.status === "finished" && existingRating && (
+            <div className="mt-4 pt-4 border-t border-gray-100">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
+                  <FaStar className="text-green-500" />
+                  <span className="text-sm font-medium text-green-700">You rated this doctor: {existingRating.value}/5</span>
+                </div>
               </div>
             </div>
           )}

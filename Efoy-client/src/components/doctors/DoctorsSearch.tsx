@@ -14,6 +14,7 @@ const DoctorsSearch = ({ searchTerm }: DoctorsSearchProps) => {
     console.log('DoctorsSearch - searchTerm:', searchTerm);
     console.log('DoctorsSearch - data:', data);
     console.log('DoctorsSearch - isLoading:', isLoading, 'isSuccess:', isSuccess, 'isError:', isError);
+    console.log('DoctorsSearch - error:', error);
 
     if (isLoading) {
         return (
@@ -28,6 +29,10 @@ const DoctorsSearch = ({ searchTerm }: DoctorsSearchProps) => {
     }
 
     if (isSuccess && data) {
+        // Extract doctors array from the API response
+        const responseData = data as any; // API returns { doctors: Doctor[], totalPages: number, currentPage: number }
+        const doctors = responseData?.doctors || [];
+        
         return (
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div className="mb-8">
@@ -35,11 +40,11 @@ const DoctorsSearch = ({ searchTerm }: DoctorsSearchProps) => {
                         Search Results
                     </h1>
                     <p className="text-gray-600">
-                        Found {data.length} doctor{data.length !== 1 ? 's' : ''} for "{searchTerm}"
+                        Found {doctors.length} doctor{doctors.length !== 1 ? 's' : ''} for "{searchTerm}"
                     </p>
                 </div>
 
-                {data.length === 0 ? (
+                {doctors.length === 0 ? (
                     <div className="text-center py-12">
                         <p className="text-gray-600 text-lg">
                             No doctors found matching "{searchTerm}". Try a different search term.
@@ -47,7 +52,7 @@ const DoctorsSearch = ({ searchTerm }: DoctorsSearchProps) => {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {data.map((doctor: Doctor) => (
+                        {doctors.map((doctor: Doctor) => (
                             <DoctorCard key={doctor.id} doctor={doctor} />
                         ))}
                     </div>

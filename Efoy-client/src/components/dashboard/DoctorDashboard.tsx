@@ -1,8 +1,8 @@
 import Reminder from "./Reminder";
 import MonthlyReport from "./MonthlyReport";
 import { useGetCurrentUserQuery } from "../../redux/api/userAPI";
+import { useGetDoctorByIdQuery } from "../../redux/api/doctorAPI";
 import { useGetDoctorDashboardQuery } from "../../redux/api/dashboardAPI";
-
 
 import Spinner from "../utils/Spinner";
 import Error from "../utils/Error";
@@ -11,16 +11,15 @@ import { FaUserMd, FaCalendarAlt, FaChartLine, FaStar, FaGraduationCap, FaBriefc
 
 const DoctorDashboard = () => {
   const { isLoading: isUserLoading, isError: isUserError, error: userError, data: user } = useGetCurrentUserQuery();
+  const { data: doctorData, isLoading: isDoctorLoading, error: doctorError } = useGetDoctorByIdQuery(user?.id || '', {
+    skip: !user?.id
+  });
   const { data: dashboardData, isLoading: isDashboardLoading, error: dashboardError } = useGetDoctorDashboardQuery();
 
-  const doctorData = user && user.role === 'doctor' ? (user as any).doctorData || {} : {};
-
-  if (isUserLoading || isDashboardLoading) return <Spinner />;
+  if (isUserLoading || isDoctorLoading || isDashboardLoading) return <Spinner />;
   if (isUserError) return <Error error={userError} />;
+  if (doctorError) return <Error error={doctorError} />;
   if (dashboardError) return <Error error={dashboardError} />;
-
-  if (isUserLoading) return <Spinner />;
-  if (isUserError) return <Error error={userError} />;
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -106,25 +105,25 @@ const DoctorDashboard = () => {
                   </div>
                 )}
                 <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-purple-600 text-white px-4 py-1 rounded-full text-sm font-medium">
-                  {doctorData.speciality}
+                  {doctorData?.speciality || 'Doctor'}
                 </div>
               </div>
 
               <h2 className="text-xl font-bold text-gray-900 mb-1">Dr. {user?.fullName}</h2>
-              <p className="text-purple-600 font-medium mb-3">{doctorData.speciality}</p>
+              <p className="text-purple-600 font-medium mb-3">{doctorData?.speciality || 'General Medicine'}</p>
 
               <div className="w-full space-y-3 mt-4">
                 <div className="flex items-center gap-2 text-gray-600">
                   <FaBriefcase className="text-purple-500" />
-                  <span className="text-sm">{doctorData.experience} years experience</span>
+                  <span className="text-sm">{doctorData?.experience || '0'} years experience</span>
                 </div>
                 <div className="flex items-center gap-2 text-gray-600">
                   <FaGraduationCap className="text-purple-500" />
-                  <span className="text-sm">{doctorData.educationLevel}</span>
+                  <span className="text-sm">{doctorData?.educationLevel || 'MD'}</span>
                 </div>
                 <div className="flex items-center gap-2 text-gray-600">
                   <FaStar className="text-yellow-400" />
-                  <span className="text-sm">Rating: {doctorData.rating || 0}</span>
+                  <span className="text-sm">Rating: {doctorData?.rating?.toFixed(1) || '0.0'}</span>
                 </div>
               </div>
             </div>
@@ -141,10 +140,7 @@ const DoctorDashboard = () => {
             transition={{ delay: 0.4 }}
             className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 mb-6"
           >
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
-              <FaChartLine className="text-purple-600" />
-              Monthly Patients Report
-            </h2>
+           
             <MonthlyReport 
               dashboardData={dashboardData}
               isLoading={isDashboardLoading}

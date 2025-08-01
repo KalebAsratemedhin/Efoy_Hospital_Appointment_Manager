@@ -19,7 +19,7 @@ const LineChart = ({ data, title, label, labels }: LineChartProps) => {
     value: data[index] || 0,
   }));
 
-  const textColor = isDarkMode ? '#E5E7EB' : '#374151';
+  const textColor = '#000000';
   const gridColor = isDarkMode ? '#374151' : '#E5E7EB';
   const lineColor = '#7b10b0';
   const tooltipBg = isDarkMode ? '#1F2937' : '#FFFFFF';

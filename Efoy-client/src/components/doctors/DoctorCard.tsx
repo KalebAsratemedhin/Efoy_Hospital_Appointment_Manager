@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Doctor } from "../../types/User";
 import { motion } from "framer-motion";
-import { FaStar, FaUserMd, FaGraduationCap, FaClock } from "react-icons/fa";
+import { FaStar, FaUserMd, FaGraduationCap } from "react-icons/fa";
 
 interface DoctorCardProps {
   doctor: Doctor;
@@ -79,27 +79,6 @@ const DoctorCard = ({ doctor }: DoctorCardProps) => {
             </div>
           </div>
           
-          <div className="flex items-center gap-3 text-gray-600">
-            <div className="p-2 bg-green-50 rounded-lg">
-              <FaUserMd className="text-green-500 text-sm" />
-            </div>
-            <div>
-              <p className="text-xs text-gray-500 uppercase tracking-wide">Specialty</p>
-              <p className="text-sm font-medium text-gray-700">{doctor.speciality}</p>
-            </div>
-          </div>
-
-          {doctor.workingHours && (
-            <div className="flex items-center gap-3 text-gray-600">
-              <div className="p-2 bg-purple-50 rounded-lg">
-                <FaClock className="text-purple-500 text-sm" />
-              </div>
-              <div>
-                <p className="text-xs text-gray-500 uppercase tracking-wide">Available</p>
-                <p className="text-sm font-medium text-gray-700">Flexible Hours</p>
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Action Button */}

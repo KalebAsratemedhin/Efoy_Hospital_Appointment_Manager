@@ -3,9 +3,12 @@ import Footer from "./Footer"
 import Header from "./Header"
 import Sidebar from "./Sidebar"
 import { useState } from "react"
+import { useSelector } from "react-redux"
+import { authSelector } from "../../redux/slices/authSlice"
 
 const Layout = () => {
   const { pathname } = useLocation()
+  const authState = useSelector(authSelector)
   const [isOpen, setIsOpen] = useState(true)
 
   const handleSidebarToggle = () => {
@@ -14,7 +17,7 @@ const Layout = () => {
 
   return (
     <div className="h-screen flex">
-      {pathname !== '/' && isOpen && <div className="h-screen ">
+      {pathname !== '/' && authState.id && isOpen && <div className="h-screen ">
         <Sidebar isOpen={isOpen} onSidebarToggle={handleSidebarToggle} />
       </div>}
 

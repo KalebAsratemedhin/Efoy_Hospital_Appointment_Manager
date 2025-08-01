@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useCreateRatingMutation, useDeleteRatingMutation, useFindCurrentUserRatingQuery, useUpdateRatingMutation } from '../../redux/api/ratingAPI';
+import { useCreateRatingMutation, useFindCurrentUserRatingQuery, useUpdateRatingMutation } from '../../redux/api/ratingAPI';
 import Error from '../utils/Error';
-import { MdDeleteOutline } from "react-icons/md";
 
 const RatingStars = ({doctorId}: {doctorId: string}) => {
   
@@ -11,9 +10,6 @@ const RatingStars = ({doctorId}: {doctorId: string}) => {
   const [hover, setHover] = useState(0);
   const [rateDoc] = useCreateRatingMutation()
   const [updateRating] = useUpdateRatingMutation()
-  const [deleteRating] = useDeleteRatingMutation()
-
-
 
   if(isRatingError)
     return <Error error={ratingError} />
@@ -42,14 +38,6 @@ const RatingStars = ({doctorId}: {doctorId: string}) => {
 
   };
 
-  const handleDelete = async () => {
-    setRating(0)
-    await deleteRating(ratingData?.id as string)
-
-  }
-
-  
-
   return (
     <div>
       <div className='flex'>
@@ -76,7 +64,6 @@ const RatingStars = ({doctorId}: {doctorId: string}) => {
 
       })
      }
-     {rating > 0 && <MdDeleteOutline className='h-5 w-5 mt-4 ml-10' onClick={handleDelete} />}
      </div>
     </div>
   );

@@ -3,6 +3,7 @@ import CountDown from './CountDown';
 
 import { useTheme } from '../../hooks/useTheme';
 import { motion } from 'framer-motion';
+import { useEffect } from 'react';
 
 interface ReminderProps {
   dashboardData?: any;
@@ -15,12 +16,16 @@ const Reminder = ({ dashboardData, isLoading, error, userRole = 'doctor' }: Remi
   const { isDarkMode } = useTheme();
   
   // Get the upcoming appointment from dashboard data
-  const upcomingAppointment = dashboardData?.upcoming_appointment;
+  const upcomingAppointment = dashboardData?.upcoming_booking || dashboardData?.upcoming_appointment;
   const eventDate = upcomingAppointment ? findNext(upcomingAppointment) : undefined;
   
-  const textColor = isDarkMode ? '#E5E7EB' : '#374151';
+  const textColor = '#000000' ;
   const secondaryTextColor = isDarkMode ? '#9CA3AF' : '#6B7280';
   const bgColor = isDarkMode ? '#1F2937' : '#FFFFFF';
+
+  useEffect(() => {
+    console.log('dashboardData', dashboardData);
+  }, [dashboardData]);
 
 
   if (isLoading) {

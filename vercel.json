@@ -2,14 +2,17 @@
   "version": 2,
   "builds": [
     {
-      "src": "server/app/main.py",
-      "use": "@vercel/python"
+      "src": "Efoy-client/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "Efoy-client/dist"
+      }
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/server/app/main.py"
+      "dest": "/Efoy-client/dist/index.html"
     }
   ]
 } 

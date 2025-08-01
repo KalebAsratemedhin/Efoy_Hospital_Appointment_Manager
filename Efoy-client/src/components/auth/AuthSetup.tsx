@@ -6,7 +6,9 @@ import Error from "../utils/Error"
 import { CustomSerializedError } from "../../types/CustomSerializedError"
 
 const AuthSetup = () => {
-  const {isLoading: isUserLoading, isError: isUserError, error: userError} = useGetCurrentUserQuery()
+  const {isLoading: isUserLoading, isError: isUserError, error: userError} = useGetCurrentUserQuery(undefined, {
+    skip: !localStorage.getItem('accessToken')
+  })
 
 
   if(isUserLoading)

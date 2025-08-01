@@ -1,11 +1,9 @@
 import { SerializedError } from "@reduxjs/toolkit";
-import { CustomSerializedError } from "../../types/CustomSerializedError";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { useEffect, useState } from "react";
+import { extractErrorMessage } from "../../utils/errorHandler";
 
 const FormError = ({ error, duration = 3000 }: { error: SerializedError | FetchBaseQueryError | string | undefined, duration?: number}) => {
-  const err = error as CustomSerializedError
-
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
@@ -35,7 +33,7 @@ const FormError = ({ error, duration = 3000 }: { error: SerializedError | FetchB
                 d="M12 8v4m0 4h.01M21 12c0 5.523-4.477 10-10 10S1 17.523 1 12 5.477 2 11 2s10 4.477 10 10z"
               />
             </svg>
-            <span className="font-heading">{err.data?.message || err.message  || "An error has occurred. "} </span>
+            <span className="font-heading">{extractErrorMessage(error)}</span>
           </div>
         </div>
       </div>

@@ -7,7 +7,9 @@ import Error from "../utils/Error";
 
 const CommentList = ({ doctorId }: { doctorId: string }) => {
   const { data: comments, isLoading, isError, error, refetch } = useFindAllCommentsQuery(doctorId);
-  const { data: user } = useGetCurrentUserQuery();
+  const { data: user } = useGetCurrentUserQuery(undefined, {
+    skip: !localStorage.getItem('accessToken')
+  });
 
   if (isLoading) return <Spinner />;
   if (isError) return <Error error={error} />;

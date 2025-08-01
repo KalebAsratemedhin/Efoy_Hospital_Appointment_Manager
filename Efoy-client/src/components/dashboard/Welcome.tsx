@@ -6,7 +6,9 @@ import { FaUserCircle } from "react-icons/fa";
 import { useTheme } from "../../hooks/useTheme";
 
 const Welcome = () => {
-    const { isLoading, isSuccess, isError, error, data } = useGetCurrentUserQuery();
+    const { isLoading, isSuccess, isError, error, data } = useGetCurrentUserQuery(undefined, {
+        skip: !localStorage.getItem('accessToken')
+    });
     const { isDarkMode } = useTheme();
 
     if (isLoading) return <Spinner />;

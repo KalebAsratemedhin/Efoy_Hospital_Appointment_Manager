@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { authSelector, clearAuth } from "../../redux/slices/authSlice";
 import { useSignoutMutation } from "../../redux/api/authAPI";
+import { useGetCurrentUserQuery } from "../../redux/api/userAPI";
 import {
   FaHome,
   FaUserMd,
@@ -26,6 +27,7 @@ const Sidebar = ({ isOpen, onSidebarToggle }: SidebarProps) => {
   const dispatch = useDispatch();
   const authState = useSelector(authSelector);
   const [signout, { isLoading }] = useSignoutMutation();
+  const { data: currentUser } = useGetCurrentUserQuery();
 
   const handleSignout = async () => {
     try {
@@ -123,7 +125,7 @@ const Sidebar = ({ isOpen, onSidebarToggle }: SidebarProps) => {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-gray-900 truncate">
-                  {authState.role === "admin" ? "Administrator" : "User"}
+                  {currentUser?.fullName || (authState.role === "admin" ? "Administrator" : "User")}
                 </p>
                 <p className="text-xs text-gray-500 truncate">{authState.role}</p>
               </div>
