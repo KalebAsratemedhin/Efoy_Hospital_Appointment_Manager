@@ -14,9 +14,6 @@ app = FastAPI(title="Efoy Hospital Appointment Manager API")
 # Setup exception handlers
 setup_exception_handlers(app)
 
-# Add rate limiting middleware
-app.middleware("http")(rate_limit_middleware)
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[settings.CLIENT_URL],

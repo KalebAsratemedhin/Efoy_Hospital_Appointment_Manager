@@ -103,7 +103,7 @@ class DashboardService:
                 Booking.appointmentDate >= date.today(),
                 Booking.status == "pending"
 
-            )
+            ), fetch_links=True
         ).sort([("appointmentDate", 1), ("time", 1)]).first_or_none()
         
         # Get monthly chart data (last 12 months)

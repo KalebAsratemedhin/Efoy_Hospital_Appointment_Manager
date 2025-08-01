@@ -11,14 +11,14 @@ from app.services.booking_service import BookingService
 router = APIRouter()
 
     
-@router.get('/', response_model=List[DoctorOut])
+@router.get('/')
 async def find_all_doctors(
     page: int = Query(1, ge=1),
     limit: int = Query(10, ge=1),
     search: Optional[str] = None
 ):
     result = await DoctorService.find_all_doctors(page, limit, search)
-    return result['doctors'] if isinstance(result, dict) and 'doctors' in result else result
+    return result
 
 @router.get('/available-slots', response_model=List[str])
 async def available_slots(

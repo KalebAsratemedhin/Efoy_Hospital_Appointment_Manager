@@ -9,7 +9,7 @@ async def seed_doctors():
     # Ethiopian doctors with different specialties and data
     doctors_data = [
         {
-            "fullName": "Dr. Abebe Kebede",
+            "fullName": "Abebe Kebede",
             "email": "abebe.kebede@efoy.com",
             "password": "doctor123",
             "phoneNumber": "+251911234567",
@@ -28,7 +28,7 @@ async def seed_doctors():
             }
         },
         {
-            "fullName": "Dr. Kidist Haile",
+            "fullName": "Kidist Haile",
             "email": "kidist.haile@efoy.com",
             "password": "doctor123",
             "phoneNumber": "+251922345678",
@@ -47,7 +47,7 @@ async def seed_doctors():
             }
         },
         {
-            "fullName": "Dr. Yohannes Tadesse",
+            "fullName": "Yohannes Tadesse",
             "email": "yohannes.tadesse@efoy.com",
             "password": "doctor123",
             "phoneNumber": "+251933456789",
@@ -66,7 +66,7 @@ async def seed_doctors():
             }
         },
         {
-            "fullName": "Dr. Bethlehem Assefa",
+            "fullName": "Bethlehem Assefa",
             "email": "bethlehem.assefa@efoy.com",
             "password": "doctor123",
             "phoneNumber": "+251944567890",
@@ -85,7 +85,7 @@ async def seed_doctors():
             }
         },
         {
-            "fullName": "Dr. Dawit Mengistu",
+            "fullName": "Dawit Mengistu",
             "email": "dawit.mengistu@efoy.com",
             "password": "doctor123",
             "phoneNumber": "+251955678901",

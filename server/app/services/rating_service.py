@@ -116,7 +116,28 @@ class RatingService:
         for doc_id in doctor_ids:
             user = await User.get(PydanticObjectId(doc_id))
             doc = await Doctor.find_one(Doctor.userId.id == PydanticObjectId(doc_id))
-            result.append({**user.model_dump(), 'doctorData': doc.model_dump() if doc else None})
+            if user and doc:
+                # Return in the format expected by DoctorCard component
+                doctor_data = {
+                    "id": str(doc.id),
+                    "userId": {
+                        "id": str(user.id),
+                        "fullName": user.fullName,
+                        "email": user.email,
+                        "profilePic": user.profilePic,
+                        "phoneNumber": user.phoneNumber,
+                        "role": user.role
+                    },
+                    "speciality": doc.speciality,
+                    "experience": doc.experience,
+                    "educationLevel": doc.educationLevel,
+                    "rating": doc.rating,
+                    "orgID": doc.orgID,
+                    "workingHours": doc.workingHours,
+                    "created_at": doc.created_at,
+                    "updated_at": doc.updated_at
+                }
+                result.append(doctor_data)
         return result
 
     @staticmethod

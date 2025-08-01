@@ -45,7 +45,7 @@ class DoctorService:
             
             # Convert user IDs to Link references
             user_links = [User.link_from_id(PydanticObjectId(uid)) for uid in user_ids]
-            doctors = await Doctor.find({"userId": {"$in": user_links}}).skip(skip).limit(limit).to_list()
+            doctors = await Doctor.find({"userId": {"$in": user_links}}).sort(-Doctor.rating).skip(skip).limit(limit).to_list()
             
             # Fetch links and process results
             for doctor in doctors:
@@ -64,8 +64,8 @@ class DoctorService:
                 'doctors': doctor_out_list
             }
         else:
-            # No search - get all doctors
-            doctors = await Doctor.find().skip(skip).limit(limit).to_list()
+            # No search - get all doctors sorted by rating (highest first)
+            doctors = await Doctor.find().sort(-Doctor.rating).skip(skip).limit(limit).to_list()
             for doctor in doctors:
                 await doctor.fetch_link(Doctor.userId)
             doctor_out_list = [DoctorOut.model_validate(doc.model_dump()) for doc in doctors]

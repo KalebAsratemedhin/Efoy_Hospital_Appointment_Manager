@@ -16,6 +16,13 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
 
+    @property
+    def google_callback_url(self) -> str:
+        """Get the Google OAuth callback URL"""
+        if self.GOOGLE_CLIENT_CALLBACK_URL:
+            return self.GOOGLE_CLIENT_CALLBACK_URL
+        return f"{self.CLIENT_URL}/google-auth"
+
 @lru_cache
 def get_settings():
     return Settings() 

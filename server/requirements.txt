@@ -14,4 +14,6 @@ httpx==0.25.2
 filetype==1.2.0
 email-validator==2.1.0.post1
 pymongo<4.6
+requests==2.31.0
+python-dotenv==1.0.0
 
