@@ -20,6 +20,7 @@ import GoogleAuth from "./pages/GoogleAuth"
 import AuthSetup from "./components/auth/AuthSetup"
 import CalendarPage from "./pages/Calendar"
 import AdminCreateDoctor from "./components/dashboard/AdminCreateDoctor";
+import VerifyEmail from "./pages/VerifyEmail";
 
 const AppRoutes = () => {
     const dispatch = useDispatch()
@@ -40,6 +41,7 @@ const AppRoutes = () => {
           <Routes>
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/signin" element={<SigninPage />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
 
             <Route element={<Layout />}>
                 <Route path="/" element={<Home />} />

@@ -14,6 +14,9 @@ class User(BaseDocument):
     age: Optional[int] = Field(default=None, ge=0)
     profilePic: Optional[str] = None
     googleId: Optional[str] = None
+    isVerified: bool = False
+    verificationToken: Optional[str] = None
+    verificationExpires: Optional[datetime] = None
 
     class Settings:
         name = "users"
@@ -23,6 +26,7 @@ class User(BaseDocument):
             "googleId",  # For OAuth
             "phoneNumber",  # For phone-based queries
             "created_at",  # For time-based queries
+            "verificationToken",  # For email verification
         ]
 
     class Config:
@@ -37,6 +41,9 @@ class User(BaseDocument):
                 "address": "123 Main St",
                 "age": 30,
                 "profilePic": "http://...",
-                "googleId": "google-oauth-id"
+                "googleId": "google-oauth-id",
+                "isVerified": False,
+                "verificationToken": "verification-token",
+                "verificationExpires": "2024-01-01T00:00:00Z"
             }
         } 

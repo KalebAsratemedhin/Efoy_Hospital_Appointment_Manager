@@ -2,6 +2,15 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { AuthResponse, SigninCredential, SignupCredential } from "../../types/User";
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
+interface SignupResponse {
+    message: string;
+    id: string;
+    email: string;
+}
+
+interface VerificationResponse {
+    message: string;
+}
 
 export const authAPI = createApi({
     reducerPath: 'authApi',
@@ -19,7 +28,7 @@ export const authAPI = createApi({
         },
     }),
     endpoints: (builder) => ({
-        signup: builder.mutation<AuthResponse, SignupCredential >({
+        signup: builder.mutation<SignupResponse, SignupCredential >({
             query: (credential) => ({
                 url: '/signup',
                 method: 'Post',
@@ -42,7 +51,19 @@ export const authAPI = createApi({
                 
             })
         }),
-        
+        verifyEmail: builder.mutation<AuthResponse, string>({
+            query: (token) => ({
+                url: `/verify-email?token=${token}`,
+                method: 'Get'
+            })
+        }),
+        resendVerification: builder.mutation<VerificationResponse, string>({
+            query: (email) => ({
+                url: '/resend-verification',
+                method: 'Post',
+                body: { email }
+            })
+        }),
         googleAuth: builder.query<void, void>({
             query: () => ({
                 url: '/google'
@@ -56,5 +77,7 @@ export const {
     useSigninMutation, 
     useSignupMutation,
     useSignoutMutation,
+    useVerifyEmailMutation,
+    useResendVerificationMutation,
     useGoogleAuthQuery
 } = authAPI

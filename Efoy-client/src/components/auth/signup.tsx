@@ -40,12 +40,17 @@ const Signup = () => {
   };
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && signupData) {
       console.log('signup data', signupData)
-      dispatch(setAuth(signupData));
-      navigate('/dashboard');
+      // Show success message and redirect to verification page
+      navigate('/verify-email', { 
+        state: { 
+          message: signupData.message,
+          email: signupData.email 
+        } 
+      });
     }
-  }, [isSuccess]);
+  }, [isSuccess, signupData, navigate]);
 
   if (isLoading) return <Spinner />;
 

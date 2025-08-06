@@ -4,56 +4,42 @@ from app.services.auth_service import AuthService
 from app.services.google_oauth_service import GoogleOAuthService
 from fastapi.responses import RedirectResponse, JSONResponse
 from app.db.models.user import User
+from pydantic import BaseModel
 
 router = APIRouter()
 
-@router.post('/signup', response_model=AuthResponse, status_code=status.HTTP_201_CREATED)
+class EmailRequest(BaseModel):
+    email: str
+
+@router.post('/signup', response_model=dict, status_code=status.HTTP_201_CREATED)
 async def signup(data: AuthSignup):
     return await AuthService.signup(data)
 
-@router.post('/signin', response_model=AuthResponse)
+@router.post('/signin', response_model=AuthResponse, status_code=status.HTTP_200_OK)
 async def signin(data: AuthLogin):
     return await AuthService.login(data)
 
-@router.post('/signout')
+@router.post('/signout', status_code=status.HTTP_200_OK)
 async def signout():
     return await AuthService.logout()
 
-# Google OAuth endpoints
+@router.get('/verify-email', response_model=AuthResponse, status_code=status.HTTP_200_OK)
+async def verify_email(token: str):
+    """Verify user email with token"""
+    return await AuthService.verify_email(token)
+
+@router.post('/resend-verification', status_code=status.HTTP_200_OK)
+async def resend_verification(data: EmailRequest):
+    """Resend verification email"""
+    return await AuthService.resend_verification_email(data.email)
+
 @router.get('/google')
-async def google_auth(request: Request):
-    """Initiate Google OAuth flow"""
-    try:
-        google_service = GoogleOAuthService()
-        auth_url = google_service.get_authorization_url()
-        return RedirectResponse(url=auth_url)
-    except ValueError as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    except Exception as e:
-        raise HTTPException(status_code=500, detail="Google OAuth not configured")
+async def google_auth():
+    return await GoogleOAuthService.get_authorization_url()
 
 @router.get('/google/callback')
-async def google_callback(request: Request):
-    """Handle Google OAuth callback"""
-    try:
-        google_service = GoogleOAuthService()
-        
-        # Get user data from Google
-        google_data = await google_service.handle_callback(request)
-        
-        # Find or create user
-        user = await GoogleOAuthService.find_or_create_user(google_data)
-        
-        # Create auth response
-        redirect_url = GoogleOAuthService.create_auth_response(user)
-        
-        return RedirectResponse(url=redirect_url)
-    except ValueError as e:
-        error_url = f"{request.base_url}auth/error?message={str(e)}"
-        return RedirectResponse(url=error_url)
-    except Exception as e:
-        error_url = f"{request.base_url}auth/error?message=Authentication failed"
-        return RedirectResponse(url=error_url)
+async def google_auth_callback(code: str):
+    return await GoogleOAuthService.handle_callback(code)
 
 @router.get('/auth/error')
 async def auth_error(request: Request):
