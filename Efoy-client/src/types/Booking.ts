@@ -8,6 +8,11 @@ export interface Booking {
     time: string,  // Made required
     reason: string,  // Made required
     status?: string,
+    appointmentType?: string,  // "in_person" or "virtual"
+    streamCallId?: string,
+    callStartedAt?: string,
+    callEndedAt?: string,
+    callDuration?: number,
     created_at?: string;  // Added missing fields
     updated_at?: string;
 }
@@ -28,6 +33,11 @@ export interface BookingPopulated {
     time: string,
     reason: string,
     status?: string,
+    appointmentType?: string,  // "in_person" or "virtual"
+    streamCallId?: string,
+    callStartedAt?: string,
+    callEndedAt?: string,
+    callDuration?: number,
     created_at?: string;  // Added missing fields
     updated_at?: string;
 }

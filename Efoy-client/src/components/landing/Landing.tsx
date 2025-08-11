@@ -1,6 +1,6 @@
 import DoctorsList from "../doctors/DoctorsList";
 import {Link} from 'react-router-dom';
-import { FaHeartbeat, FaStethoscope, FaAmbulance } from "react-icons/fa";
+import { FaHeartbeat, FaStethoscope, FaAmbulance, FaVideo } from "react-icons/fa";
 import { motion } from "framer-motion";
 
 const LandingPage = () => {
@@ -23,7 +23,7 @@ const LandingPage = () => {
                 Your Health, <span className="text-cyan-600">Our Priority</span>
               </h1>
               <p className="text-xl text-gray-600">
-                Experience seamless healthcare management with Efoy. Book appointments, connect with top doctors, and manage your health journey effortlessly.
+                Experience seamless healthcare management with Efoy. Book appointments, connect with top doctors via video calls, and manage your health journey effortlessly from anywhere.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link to="/signup" className="bg-cyan-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-cyan-700 transition-all transform hover:scale-105">
@@ -54,28 +54,28 @@ const LandingPage = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <motion.div 
               whileHover={{ scale: 1.05 }}
-              className="text-center p-6 rounded-xl bg-gradient-to-br from-cyan-50 to-white shadow-sm"
+              className="text-center p-6 rounded-xl bg-gradient-to-br from-cyan-50 to-white border-2 border-cyan-200 shadow-lg hover:shadow-xl transition-all duration-300"
             >
               <div className="text-4xl font-bold text-cyan-600 mb-2">500+</div>
               <div className="text-gray-600">Expert Doctors</div>
             </motion.div>
             <motion.div 
               whileHover={{ scale: 1.05 }}
-              className="text-center p-6 rounded-xl bg-gradient-to-br from-cyan-50 to-white shadow-sm"
+              className="text-center p-6 rounded-xl bg-gradient-to-br from-cyan-50 to-white border-2 border-cyan-200 shadow-lg hover:shadow-xl transition-all duration-300"
             >
               <div className="text-4xl font-bold text-cyan-600 mb-2">10k+</div>
               <div className="text-gray-600">Happy Patients</div>
             </motion.div>
             <motion.div 
               whileHover={{ scale: 1.05 }}
-              className="text-center p-6 rounded-xl bg-gradient-to-br from-cyan-50 to-white shadow-sm"
+              className="text-center p-6 rounded-xl bg-gradient-to-br from-cyan-50 to-white border-2 border-cyan-200 shadow-lg hover:shadow-xl transition-all duration-300"
             >
-              <div className="text-4xl font-bold text-cyan-600 mb-2">24/7</div>
-              <div className="text-gray-600">Support</div>
+              <div className="text-4xl font-bold text-cyan-600 mb-2">100%</div>
+              <div className="text-gray-600">Video Ready</div>
             </motion.div>
             <motion.div 
               whileHover={{ scale: 1.05 }}
-              className="text-center p-6 rounded-xl bg-gradient-to-br from-cyan-50 to-white shadow-sm"
+              className="text-center p-6 rounded-xl bg-gradient-to-br from-cyan-50 to-white border-2 border-cyan-200 shadow-lg hover:shadow-xl transition-all duration-300"
             >
               <div className="text-4xl font-bold text-cyan-600 mb-2">15+</div>
               <div className="text-gray-600">Specialties</div>
@@ -85,16 +85,17 @@ const LandingPage = () => {
       </div>
 
       {/* Services Section */}
-      <div className="py-24 bg-gradient-to-b from-white to-cyan-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="py-24 bg-gradient-to-b from-white to-cyan-50 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/pattern.png')] opacity-5"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Services</h2>
             <p className="text-xl text-gray-600">Comprehensive healthcare solutions for you and your family</p>
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <motion.div 
               whileHover={{ y: -10 }}
-              className="bg-white p-8 rounded-xl shadow-sm hover:shadow-xl transition-all"
+              className="bg-white p-8 rounded-xl border-2 border-cyan-100 shadow-lg hover:shadow-2xl hover:border-cyan-300 transition-all duration-300"
             >
               <div className="w-12 h-12 bg-cyan-100 rounded-lg flex items-center justify-center mb-6">
                 <FaHeartbeat className="w-6 h-6 text-cyan-600" />
@@ -104,7 +105,7 @@ const LandingPage = () => {
             </motion.div>
             <motion.div 
               whileHover={{ y: -10 }}
-              className="bg-white p-8 rounded-xl shadow-sm hover:shadow-xl transition-all"
+              className="bg-white p-8 rounded-xl border-2 border-cyan-100 shadow-lg hover:shadow-2xl hover:border-cyan-300 transition-all duration-300"
             >
               <div className="w-12 h-12 bg-cyan-100 rounded-lg flex items-center justify-center mb-6">
                 <FaStethoscope className="w-6 h-6 text-cyan-600" />
@@ -114,13 +115,23 @@ const LandingPage = () => {
             </motion.div>
             <motion.div 
               whileHover={{ y: -10 }}
-              className="bg-white p-8 rounded-xl shadow-sm hover:shadow-xl transition-all"
+              className="bg-white p-8 rounded-xl border-2 border-cyan-100 shadow-lg hover:shadow-2xl hover:border-cyan-300 transition-all duration-300"
             >
               <div className="w-12 h-12 bg-cyan-100 rounded-lg flex items-center justify-center mb-6">
                 <FaAmbulance className="w-6 h-6 text-cyan-600" />
               </div>
               <h3 className="text-xl font-semibold mb-4">Emergency Care</h3>
               <p className="text-gray-600">24/7 emergency medical services at your fingertips.</p>
+            </motion.div>
+            <motion.div 
+              whileHover={{ y: -10 }}
+              className="bg-white p-8 rounded-xl border-2 border-cyan-100 shadow-lg hover:shadow-2xl hover:border-cyan-300 transition-all duration-300"
+            >
+              <div className="w-12 h-12 bg-cyan-100 rounded-lg flex items-center justify-center mb-6">
+                <FaVideo className="w-6 h-6 text-cyan-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-4">Video Consultations</h3>
+              <p className="text-gray-600">Get medical advice from the comfort of your home with secure, high-quality video calls.</p>
             </motion.div>
           </div>
         </div>
@@ -146,7 +157,7 @@ const LandingPage = () => {
             transition={{ duration: 0.8 }}
           >
             <h2 className="text-3xl font-bold text-white mb-8">Ready to Take Control of Your Health?</h2>
-            <p className="text-xl text-cyan-100 mb-12">Join thousands of patients who trust Efoy for their healthcare needs.</p>
+            <p className="text-xl text-cyan-100 mb-12">Join thousands of patients who trust Efoy for their healthcare needs. Experience the convenience of video consultations from anywhere.</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/signup" className="bg-white text-cyan-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-cyan-50 transition-all transform hover:scale-105">
                 Get Started Now

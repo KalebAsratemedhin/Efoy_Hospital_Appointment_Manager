@@ -13,6 +13,10 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_CALLBACK_URL: str = None
     PORT: int = 8000
     
+    # Stream Video configuration
+    STREAM_API_KEY: str = None
+    STREAM_API_SECRET: str = None
+    
     # Email configuration
     SMTP_HOST: str = "smtp.gmail.com"
     SMTP_PORT: int = 587

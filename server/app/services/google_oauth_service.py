@@ -106,6 +106,7 @@ class GoogleOAuthService:
             email=google_data.get('email', ''),
             googleId=google_data.get('googleId'),
             profilePic=google_data.get('profilePic'),
+            isVerified=True,
             role='patient'  # Default role for Google OAuth users
         )
         await user.insert()

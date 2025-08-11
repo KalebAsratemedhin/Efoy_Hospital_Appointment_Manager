@@ -27,6 +27,7 @@ export const authAPI = createApi({
             return headers;
         },
     }),
+    tagTypes: ['User', 'Auth'],
     endpoints: (builder) => ({
         signup: builder.mutation<SignupResponse, SignupCredential >({
             query: (credential) => ({
@@ -34,7 +35,8 @@ export const authAPI = createApi({
                 method: 'Post',
                 body: credential,
                 
-            })
+            }),
+            invalidatesTags: ['User', 'Auth']
         }),
         signin: builder.mutation<AuthResponse, SigninCredential >({
             query: (credential) => ({
@@ -42,20 +44,23 @@ export const authAPI = createApi({
                 method: 'Post',
                 body: credential,
                 
-            })
+            }),
+            invalidatesTags: ['User', 'Auth']
         }),
         signout: builder.mutation<void, void >({
             query: () => ({
                 url: '/signout',
                 method: 'Post'
                 
-            })
+            }),
+            invalidatesTags: ['User', 'Auth']
         }),
         verifyEmail: builder.mutation<AuthResponse, string>({
             query: (token) => ({
                 url: `/verify-email?token=${token}`,
                 method: 'Get'
-            })
+            }),
+            invalidatesTags: ['User', 'Auth']
         }),
         resendVerification: builder.mutation<VerificationResponse, string>({
             query: (email) => ({

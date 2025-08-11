@@ -12,6 +12,12 @@ class Booking(BaseDocument):
     time: str
     reason: str
     status: str = Field(default="pending")
+    # Video call fields
+    appointmentType: str = Field(default="in_person")  # "in_person" or "virtual"
+    streamCallId: Optional[str] = None
+    callStartedAt: Optional[datetime] = None
+    callEndedAt: Optional[datetime] = None
+    callDuration: Optional[int] = None  # in minutes
 
     class Settings:
         name = "bookings"
@@ -21,6 +27,7 @@ class Booking(BaseDocument):
             "appointmentDate",  # For date-based queries
             "status",     # For status-based queries
             "created_at", # For time-based queries
+            "appointmentType",  # For video call queries
             [("doctorId", 1), ("appointmentDate", 1), ("time", 1)],  # Compound index for availability checks
             [("patientId", 1), ("appointmentDate", 1)],  # Compound index for patient date queries
         ] 

@@ -8,12 +8,13 @@ import Error from "../utils/Error";
 import { useCreateBookingMutation } from "../../redux/api/bookingAPI";
 import TimeDate from "./TimeDate";
 import { motion } from "framer-motion";
-import { FaUserMd, FaClock, FaInfoCircle, FaArrowLeft } from "react-icons/fa";
+import { FaUserMd, FaClock, FaInfoCircle, FaArrowLeft, FaVideo } from "react-icons/fa";
 
 interface FormData {
   appointmentDate: string;
   time: string;
   reason: string;
+  appointmentType: string;
 }
 
 const BookingPage = () => {
@@ -31,6 +32,7 @@ const BookingPage = () => {
   } = useForm<FormData>({
     defaultValues: {
       appointmentDate: new Date().toISOString().split("T")[0],
+      appointmentType: "in_person",
     }
   });
 
@@ -126,6 +128,78 @@ const BookingPage = () => {
                 />
                 {errors.reason && (
                   <p className="text-red-500 text-sm mt-1">{errors.reason.message}</p>
+                )}
+              </div>
+
+              {/* Appointment Type Selection */}
+              <div>
+                <label className="block text-gray-700 font-semibold mb-2 flex items-center gap-2">
+                  <FaVideo className="text-purple-500" />
+                  Appointment Type
+                </label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <label className="relative">
+                    <input
+                      type="radio"
+                      value="in_person"
+                      {...register("appointmentType", { required: "Please select appointment type" })}
+                      className="sr-only"
+                    />
+                    <div className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
+                      watch("appointmentType") === "in_person"
+                        ? "border-purple-500 bg-purple-50"
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}>
+                      <div className="flex items-center gap-3">
+                        <div className={`w-5 h-5 rounded-full border-2 ${
+                          watch("appointmentType") === "in_person"
+                            ? "border-purple-500 bg-purple-500"
+                            : "border-gray-300"
+                        }`}>
+                          {watch("appointmentType") === "in_person" && (
+                            <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5"></div>
+                          )}
+                        </div>
+                        <div>
+                          <div className="font-medium text-gray-900">In-Person Visit</div>
+                          <div className="text-sm text-gray-500">Meet with doctor at the hospital</div>
+                        </div>
+                      </div>
+                    </div>
+                  </label>
+                  
+                  <label className="relative">
+                    <input
+                      type="radio"
+                      value="virtual"
+                      {...register("appointmentType", { required: "Please select appointment type" })}
+                      className="sr-only"
+                    />
+                    <div className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
+                      watch("appointmentType") === "virtual"
+                        ? "border-purple-500 bg-purple-50"
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}>
+                      <div className="flex items-center gap-3">
+                        <div className={`w-5 h-5 rounded-full border-2 ${
+                          watch("appointmentType") === "virtual"
+                            ? "border-purple-500 bg-purple-500"
+                            : "border-gray-300"
+                        }`}>
+                          {watch("appointmentType") === "virtual" && (
+                            <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5"></div>
+                          )}
+                        </div>
+                        <div>
+                          <div className="font-medium text-gray-900">Video Consultation</div>
+                          <div className="text-sm text-gray-500">Meet with doctor online</div>
+                        </div>
+                      </div>
+                    </div>
+                  </label>
+                </div>
+                {errors.appointmentType && (
+                  <p className="text-red-500 text-sm mt-2">{errors.appointmentType.message}</p>
                 )}
               </div>
 

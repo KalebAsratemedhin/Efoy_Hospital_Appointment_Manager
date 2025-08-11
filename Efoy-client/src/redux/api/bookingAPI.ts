@@ -18,7 +18,7 @@ export const bookingAPI = createApi({
             return headers;
         },
     }),
-    tagTypes: ['MyBookings', 'Booking'],
+    tagTypes: ['MyBookings', 'Booking', 'Doctor'],
     endpoints: (builder) => ({
         createBooking: builder.mutation<BookingPopulated, Booking >({
             query: (credential) => ({
@@ -27,7 +27,7 @@ export const bookingAPI = createApi({
                 body: credential,
                 
             }),
-            invalidatesTags: ['MyBookings']
+            invalidatesTags: ['MyBookings', 'Doctor']
         }),
         updateBooking: builder.mutation<BookingPopulated, {id: string, update: Partial<Booking>} >({
             query: ({id, update}) => ({
@@ -36,7 +36,7 @@ export const bookingAPI = createApi({
                 body: update,
                 
             }),
-            invalidatesTags: ['MyBookings', 'Booking']
+            invalidatesTags: ['MyBookings', 'Booking', 'Doctor']
 
         }),
         deleteBooking: builder.mutation<void, string >({
@@ -44,21 +44,23 @@ export const bookingAPI = createApi({
                 url: `/${id}`,
                 method: 'Delete'
                 
-            })
+            }),
+            invalidatesTags: ['MyBookings', 'Doctor']
         }),
         markBookingFinished: builder.mutation<BookingPopulated, string>({
             query: (id) => ({
                 url: `/${id}/finish`,
                 method: 'Put'
             }),
-            invalidatesTags: ['MyBookings', 'Booking']
+            invalidatesTags: ['MyBookings', 'Booking', 'Doctor']
         }),
 
         findRecentBooking: builder.query<BookingPopulated, void>({
             query: () => ({
                 url: `/recent`,
                 method: 'Get'
-            })
+            }),
+            providesTags: ['MyBookings']
         }),
 
         findOneBooking: builder.query<BookingPopulated, string>({
@@ -66,7 +68,9 @@ export const bookingAPI = createApi({
                 url: `/${id}`,
                 method: 'Get'
             }),
-            providesTags: ['Booking']
+            providesTags: (_, __, id) => [
+                { type: 'Booking', id }
+            ]
         }),
 
         findCurrentUserBookings: builder.query<BookingPaginatedResponse, {page: number, limit: number}>({
@@ -80,13 +84,19 @@ export const bookingAPI = createApi({
             query: (patientId) => ({
                 url: `/patient/${patientId}`,
                 method: 'Get'
-            })
+            }),
+            providesTags: (_, __, patientId) => [
+                { type: 'MyBookings', id: patientId }
+            ]
         }),
         findDoctorSummary: builder.query<number[], string>({
             query: (doctorId) => ({
                 url: `/doctor/${doctorId}`,
                 method: 'Get'
-            })
+            }),
+            providesTags: (_, __, doctorId) => [
+                { type: 'Doctor', id: doctorId }
+            ]
         }),
 
     })

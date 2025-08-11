@@ -3,8 +3,6 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { useSignupMutation } from "../../redux/api/authAPI";
 import Spinner from "../utils/Spinner";
-import { useDispatch } from "react-redux";
-import { setAuth } from "../../redux/slices/authSlice";
 import { SignupCredential } from "../../types/User";
 import { FcGoogle } from "react-icons/fc";
 import FormError from "../utils/FormError";
@@ -27,7 +25,6 @@ const Signup = () => {
 
   const [signupUser, { isError, isLoading, isSuccess, error, data: signupData }] = useSignupMutation();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = async (data: FormData) => {

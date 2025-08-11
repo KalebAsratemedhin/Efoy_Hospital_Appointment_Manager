@@ -21,6 +21,8 @@ import AuthSetup from "./components/auth/AuthSetup"
 import CalendarPage from "./pages/Calendar"
 import AdminCreateDoctor from "./components/dashboard/AdminCreateDoctor";
 import VerifyEmail from "./pages/VerifyEmail";
+import VideoCallPage from "./components/appointments/VideoCallPage";
+import PrescriptionList from "./components/appointments/PrescriptionList";
 
 const AppRoutes = () => {
     const dispatch = useDispatch()
@@ -60,12 +62,16 @@ const AppRoutes = () => {
                     <Route path="/appointments/:id" element={<Appointments />} />
                     <Route path="/calendar" element={<CalendarPage />} />
                     <Route path="/admin/doctors/create" element={<AdminCreateDoctor />} />
+                    <Route path="/prescriptions" element={<PrescriptionList />} />
                 </Route>
 
 
 
 
             </Route>
+
+            {/* Video call route - accessible directly */}
+            <Route path="/video-call/:bookingId" element={<VideoCallPage />} />
 
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -17,7 +17,7 @@ export const userAPI = createApi({
             return headers;
         },
     }),
-    tagTypes: ['User'],
+    tagTypes: ['User', 'Doctor'],
     endpoints: (builder) => ({
         getCurrentUser: builder.query<User, void>({
             query: () => ({
@@ -31,14 +31,18 @@ export const userAPI = createApi({
             query: (id) => ({
                 url: `/doctor/${id}`,
                 method: 'Get'
-            })
+            }),
+            providesTags: (_, __, id) => [
+                { type: 'Doctor', id }
+            ]
         }),
 
         findAllDoctors: builder.query<PaginatedResponse<Doctor>, {page: number, limit: number}>({
             query: ({ page = 1, limit = 10 }) => ({
                 url: `/doctor?page=${page}&limit=${limit}`,
                 method: 'Get'
-            })
+            }),
+            providesTags: ['Doctor']
         }),
 
         updateUser: builder.mutation<User, {id: string, update: UserUpdate}>({
@@ -69,7 +73,8 @@ export const userAPI = createApi({
             query: (searchTerm) => ({
                url: `/doctor?search=${searchTerm}`,
                method: 'Get'
-            })
+            }),
+            providesTags: ['Doctor']
         }),
 
         adminStats: builder.query<AdminStats, void>({
@@ -93,7 +98,7 @@ export const userAPI = createApi({
                 url: `/${id}`,
                 method: 'Delete'
             }),
-            invalidatesTags: ['User']
+            invalidatesTags: ['User', 'Doctor']
         }),
 
     })

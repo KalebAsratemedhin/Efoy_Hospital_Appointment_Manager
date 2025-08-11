@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.api.v1.endpoints import user, booking, auth, doctor, comment, rating, dashboard
+from app.api.v1.endpoints import user, booking, auth, doctor, comment, rating, dashboard, video, prescription
 from app.db.session import initiate_database
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import get_settings
@@ -37,6 +37,8 @@ app.include_router(doctor.router, prefix="/api/v1/doctor", tags=["Doctor"])
 app.include_router(comment.router, prefix="/api/v1/comment", tags=["Comment"])
 app.include_router(rating.router, prefix="/api/v1/rating", tags=["Rating"])
 app.include_router(dashboard.router, prefix="/api/v1/dashboard", tags=["Dashboard"])
+app.include_router(video.router, prefix="/api/v1/video", tags=["Video"])
+app.include_router(prescription.router, prefix="/api/v1/prescription", tags=["Prescription"])
 
 def custom_openapi():
     if app.openapi_schema:

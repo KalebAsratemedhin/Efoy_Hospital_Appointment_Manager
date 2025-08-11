@@ -11,6 +11,7 @@ class BookingCreate(BaseModel):
     appointmentDate: date
     time: str
     reason: str
+    appointmentType: str = "in_person"  # "in_person" or "virtual"
 
     @field_validator('appointmentDate')
     @classmethod
@@ -26,10 +27,18 @@ class BookingCreate(BaseModel):
             raise ValueError('Invalid time format. Use HH:MM.')
         return v
 
+    @field_validator('appointmentType')
+    @classmethod
+    def valid_appointment_type(cls, v):
+        if v not in ["in_person", "virtual"]:
+            raise ValueError('Appointment type must be either "in_person" or "virtual".')
+        return v
+
 class BookingUpdate(BaseModel):
     appointmentDate: Optional[date]
     time: Optional[str]
     reason: Optional[str]
+    appointmentType: Optional[str]
 
     @field_validator('appointmentDate')
     @classmethod
@@ -45,6 +54,13 @@ class BookingUpdate(BaseModel):
             raise ValueError('Invalid time format. Use HH:MM.')
         return v
 
+    @field_validator('appointmentType')
+    @classmethod
+    def valid_appointment_type(cls, v):
+        if v and v not in ["in_person", "virtual"]:
+            raise ValueError('Appointment type must be either "in_person" or "virtual".')
+        return v
+
 class BookingOut(BaseModel):
     id: str
     patientId: UserOut
@@ -54,6 +70,11 @@ class BookingOut(BaseModel):
     time: str
     reason: str
     status: str
+    appointmentType: str
+    streamCallId: Optional[str]
+    callStartedAt: Optional[datetime]
+    callEndedAt: Optional[datetime]
+    callDuration: Optional[int]
     created_at: Optional[datetime]
     updated_at: Optional[datetime]
     model_config = {"from_attributes": True}

@@ -18,7 +18,7 @@ export const doctorAPI = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Doctor"],
+  tagTypes: ["Doctor", "User"],
   endpoints: (builder) => ({
     getDoctors: builder.query<Doctor[], {page?: number; limit?: number; search?: string}>({
       query: (params = {}) => {
@@ -35,7 +35,9 @@ export const doctorAPI = createApi({
         url: `/${id}`,
         method: "GET",
       }),
-      providesTags: ["Doctor"],
+      providesTags: (_, __, id) => [
+        { type: "Doctor", id }
+      ],
     }),
     updateDoctor: builder.mutation<Doctor, {id: string; update: Partial<Doctor>}>({
       query: ({id, update}: {id: string; update: Partial<Doctor>}) => ({
@@ -43,7 +45,10 @@ export const doctorAPI = createApi({
         method: "PUT",
         body: update,
       }),
-      invalidatesTags: ["Doctor"],
+      invalidatesTags: (_, __, {id}) => [
+        { type: "Doctor", id },
+        "Doctor"
+      ],
     }),
     updateWorkingHours: builder.mutation<Doctor, {id: string; workingHours: Record<string, {start: string; end: string}>}>({
       query: ({id, workingHours}: {id: string; workingHours: Record<string, {start: string; end: string}>}) => ({
@@ -51,7 +56,10 @@ export const doctorAPI = createApi({
         method: "PUT",
         body: workingHours,
       }),
-      invalidatesTags: ["Doctor"],
+      invalidatesTags: (_, __, {id}) => [
+        { type: "Doctor", id },
+        "Doctor"
+      ],
     }),
     adminCreateDoctor: builder.mutation<Doctor, DoctorCreate>({
       query: (doctorData) => ({
@@ -59,13 +67,16 @@ export const doctorAPI = createApi({
         method: 'POST',
         body: doctorData,
       }),
-      invalidatesTags: ['Doctor'],
+      invalidatesTags: ['Doctor', 'User'],
     }),
     availableTimeSlots: builder.query<string[], {doctorId: string, date: string}>({
       query: ({doctorId, date}) => ({
         url: `/available-slots?doctor=${doctorId}&date=${date}`,
         method: 'GET',
       }),
+      providesTags: (_, __, {doctorId}) => [
+        { type: "Doctor", id: doctorId }
+      ],
     }),
   }),
 });

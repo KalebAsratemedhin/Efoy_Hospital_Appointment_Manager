@@ -1,6 +1,6 @@
 from pydantic import BaseModel, field_serializer
 from typing import Generic, TypeVar, Optional, List, Any
-from datetime import datetime
+from datetime import datetime, timezone
 
 T = TypeVar('T')
 
@@ -9,7 +9,7 @@ class ErrorResponse(BaseModel):
     error: str
     detail: Optional[str] = None
     status_code: int
-    timestamp: datetime = datetime.utcnow()
+    timestamp: datetime = datetime.now(timezone.utc)
 
     @field_serializer('timestamp')
     def serialize_timestamp(self, value):
@@ -20,7 +20,7 @@ class SuccessResponse(BaseModel, Generic[T]):
     success: bool = True
     message: Optional[str] = None
     data: Optional[T] = None
-    timestamp: datetime = datetime.utcnow()
+    timestamp: datetime = datetime.now(timezone.utc)
 
     @field_serializer('timestamp')
     def serialize_timestamp(self, value):
@@ -60,7 +60,7 @@ class SearchParams(BaseModel):
 class HealthCheckResponse(BaseModel):
     """Health check response model"""
     status: str
-    timestamp: datetime
+    timestamp: datetime = datetime.now(timezone.utc)
     version: str
     database: str
     uptime: float 

@@ -4,12 +4,15 @@ import { useMarkBookingFinishedMutation } from "../../redux/api/bookingAPI";
 import Spinner from "../utils/Spinner";
 import Error from "../utils/Error";
 import { motion } from "framer-motion";
-import { FaUser, FaCalendarAlt, FaClock, FaEnvelope, FaCheckCircle, FaEye, FaPhone } from "react-icons/fa";
+import { FaUser, FaCalendarAlt, FaClock, FaEnvelope, FaCheckCircle, FaEye, FaPhone, FaPills, FaVideo, FaVideoSlash } from "react-icons/fa";
+import { useState } from "react";
+import PrescriptionForm from "./PrescriptionForm";
 
 const BookingCardDoctor = ({booking, refetch}: {booking: BookingPopulated, refetch: () => void}) => {
   const patient = booking.patientId
+  const [showPrescriptionForm, setShowPrescriptionForm] = useState(false);
 
-  const initials = patient?.fullName.split(' ').map((name: string) => name[0].toUpperCase()).join('');  
+  const initials = patient?.fullName.split(' ').map((name: string) => name[0].toUpperCase()).join('');
   const [markFinished, {isLoading: isUpdateLoading, isSuccess: isUpdateSuccess, isError: isUpdateError, error: updateError} ]= useMarkBookingFinishedMutation()
 
   const handleStatus = async () => {
@@ -21,6 +24,17 @@ const BookingCardDoctor = ({booking, refetch}: {booking: BookingPopulated, refet
   if (isUpdateLoading) return <Spinner />;
   if (isUpdateError) return <Error error={updateError} />;
   if(isUpdateSuccess) refetch()
+
+  if (showPrescriptionForm) {
+    return (
+      <PrescriptionForm
+        bookingId={booking.id || ''}
+        patientName={booking.patientId?.fullName || 'Patient'}
+        onSuccess={() => setShowPrescriptionForm(false)}
+        onCancel={() => setShowPrescriptionForm(false)}
+      />
+    );
+  }
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -78,7 +92,7 @@ const BookingCardDoctor = ({booking, refetch}: {booking: BookingPopulated, refet
                     <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
                     <div className="flex items-center gap-1">
                       <FaPhone className="text-green-500" />
-                      <span>{patient.phoneNumber}</span>
+                      <span>{patient?.phoneNumber}</span>
                     </div>
                   </>
                 )}
@@ -120,10 +134,27 @@ const BookingCardDoctor = ({booking, refetch}: {booking: BookingPopulated, refet
               </div>
             </div>
 
+            {/* Appointment Type */}
+            <div className="flex items-center gap-3 text-gray-600">
+              <div className={`p-2 rounded-lg ${booking.appointmentType === 'virtual' ? 'bg-blue-50' : 'bg-gray-50'}`}>
+                {booking.appointmentType === 'virtual' ? (
+                  <FaVideo className="text-blue-500 text-sm" />
+                ) : (
+                  <FaVideoSlash className="text-gray-500 text-sm" />
+                )}
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 uppercase tracking-wide">Type</p>
+                <p className="text-sm font-medium text-gray-700">
+                  {booking.appointmentType === 'virtual' ? 'Video Consultation' : 'In-Person Visit'}
+                </p>
+              </div>
+            </div>
+
             {booking.reason && (
               <div className="flex items-start gap-3 text-gray-600">
                 <div className="p-2 bg-purple-50 rounded-lg mt-1">
-                  <FaUser className="text-purple-500 text-sm" />
+                  <FaUser className="text-purple-500" />
                 </div>
                 <div>
                   <p className="text-xs text-gray-500 uppercase tracking-wide">Reason</p>
@@ -142,6 +173,26 @@ const BookingCardDoctor = ({booking, refetch}: {booking: BookingPopulated, refet
               <FaEye className="text-xs" />
               View Details
             </Link>
+            
+            {/* Video Call Button for Virtual Appointments */}
+            {booking.appointmentType === 'virtual' && (
+              <Link 
+                to={`/video-call/${booking.id}`}
+                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
+              >
+                <FaVideo className="text-xs" />
+                Join Call
+              </Link>
+            )}
+
+            {/* Prescription Button */}
+            <button
+              onClick={() => setShowPrescriptionForm(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm font-medium"
+            >
+              <FaPills className="text-xs" />
+              Create Prescription
+            </button>
             
             {booking.status === "pending" && (
               <button 

@@ -18,6 +18,7 @@ export const ratingAPI = createApi({
             return headers;
         },
     }),
+    tagTypes: ['Rating', 'Doctor', 'User'],
     endpoints: (builder) => ({
         createRating: builder.mutation<Rating, Rating >({
             query: (credential) => ({
@@ -25,7 +26,8 @@ export const ratingAPI = createApi({
                 method: 'Post',
                 body: credential,
                 
-            })
+            }),
+            invalidatesTags: ['Rating', 'Doctor']
         }),
         updateRating: builder.mutation<Rating, {id: string, update: Partial<Rating>} >({
             query: ({id, update}) => ({
@@ -33,34 +35,44 @@ export const ratingAPI = createApi({
                 method: 'Put',
                 body: update,
                 
-            })
+            }),
+            invalidatesTags: ['Rating', 'Doctor']
         }),
         deleteRating: builder.mutation<void, string >({
             query: (id) => ({
                 url: `/${id}`,
                 method: 'Delete'
                 
-            })
+            }),
+            invalidatesTags: ['Rating', 'Doctor']
         }),
 
         findCurrentUserRating: builder.query<Rating | null, string>({
             query: (doctorId) => ({
                 url: `/${doctorId}`,
                 method: 'Get'
-            })
+            }),
+            providesTags: (_, __, doctorId) => [
+                { type: 'Rating', id: doctorId }
+            ]
         }),
         findCurrentUserFavorites: builder.query<FavoriteDoctor[], void>({
             query: () => ({
                 url: `/favorites`,
                 method: 'Get'
-            })
+            }),
+            providesTags: ['Rating']
         }),
         // Added missing endpoint
         getDoctorRatings: builder.query<PopulatedRating[], string>({
             query: (doctorId) => ({
                 url: `/doctor/${doctorId}/all`,
                 method: 'Get'
-            })
+            }),
+            providesTags: (_, __, doctorId) => [
+                { type: 'Rating', id: 'LIST' },
+                { type: 'Doctor', id: doctorId }
+            ]
         })
 
     })

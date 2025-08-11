@@ -5,7 +5,7 @@ import Spinner from "../utils/Spinner";
 import Error from "../utils/Error";
 import { BookingPopulated } from "../../types/Booking";
 import { motion } from "framer-motion";
-import { FaUserMd, FaCalendarAlt, FaClock, FaStethoscope, FaTrash, FaEye, FaStar } from "react-icons/fa";
+import { FaUserMd, FaCalendarAlt, FaClock, FaStethoscope, FaTrash, FaEye, FaStar, FaVideo, FaVideoSlash } from "react-icons/fa";
 import RatingStars from "../rating/RatingStars";
 import { useEffect } from "react";
 
@@ -125,7 +125,7 @@ const BookingCardPatient = ({booking, refetch}: {booking: BookingPopulated, refe
             {booking.reason && (
               <div className="flex items-start gap-3 text-gray-600">
                 <div className="p-2 bg-purple-50 rounded-lg mt-1">
-                  <FaUserMd className="text-purple-500 text-sm" />
+                  <FaUserMd className="text-purple-500" />
                 </div>
                 <div>
                   <p className="text-xs text-gray-500 uppercase tracking-wide">Reason</p>
@@ -133,6 +133,23 @@ const BookingCardPatient = ({booking, refetch}: {booking: BookingPopulated, refe
                 </div>
               </div>
             )}
+
+            {/* Appointment Type */}
+            <div className="flex items-center gap-3 text-gray-600">
+              <div className={`p-2 rounded-lg ${booking.appointmentType === 'virtual' ? 'bg-blue-50' : 'bg-gray-50'}`}>
+                {booking.appointmentType === 'virtual' ? (
+                  <FaVideo className="text-blue-500 text-sm" />
+                ) : (
+                  <FaVideoSlash className="text-gray-500 text-sm" />
+                )}
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 uppercase tracking-wide">Type</p>
+                <p className="text-sm font-medium text-gray-700">
+                  {booking.appointmentType === 'virtual' ? 'Video Consultation' : 'In-Person Visit'}
+                </p>
+              </div>
+            </div>
           </div>
 
           {/* Actions */}
@@ -144,6 +161,17 @@ const BookingCardPatient = ({booking, refetch}: {booking: BookingPopulated, refe
               <FaEye className="text-xs" />
               View Details
             </Link>
+            
+            {/* Video Call Button for Virtual Appointments */}
+            {booking.appointmentType === 'virtual' && (
+              <Link 
+                to={`/video-call/${booking.id}`}
+                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
+              >
+                <FaVideo className="text-xs" />
+                Join Call
+              </Link>
+            )}
             
             {booking.status !== "finished" && (
               <button 

@@ -7,10 +7,11 @@ from app.db.models.comment import Comment
 from app.db.models.rating import Rating
 # Import other models as you create them
 from app.core.config import get_settings
+from app.db.models.prescription import Prescription
 
 settings = get_settings()
 
 async def initiate_database():
     client = motor.motor_asyncio.AsyncIOMotorClient(settings.MONGO_URI)
     database = client.get_default_database()
-    await init_beanie(database, document_models=[User, Booking, Doctor, Comment, Rating]) 
+    await init_beanie(database, document_models=[User, Booking, Doctor, Comment, Rating, Prescription]) 

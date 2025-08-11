@@ -145,7 +145,8 @@ class DoctorService:
             email=data.email,
             password=pwd_context.hash(data.password),
             phoneNumber=data.phoneNumber,
-            role="doctor"
+            role="doctor",
+            isVerified=True
         )
         await user.insert()
         doctor = Doctor(

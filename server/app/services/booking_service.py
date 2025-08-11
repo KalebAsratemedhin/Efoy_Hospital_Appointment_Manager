@@ -219,7 +219,8 @@ class BookingService:
                         appointmentDate=booking_in.appointmentDate,
                         time=booking_in.time,
                         reason=booking_in.reason,
-                        status="pending"
+                        status="pending",
+                        appointmentType=booking_in.appointmentType
                     )
                     await booking.insert()
                     await booking.fetch_link(Booking.doctorId)
@@ -262,7 +263,7 @@ class BookingService:
 
     @staticmethod
     async def update_booking(id: str, booking_update: BookingUpdate) -> dict:
-        booking = await Booking.get(PydanticObjectId(id))
+        booking = await Booking.get(PydanticObjectId(id), fetch_links=True)
         if not booking:
             raise HTTPException(status_code=404, detail="Booking not found")
         
@@ -282,6 +283,7 @@ class BookingService:
             appointment_time = update_data.get("time", booking.time)
             
             # Get doctor and check working hours
+            # Use the correct way to access linked document ID
             doctor = await Doctor.find_one(Doctor.userId.id == booking.doctorId.id)
             if doctor:
                 day_name = BookingService._get_day_name(appointment_date)
@@ -312,7 +314,28 @@ class BookingService:
             setattr(booking, field, value)
         
         await booking.save()
-        return BookingOut.model_validate(booking)
+
+
+         # Convert to dict and add doctorData
+        booking_dict = booking.model_dump()
+        
+        # Get doctor data and flatten it
+        doctor = await Doctor.find_one(Doctor.userId.id == booking.doctorId.id)
+        if doctor:
+            doctor_data = {
+                "id": str(doctor.id),
+                "speciality": doctor.speciality,
+                "experience": doctor.experience,
+                "educationLevel": doctor.educationLevel,
+                "rating": doctor.rating,
+                "orgID": doctor.orgID,
+                'workingHours': doctor.workingHours,
+                'created_at': doctor.created_at,
+                'updated_at': doctor.updated_at
+            }
+            booking_dict['doctorData'] = doctor_data
+        
+        return BookingOut.model_validate(booking_dict)
 
     @staticmethod
     async def mark_booking_finished(id: str, current_user: User) -> dict:
@@ -326,7 +349,7 @@ class BookingService:
         await booking.fetch_link(Booking.doctorId)
         
         # Check if current user is the doctor for this booking
-        if str(booking.doctorId.id) != str(current_user.id):
+        if booking.doctorId.id != current_user.id:
             print('current_user', current_user)
             print('booking.doctorId.id', booking.doctorId.id)
             raise HTTPException(status_code=403, detail="Only the assigned doctor can mark booking as finished")

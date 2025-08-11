@@ -14,6 +14,7 @@ import {
   FaHospital,
   FaClipboardList,
   FaArrowLeft,
+  FaPills,
 } from "react-icons/fa";
 
 interface SidebarProps {
@@ -47,12 +48,23 @@ const Sidebar = ({ isOpen, onSidebarToggle }: SidebarProps) => {
         { name: "Doctors", href: "/doctors", icon: FaUserMd },
         { name: "Settings", href: "/settings", icon: FaCog },
       ]
+    : authState.role === "doctor"
+    ? [
+        { name: "Home", href: "/", icon: FaHome },
+        { name: "Dashboard", href: "/dashboard", icon: FaUser },
+        { name: "Appointments", href: "/appointments", icon: FaCalendarAlt },
+        { name: "Calendar", href: "/calendar", icon: FaCalendarAlt },
+        { name: "Doctors", href: "/doctors", icon: FaUserMd },
+        { name: "Prescriptions", href: "/prescriptions", icon: FaPills },
+        { name: "Settings", href: "/settings", icon: FaCog },
+      ]
     : [
         { name: "Home", href: "/", icon: FaHome },
         { name: "Dashboard", href: "/dashboard", icon: FaUser },
         { name: "Appointments", href: "/appointments", icon: FaCalendarAlt },
         { name: "Calendar", href: "/calendar", icon: FaCalendarAlt },
         { name: "Doctors", href: "/doctors", icon: FaUserMd },
+        { name: "Prescriptions", href: "/prescriptions", icon: FaPills },
         { name: "Settings", href: "/settings", icon: FaCog },
       ];
 

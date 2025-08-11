@@ -17,21 +17,21 @@ export const dashboardAPI = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Dashboard"],
+  tagTypes: ["Dashboard", "User", "Doctor", "Booking"],
   endpoints: (builder) => ({
     getDoctorDashboard: builder.query<any, void>({
       query: () => ({
         url: '/doctor',
         method: 'GET',
       }),
-      providesTags: ["Dashboard"],
+      providesTags: ["Dashboard", "Doctor"],
     }),
     getPatientDashboard: builder.query<any, void>({
       query: () => ({
         url: '/patient',
         method: 'GET',
       }),
-      providesTags: ["Dashboard"],
+      providesTags: ["Dashboard", "User"],
     }),
   }),
 });

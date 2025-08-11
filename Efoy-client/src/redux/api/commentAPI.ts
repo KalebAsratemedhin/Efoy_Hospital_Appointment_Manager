@@ -18,6 +18,7 @@ export const commentAPI = createApi({
             return headers;
         },
     }),
+    tagTypes: ['Comment', 'Doctor'],
     endpoints: (builder) => ({
         createComment: builder.mutation<CommentI, {doctorId: string, content: string} >({
             query: (credential) => ({
@@ -25,7 +26,8 @@ export const commentAPI = createApi({
                 method: 'Post',
                 body: credential,
                 
-            })
+            }),
+            invalidatesTags: ['Comment', 'Doctor']
         }),
         updateComment: builder.mutation<CommentI, {id: string, update: {content: string}} >({
             query: ({id, update}) => ({
@@ -33,34 +35,42 @@ export const commentAPI = createApi({
                 method: 'Put',
                 body: update,
                 
-            })
+            }),
+            invalidatesTags: ['Comment', 'Doctor']
         }),
         deleteComment: builder.mutation<CommentI, string >({
             query: (id) => ({
                 url: `/${id}`,
                 method: 'Delete'
                 
-            })
+            }),
+            invalidatesTags: ['Comment', 'Doctor']
         }),
 
         findOneComment: builder.query<CommentI, string>({
             query: (id) => ({
                 url: `/${id}`,
                 method: 'Get'
-            })
+            }),
+            providesTags: ['Comment']
         }),
 
         findCurrentUserComments: builder.query<CommentI[], void>({
             query: () => ({
                 url: '/',
                 method: 'Get'
-            })
+            }),
+            providesTags: ['Comment']
         }),
         findAllComments: builder.query<CommentPopulated[], string>({
             query: (doctorId) => ({
                 url: `/${doctorId}`,
                 method: 'Get'
-            })
+            }),
+            providesTags: (_, __, doctorId) => [
+                { type: 'Comment', id: 'LIST' },
+                { type: 'Doctor', id: doctorId }
+            ]
         })
 
     })
