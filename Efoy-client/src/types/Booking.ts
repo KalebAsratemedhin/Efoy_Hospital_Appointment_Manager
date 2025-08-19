@@ -8,6 +8,10 @@ export interface Booking {
     time: string,  // Made required
     reason: string,  // Made required
     status?: string,
+    paymentStatus?: string,  // "unpaid", "paid", "refunded"
+    paymentId?: string,  // Reference to Payment document
+    paymentAmount?: number,  // Payment amount in USD
+    paymentCurrency?: string,  // Payment currency
     appointmentType?: string,  // "in_person" or "virtual"
     streamCallId?: string,
     callStartedAt?: string,
@@ -33,6 +37,10 @@ export interface BookingPopulated {
     time: string,
     reason: string,
     status?: string,
+    paymentStatus?: string,  // "unpaid", "paid", "refunded"
+    paymentId?: string,  // Reference to Payment document
+    paymentAmount?: number,  // Payment amount in USD
+    paymentCurrency?: string,  // Payment currency
     appointmentType?: string,  // "in_person" or "virtual"
     streamCallId?: string,
     callStartedAt?: string,

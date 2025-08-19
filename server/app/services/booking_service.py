@@ -10,6 +10,7 @@ from beanie.operators import And
 import re
 from motor.motor_asyncio import AsyncIOMotorClient
 from app.core.config import get_settings
+from app.core.websocket_manager import websocket_manager
 from zoneinfo import ZoneInfo
 
 settings = get_settings()
@@ -220,7 +221,9 @@ class BookingService:
                         time=booking_in.time,
                         reason=booking_in.reason,
                         status="pending",
-                        appointmentType=booking_in.appointmentType
+                        appointmentType=booking_in.appointmentType,
+                        paymentAmount=doctor.sessionPrice,
+                        paymentCurrency="ETB"
                     )
                     await booking.insert()
                     await booking.fetch_link(Booking.doctorId)
@@ -228,6 +231,20 @@ class BookingService:
                     
                     await session.commit_transaction()
                     print('booking', booking)
+                    
+                    # Broadcast slot update to all connected clients
+                    try:
+                        available_slots = await BookingService.find_available_time_slots(
+                            str(booking.doctorId.id), 
+                            booking.appointmentDate
+                        )
+                        await websocket_manager.broadcast_slot_update(
+                            str(booking.doctorId.id), 
+                            booking.appointmentDate, 
+                            available_slots
+                        )
+                    except Exception as e:
+                        print(f"Failed to broadcast slot update: {e}")
                     
                     # Convert to dict and add doctorData
                     booking_dict = booking.model_dump()
@@ -242,6 +259,7 @@ class BookingService:
                             "educationLevel": doctor.educationLevel,
                             "rating": doctor.rating,
                             "orgID": doctor.orgID,
+                            "sessionPrice": doctor.sessionPrice,
                             'workingHours': doctor.workingHours,
                             'created_at': doctor.created_at,
                             'updated_at': doctor.updated_at
@@ -268,6 +286,14 @@ class BookingService:
             raise HTTPException(status_code=404, detail="Booking not found")
         
         update_data = booking_update.model_dump(exclude_unset=True)
+        
+        # Prevent status changes for unpaid appointments (except to 'cancelled')
+        if "status" in update_data and update_data["status"] != "cancelled":
+            if booking.paymentStatus != "paid":
+                raise HTTPException(
+                    status_code=402, 
+                    detail="Payment required. Please complete payment before confirming this appointment."
+                )
         
         # Validate appointment date if being updated
         if "appointmentDate" in update_data and update_data["appointmentDate"] < date.today():
@@ -339,7 +365,7 @@ class BookingService:
 
     @staticmethod
     async def mark_booking_finished(id: str, current_user: User) -> dict:
-        booking = await Booking.get(PydanticObjectId(id))
+        booking = await Booking.get(PydanticObjectId(id), fetch_links=True)
         if not booking:
             raise HTTPException(status_code=404, detail="Booking not found")
         
@@ -386,10 +412,29 @@ class BookingService:
 
     @staticmethod
     async def delete_booking(id: str) -> None:
-        booking = await Booking.get(PydanticObjectId(id))
+        booking = await Booking.get(PydanticObjectId(id), fetch_links=True)
         if not booking:
             raise HTTPException(status_code=404, detail="Booking not found")
+        
+        # Store doctor ID and date before deleting
+        doctor_id = str(booking.doctorId.id)
+        appointment_date = booking.appointmentDate
+        
         await booking.delete()
+        
+        # Broadcast slot update to all connected clients
+        try:
+            available_slots = await BookingService.find_available_time_slots(
+                doctor_id, 
+                appointment_date
+            )
+            await websocket_manager.broadcast_slot_update(
+                doctor_id, 
+                appointment_date, 
+                available_slots
+            )
+        except Exception as e:
+            print(f"Failed to broadcast slot update after deletion: {e}")
 
     @staticmethod
     async def doctor_summary(doctorId: str) -> List[int]:

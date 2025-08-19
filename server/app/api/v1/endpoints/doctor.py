@@ -32,6 +32,14 @@ async def available_slots(
 async def find_one_doctor(id: str):
     return await DoctorService.find_one_doctor(id)
 
+@router.get('/user/{user_id}', response_model=DoctorOut)
+async def find_doctor_by_user_id(user_id: str, current_user: User = Depends(get_current_user)):
+    """Get doctor profile by user ID (for profile editing)"""
+    # Ensure the current user is requesting their own profile
+    if str(current_user.id) != user_id:
+        raise HTTPException(status_code=403, detail="Can only access your own profile")
+    return await DoctorService.find_doctor_by_user_id(user_id)
+
 @router.put('/{id}', response_model=DoctorOut)
 async def update_doctor(id: str, update: DoctorUpdate, current_user: User = Depends(get_current_user)):
     return await DoctorService.update_doctor(id, update, current_user)

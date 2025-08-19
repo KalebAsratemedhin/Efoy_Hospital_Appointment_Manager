@@ -10,7 +10,8 @@ import { useSelector } from 'react-redux';
 import { authSelector } from '../../redux/slices/authSlice';
 import TimeDate from './TimeDate';
 import { motion } from 'framer-motion';
-import { FaArrowLeft, FaUserMd, FaUser, FaCalendarAlt, FaClock, FaStethoscope, FaGraduationCap, FaPhone, FaEnvelope, FaBirthdayCake } from 'react-icons/fa';
+import { FaArrowLeft, FaUserMd, FaUser, FaCalendarAlt, FaClock, FaStethoscope, FaGraduationCap, FaPhone, FaEnvelope, FaBirthdayCake, FaCheckCircle } from 'react-icons/fa';
+import { formatTime } from "../../utils/timeUtils";
 
 interface FormData {
   appointmentDate: string;
@@ -244,7 +245,28 @@ const BookingDetails = () => {
                   <FaClock className="text-purple-500" />
                   <div>
                     <p className="text-sm text-gray-600">Time</p>
-                    <p className="font-medium text-gray-900">{appointment?.time}</p>
+                    <p className="font-medium text-gray-900">{appointment?.time ? formatTime(appointment.time) : 'Not set'}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <FaCheckCircle className="text-purple-500" />
+                  <div>
+                    <p className="text-sm text-gray-600">Payment Status</p>
+                    <div className="flex items-center gap-2">
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        appointment?.paymentStatus === 'paid' ? 'bg-green-100 text-green-800' :
+                        appointment?.paymentStatus === 'refunded' ? 'bg-gray-100 text-gray-800' :
+                        'bg-red-100 text-red-800'
+                      }`}>
+                        {appointment?.paymentStatus ? appointment.paymentStatus.charAt(0).toUpperCase() + appointment.paymentStatus.slice(1) : 'Unpaid'}
+                      </span>
+                      {appointment?.paymentAmount && (
+                        <span className="text-sm font-medium text-gray-700">
+                          {appointment.paymentAmount} {appointment.paymentCurrency || 'ETB'}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>

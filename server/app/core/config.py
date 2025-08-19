@@ -16,6 +16,14 @@ class Settings(BaseSettings):
     # Stream Video configuration
     STREAM_API_KEY: str = None
     STREAM_API_SECRET: str = None
+
+    # stripe configuration
+    STRIPE_SECRET_KEY: str = None
+    STRIPE_WEBHOOK_SECRET: str = None
+    
+    # Payment configuration - hardcoded constants
+    DEFAULT_PAYMENT_AMOUNT: float = 150.00
+    DEFAULT_PAYMENT_CURRENCY: str = "ETB"
     
     # Email configuration
     SMTP_HOST: str = "smtp.gmail.com"

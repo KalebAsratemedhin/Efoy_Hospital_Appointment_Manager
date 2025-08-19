@@ -4,6 +4,9 @@ from pydantic import Field
 from typing import Optional
 from datetime import date, datetime
 from app.db.models.user import User
+from app.core.config import get_settings
+
+settings = get_settings()
 
 class Booking(BaseDocument):
     patientId: Link[User]
@@ -12,6 +15,10 @@ class Booking(BaseDocument):
     time: str
     reason: str
     status: str = Field(default="pending")
+    paymentStatus: str = Field(default="unpaid")  # "unpaid", "paid", "refunded"
+    paymentId: Optional[str] = None  # Reference to Payment document
+    paymentAmount: float = Field(default_factory=lambda: get_settings().DEFAULT_PAYMENT_AMOUNT)  # Payment amount from config
+    paymentCurrency: str = Field(default_factory=lambda: get_settings().DEFAULT_PAYMENT_CURRENCY)  # Payment currency from config
     # Video call fields
     appointmentType: str = Field(default="in_person")  # "in_person" or "virtual"
     streamCallId: Optional[str] = None

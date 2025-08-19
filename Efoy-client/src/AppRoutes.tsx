@@ -23,6 +23,8 @@ import AdminCreateDoctor from "./components/dashboard/AdminCreateDoctor";
 import VerifyEmail from "./pages/VerifyEmail";
 import VideoCallPage from "./components/appointments/VideoCallPage";
 import PrescriptionList from "./components/appointments/PrescriptionList";
+import Payment from "./pages/Payment";
+import PaymentSuccess from "./pages/PaymentSuccess";
 
 const AppRoutes = () => {
     const dispatch = useDispatch()
@@ -63,6 +65,9 @@ const AppRoutes = () => {
                     <Route path="/calendar" element={<CalendarPage />} />
                     <Route path="/admin/doctors/create" element={<AdminCreateDoctor />} />
                     <Route path="/prescriptions" element={<PrescriptionList />} />
+                    <Route path="/payment/:bookingId" element={<Payment />} />
+                    <Route path="/payment/success" element={<PaymentSuccess />} />
+                    <Route path="/payment/cancel" element={<Payment />} />
                 </Route>
 
 

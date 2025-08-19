@@ -139,7 +139,10 @@ class PrescriptionService:
             # Fetch linked data
             prescriptions_with_links = []
             for prescription in prescriptions:
+                await prescription.fetch_link(Prescription.doctorId)
                 await prescription.fetch_link(Prescription.patientId)
+                await prescription.fetch_link(Prescription.bookingId)
+                
                 prescription_dict = prescription.model_dump()
                 prescription_dict['id'] = str(prescription.id)
                 prescription_dict['bookingId'] = str(prescription.bookingId.id)  # Extract ID from Link field

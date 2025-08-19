@@ -12,6 +12,7 @@ class Doctor(BaseDocument):
     speciality: str
     experience: str
     educationLevel: str
+    sessionPrice: float = Field(default=150.0, ge=0, description="Price per 20-minute session in ETB")
     workingHours: Dict[str, Dict[str, str]] = Field(
         default={
             "monday": {"start": "08:00", "end": "17:00"},

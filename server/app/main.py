@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.api.v1.endpoints import user, booking, auth, doctor, comment, rating, dashboard, video, prescription
+from app.api.v1.endpoints import user, booking, auth, doctor, comment, rating, dashboard, video, prescription, payment
 from app.db.session import initiate_database
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import get_settings
@@ -14,6 +14,7 @@ app = FastAPI(title="Efoy Hospital Appointment Manager API")
 # Setup exception handlers
 setup_exception_handlers(app)
 
+# Single CORS middleware that handles both HTTP and WebSocket
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[settings.CLIENT_URL],
@@ -39,6 +40,7 @@ app.include_router(rating.router, prefix="/api/v1/rating", tags=["Rating"])
 app.include_router(dashboard.router, prefix="/api/v1/dashboard", tags=["Dashboard"])
 app.include_router(video.router, prefix="/api/v1/video", tags=["Video"])
 app.include_router(prescription.router, prefix="/api/v1/prescription", tags=["Prescription"])
+app.include_router(payment.router, prefix="/api/v1/payment", tags=["Payment"])
 
 def custom_openapi():
     if app.openapi_schema:

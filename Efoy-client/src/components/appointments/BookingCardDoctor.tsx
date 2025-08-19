@@ -4,9 +4,10 @@ import { useMarkBookingFinishedMutation } from "../../redux/api/bookingAPI";
 import Spinner from "../utils/Spinner";
 import Error from "../utils/Error";
 import { motion } from "framer-motion";
-import { FaUser, FaCalendarAlt, FaClock, FaEnvelope, FaCheckCircle, FaEye, FaPhone, FaPills, FaVideo, FaVideoSlash } from "react-icons/fa";
+import { FaUser, FaCalendarAlt, FaClock, FaEnvelope, FaCheckCircle, FaEye, FaPhone, FaPills, FaVideo, FaVideoSlash, FaCreditCard } from "react-icons/fa";
 import { useState } from "react";
 import PrescriptionForm from "./PrescriptionForm";
+import { formatTime } from "../../utils/timeUtils";
 
 const BookingCardDoctor = ({booking, refetch}: {booking: BookingPopulated, refetch: () => void}) => {
   const patient = booking.patientId
@@ -130,7 +131,7 @@ const BookingCardDoctor = ({booking, refetch}: {booking: BookingPopulated, refet
               </div>
               <div>
                 <p className="text-xs text-gray-500 uppercase tracking-wide">Time</p>
-                <p className="text-sm font-medium text-gray-700">{booking.time}</p>
+                <p className="text-sm font-medium text-gray-700">{formatTime(booking.time)}</p>
               </div>
             </div>
 
@@ -148,6 +149,38 @@ const BookingCardDoctor = ({booking, refetch}: {booking: BookingPopulated, refet
                 <p className="text-sm font-medium text-gray-700">
                   {booking.appointmentType === 'virtual' ? 'Video Consultation' : 'In-Person Visit'}
                 </p>
+              </div>
+            </div>
+
+            {/* Payment Status Display */}
+            <div className="flex items-center gap-3 text-gray-600">
+              <div className={`p-2 rounded-lg ${
+                booking.paymentStatus === 'paid' ? 'bg-green-50' : 
+                booking.paymentStatus === 'refunded' ? 'bg-gray-50' : 
+                'bg-red-50'
+              }`}>
+                <FaCreditCard className={`text-sm ${
+                  booking.paymentStatus === 'paid' ? 'text-green-500' : 
+                  booking.paymentStatus === 'refunded' ? 'text-gray-500' : 
+                  'text-red-500'
+                }`} />
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 uppercase tracking-wide">Payment</p>
+                <div className="flex items-center gap-2">
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    booking.paymentStatus === 'paid' ? 'bg-green-100 text-green-800' :
+                    booking.paymentStatus === 'refunded' ? 'bg-gray-100 text-gray-800' :
+                    'bg-red-100 text-red-800'
+                  }`}>
+                    {booking.paymentStatus ? booking.paymentStatus.charAt(0).toUpperCase() + booking.paymentStatus.slice(1) : 'Unpaid'}
+                  </span>
+                  {booking.paymentAmount && (
+                    <span className="text-xs text-gray-600">
+                      {booking.paymentAmount} {booking.paymentCurrency || 'ETB'}
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
 

@@ -42,6 +42,8 @@ class ConflictException(AppException):
     def __init__(self, message: str = "Conflict", detail: str = None):
         super().__init__(message, status_code=409, detail=detail)
 
+
+
 async def validation_exception_handler(request: Request, exc: Union[RequestValidationError, ValidationError]):
     """Handle Pydantic validation errors"""
     errors = []

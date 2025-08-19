@@ -9,6 +9,7 @@ import { doctorAPI } from "./api/doctorAPI";
 import { dashboardAPI } from "./api/dashboardAPI";
 import { videoAPI } from "./api/videoAPI";
 import { prescriptionAPI } from "./api/prescriptionAPI";
+import { paymentAPI } from "./api/paymentAPI";
 
 export const store = configureStore({
     reducer: {
@@ -22,6 +23,7 @@ export const store = configureStore({
         [dashboardAPI.reducerPath]: dashboardAPI.reducer,
         [videoAPI.reducerPath]: videoAPI.reducer,
         [prescriptionAPI.reducerPath]: prescriptionAPI.reducer,
+        [paymentAPI.reducerPath]: paymentAPI.reducer,
     },
     middleware: getDefaultMiddleware =>
         getDefaultMiddleware()
@@ -34,6 +36,7 @@ export const store = configureStore({
             .concat(dashboardAPI.middleware)
             .concat(videoAPI.middleware)
             .concat(prescriptionAPI.middleware)
+            .concat(paymentAPI.middleware)
 })
 
 export type RootState = ReturnType<typeof store.getState>

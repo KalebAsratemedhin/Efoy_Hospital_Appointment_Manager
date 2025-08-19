@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Doctor, DoctorCreate } from "../../types/User";
+import { Doctor, DoctorCreate, DoctorDataUpdate } from "../../types/User";
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -39,8 +39,17 @@ export const doctorAPI = createApi({
         { type: "Doctor", id }
       ],
     }),
-    updateDoctor: builder.mutation<Doctor, {id: string; update: Partial<Doctor>}>({
-      query: ({id, update}: {id: string; update: Partial<Doctor>}) => ({
+    getDoctorByUserId: builder.query<Doctor, string>({
+      query: (userId: string) => ({
+        url: `/user/${userId}`,
+        method: "GET",
+      }),
+      providesTags: (_, __, userId) => [
+        { type: "Doctor", userId }
+      ],
+    }),
+    updateDoctor: builder.mutation<Doctor, {id: string; update: DoctorDataUpdate}>({
+      query: ({id, update}: {id: string; update: DoctorDataUpdate}) => ({
         url: `/${id}`,
         method: "PUT",
         body: update,
@@ -84,6 +93,7 @@ export const doctorAPI = createApi({
 export const { 
   useGetDoctorsQuery, 
   useGetDoctorByIdQuery,
+  useGetDoctorByUserIdQuery,
   useUpdateDoctorMutation,
   useUpdateWorkingHoursMutation,
   useAdminCreateDoctorMutation,

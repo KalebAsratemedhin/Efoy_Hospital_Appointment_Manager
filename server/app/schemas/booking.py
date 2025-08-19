@@ -70,6 +70,9 @@ class BookingOut(BaseModel):
     time: str
     reason: str
     status: str
+    paymentStatus: str
+    paymentAmount: float
+    paymentCurrency: str
     appointmentType: str
     streamCallId: Optional[str]
     callStartedAt: Optional[datetime]

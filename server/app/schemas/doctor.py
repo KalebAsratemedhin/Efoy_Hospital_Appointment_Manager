@@ -10,6 +10,7 @@ class DoctorCreate(BaseModel):
     speciality: str
     experience: str
     educationLevel: str
+    sessionPrice: float = Field(default=150.0, ge=0, description="Price per 20-minute session in ETB")
     workingHours: Optional[Dict[str, Dict[str, str]]] = None
     fullName: str
     email: EmailStr
@@ -21,6 +22,13 @@ class DoctorCreate(BaseModel):
     def not_empty(cls, v):
         if not v or not v.strip():
             raise ValueError('Field cannot be empty')
+        return v
+
+    @field_validator('sessionPrice')
+    @classmethod
+    def validate_session_price(cls, v):
+        if v < 0:
+            raise ValueError('Session price cannot be negative')
         return v
 
     @field_validator('workingHours')
@@ -47,6 +55,7 @@ class DoctorUpdate(BaseModel):
     experience: Optional[str] = None
     educationLevel: Optional[str] = None
     rating: Optional[float] = None
+    sessionPrice: Optional[float] = Field(None, ge=0, description="Price per 20-minute session in ETB")
     workingHours: Optional[Dict[str, Dict[str, str]]] = None
 
     @field_validator('orgID', 'speciality', 'experience', 'educationLevel')
@@ -54,6 +63,13 @@ class DoctorUpdate(BaseModel):
     def not_empty(cls, v):
         if v is not None and not v.strip():
             raise ValueError('Field cannot be empty')
+        return v
+
+    @field_validator('sessionPrice')
+    @classmethod
+    def validate_session_price(cls, v):
+        if v is not None and v < 0:
+            raise ValueError('Session price cannot be negative')
         return v
 
     @field_validator('workingHours')
@@ -80,6 +96,7 @@ class DoctorData(BaseModel):
     speciality: str
     experience: str
     educationLevel: str
+    sessionPrice: float = 150.0
     workingHours: Dict[str, Dict[str, str]]
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
@@ -93,6 +110,7 @@ class DoctorOut(BaseModel):
     speciality: str
     experience: str
     educationLevel: str
+    sessionPrice: float = 150.0
     workingHours: Dict[str, Dict[str, str]]
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None

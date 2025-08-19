@@ -4,19 +4,22 @@ import MonthlyReport from "./MonthlyReport"
 import FavoritesList from "./FavoritesList"
 
 import { motion } from "framer-motion";
-import { FaUserInjured, FaCalendarAlt, FaHeart, FaClock, FaCheckCircle, FaPills } from "react-icons/fa";
+import { FaUserInjured, FaCalendarAlt, FaHeart, FaClock, FaCheckCircle, FaPills, FaCreditCard } from "react-icons/fa";
 import { useGetCurrentUserQuery } from "../../redux/api/userAPI";
 import { useGetPatientDashboardQuery } from "../../redux/api/dashboardAPI";
 import { useFindCurrentUserFavoritesQuery } from "../../redux/api/ratingAPI";
 import { useGetPatientPrescriptionsQuery } from "../../redux/api/prescriptionAPI";
+import { useFindCurrentUserBookingsQuery } from "../../redux/api/bookingAPI";
 import Spinner from "../utils/Spinner";
 import Error from "../utils/Error";
+import { formatTime } from "../../utils/timeUtils";
 
 const PatientDashboard = () => {
   const { isLoading: isUserLoading, isError: isUserError, error: userError, data: user } = useGetCurrentUserQuery();
   const { data: dashboardData, isLoading: isDashboardLoading, error: dashboardError } = useGetPatientDashboardQuery();
   const { data: favoritesData } = useFindCurrentUserFavoritesQuery();
   const { data: prescriptionsData } = useGetPatientPrescriptionsQuery({ page: 1, limit: 5 });
+  const { data: bookingsData } = useFindCurrentUserBookingsQuery({ page: 1, limit: 10 });
 
   if (isUserLoading || isDashboardLoading) return <Spinner />;
   if (isUserError) return <Error error={userError} />;
@@ -99,11 +102,70 @@ const PatientDashboard = () => {
             />
           </motion.div>
 
-          {/* Favorites Section */}
+          {/* Payment Section */}
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3 }}
+            className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300"
+          >
+            <div className="flex justify-between items-center mb-4">
+                             <h2 className="text-2xl font-semibold text-gray-800 flex items-center gap-2">
+                 <FaCreditCard className="text-green-600" />
+                 Unpaid Appointments
+               </h2>
+              <Link 
+                to="/appointments" 
+                className="text-green-600 hover:text-green-700 transition-colors duration-200 flex items-center gap-2"
+              >
+                View All
+                <FaCalendarAlt />
+              </Link>
+            </div>
+                             {bookingsData?.items && bookingsData.items.filter(booking => booking.paymentStatus === 'unpaid').length > 0 ? (
+                   <div className="space-y-3">
+                     {bookingsData.items
+                       .filter(booking => booking.paymentStatus === 'unpaid')
+                       .slice(0, 3)
+                       .map((booking) => (
+                    <div key={booking.id} className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
+                          <FaCreditCard className="text-yellow-600 text-sm" />
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-800">
+                            Dr. {booking.doctorId?.fullName}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            {new Date(booking.appointmentDate || '').toLocaleDateString()} at {formatTime(booking.time)}
+                          </p>
+                        </div>
+                      </div>
+                                             <div className="flex items-center gap-2">
+                         <span className="text-sm font-medium text-yellow-800">${booking.paymentAmount || 150.00}</span>
+                        <Link 
+                          to={`/payment/${booking.id}`}
+                          className="px-3 py-1 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors text-sm font-medium"
+                        >
+                          Pay Now
+                        </Link>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+                         ) : (
+               <div className="text-center py-6 text-gray-500">
+                 No unpaid appointments
+               </div>
+             )}
+          </motion.div>
+
+          {/* Favorites Section */}
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4 }}
             className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300"
           >
             <div className="flex justify-between items-center mb-4">
@@ -126,7 +188,7 @@ const PatientDashboard = () => {
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.4 }}
+            transition={{ delay: 0.5 }}
             className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300"
           >
             <div className="flex justify-between items-center mb-4">

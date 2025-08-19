@@ -20,6 +20,7 @@ export interface DoctorData {
     educationLevel: string;
     rating?: number;
     orgID: string;  // Added missing field
+    sessionPrice: number;  // Added session price
     workingHours?: Record<string, {start: string, end: string}>;  // Added missing field
 }
 
@@ -31,6 +32,7 @@ export interface Doctor {
     experience: string;
     educationLevel: string;
     rating?: number;
+    sessionPrice: number;  // Added session price
     workingHours?: Record<string, {start: string, end: string}>;
 }
 
@@ -39,6 +41,7 @@ export interface DoctorDataUpdate {
     experience?: string;
     educationLevel?: string;
     orgID?: string;  // Added missing field
+    sessionPrice?: number;  // Added session price
     workingHours?: Record<string, {start: string, end: string}>;  // Added missing field
 }
 

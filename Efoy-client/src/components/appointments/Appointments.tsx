@@ -1,11 +1,12 @@
 import { useEffect } from "react";
 import { useFindCurrentUserBookingsQuery } from "../../redux/api/bookingAPI";
 import { motion } from "framer-motion";
-import { FaCalendarAlt, FaClock, FaCheckCircle, FaTimesCircle, FaSpinner } from "react-icons/fa";
+import { FaCalendarAlt, FaClock, FaTimes, FaCheckCircle } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { authSelector } from "../../redux/slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import { BookingPopulated } from "../../types/Booking";
+import { formatTime } from "../../utils/timeUtils";
 
 const Appointments = () => {
   const navigate = useNavigate();
@@ -55,9 +56,9 @@ const Appointments = () => {
       case "approved":
         return <FaCheckCircle className="text-green-500" />;
       case "rejected":
-        return <FaTimesCircle className="text-red-500" />;
+        return <FaTimes className="text-red-500" />;
       case "pending":
-        return <FaSpinner className="text-yellow-500 animate-spin" />;
+        return <FaClock className="text-yellow-500 animate-spin" />;
       default:
         return null;
     }
@@ -106,14 +107,28 @@ const Appointments = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                   <div className="flex items-center gap-2 text-gray-600">
                     <FaCalendarAlt className="text-cyan-500" />
                     <span>{new Date(booking.appointmentDate).toLocaleDateString()}</span>
                   </div>
                   <div className="flex items-center gap-2 text-gray-600">
                     <FaClock className="text-cyan-500" />
-                    <span>{booking.time}</span>
+                    <span>{formatTime(booking.time)}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      booking.paymentStatus === 'paid' ? 'bg-green-100 text-green-800' :
+                      booking.paymentStatus === 'refunded' ? 'bg-gray-100 text-gray-800' :
+                      'bg-red-100 text-red-800'
+                    }`}>
+                      {booking.paymentStatus ? booking.paymentStatus.charAt(0).toUpperCase() + booking.paymentStatus.slice(1) : 'Unpaid'}
+                    </span>
+                    {booking.paymentAmount && (
+                      <span className="text-xs text-gray-600">
+                        {booking.paymentAmount} {booking.paymentCurrency || 'ETB'}
+                      </span>
+                    )}
                   </div>
                 </div>
 

@@ -1,12 +1,47 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Query
+from fastapi import APIRouter, Depends, HTTPException, status, Query, WebSocket, WebSocketDisconnect
 from typing import List
 from app.schemas.booking import BookingCreate, BookingUpdate, BookingOut, BookingPaginatedResponse
 from app.db.models.user import User
 from app.core.security import get_current_user
+from app.core.websocket_manager import websocket_manager
 from datetime import date
 from app.services.booking_service import BookingService
+import json
 
 router = APIRouter()
+
+@router.websocket("/ws/slots/{doctor_id}/{appointment_date}")
+async def websocket_slots(websocket: WebSocket, doctor_id: str, appointment_date: str):
+    """WebSocket endpoint for real-time slot availability updates - No authentication required"""
+    try:
+        # Parse the appointment date
+        parsed_date = date.fromisoformat(appointment_date)
+        
+        # Connect the client (no authentication needed for public slot info)
+        await websocket_manager.connect(websocket, doctor_id, parsed_date)
+        
+        # Send initial slot availability
+        available_slots = await BookingService.find_available_time_slots(doctor_id, parsed_date)
+        await websocket.send_text(json.dumps({
+            "type": "initial_slots",
+            "doctor_id": doctor_id,
+            "appointment_date": appointment_date,
+            "available_slots": available_slots
+        }))
+        
+        # Keep connection alive and handle disconnection
+        try:
+            while True:
+                # Wait for any message (ping/pong or disconnect)
+                data = await websocket.receive_text()
+                # You can add ping/pong logic here if needed
+        except WebSocketDisconnect:
+            websocket_manager.disconnect(websocket, doctor_id, parsed_date)
+            
+    except ValueError:
+        await websocket.close(code=4000, reason="Invalid date format")
+    except Exception as e:
+        await websocket.close(code=4001, reason=f"Error: {str(e)}")
 
 @router.get('/', response_model=BookingPaginatedResponse)
 async def find_all_user_bookings(
